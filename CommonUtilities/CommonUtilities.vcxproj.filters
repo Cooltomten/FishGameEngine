@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="CommonUtilities\Math\Collision2D\Circle.cpp" />
+    <ClCompile Include="CommonUtilities\Math\Collision2D\Collider2D.cpp" />
+    <ClCompile Include="CommonUtilities\Math\Collision2D\Intersection2D.cpp" />
+    <ClCompile Include="CommonUtilities\Math\Collision2D\Rectangle.cpp" />
+    <ClCompile Include="CommonUtilities\DualSense5InputManager.cpp" />
+    <ClCompile Include="CommonUtilities\InputManager.cpp" />
+    <ClCompile Include="CommonUtilities\Timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Math">
+      <UniqueIdentifier>{e7dc7e51-053b-485d-b980-de1a1c212bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\2DCollision">
+      <UniqueIdentifier>{7a68cc7f-b1b0-484f-ba1c-94cca01c45c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Collision">
+      <UniqueIdentifier>{3af6fef7-dd18-4388-8cd5-6456a3efe027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collections">
+      <UniqueIdentifier>{3596dc5d-0d9b-4246-a04b-d47d62b8b95d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CommonUtilities\Collections\BSTSet.hpp" />
+    <ClInclude Include="CommonUtilities\Collections\DoublyLinkedList.hpp" />
+    <ClInclude Include="CommonUtilities\Collections\HashMap.hpp" />
+    <ClInclude Include="CommonUtilities\Collections\Heap.hpp" />
+    <ClInclude Include="CommonUtilities\Collections\MinHeap.hpp" />
+    <ClInclude Include="CommonUtilities\Collections\Queue.hpp" />
+    <ClInclude Include="CommonUtilities\Collections\Sort.hpp" />
+    <ClInclude Include="CommonUtilities\Collections\Stack.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Collision\AABB3D.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Collision\Intersection.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Collision\Ray.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Collision\Sphere.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Collision2D\Circle.h" />
+    <ClInclude Include="CommonUtilities\Math\Collision2D\Collider2D.h" />
+    <ClInclude Include="CommonUtilities\Math\Collision2D\Intersection2D.h" />
+    <ClInclude Include="CommonUtilities\Math\Collision2D\Rectangle.h" />
+    <ClInclude Include="CommonUtilities\Math\ColorUtilities.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Line.hpp" />
+    <ClInclude Include="CommonUtilities\Math\LineVolume.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Matrix.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Matrix3x3.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Matrix4x4.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Plane.hpp" />
+    <ClInclude Include="CommonUtilities\Math\PlaneVolume.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Vector.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Vector2.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Vector3.hpp" />
+    <ClInclude Include="CommonUtilities\Math\Vector4.hpp" />
+    <ClInclude Include="CommonUtilities\ds5w.h" />
+    <ClInclude Include="CommonUtilities\DualSense5InputManager.h" />
+    <ClInclude Include="CommonUtilities\InputManager.h" />
+    <ClInclude Include="CommonUtilities\Matrix.hpp" />
+    <ClInclude Include="CommonUtilities\Timer.h" />
+    <ClInclude Include="CommonUtilities\UtilityFunctions.hpp" />
+    <ClInclude Include="CommonUtilities\VectorOnStack.hpp" />
+  </ItemGroup>
+</Project>
