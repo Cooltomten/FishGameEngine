@@ -12,7 +12,7 @@ struct ID3D11InputLayout;
 
 namespace FGE
 {
-	class Model
+	class Mesh
 	{
 	public:
 		struct MeshData
@@ -30,19 +30,18 @@ namespace FGE
 		};
 
 	public:
-		Model() = default;
-		~Model() = default;
+		Mesh() = default;
+		~Mesh() = default;
 
 		void Init(const MeshData& someMeshData, std::string aPath);
 		FORCEINLINE MeshData const& GetMeshData() const { return myMeshData; };
 		FORCEINLINE std::string const& GetName() const{return myName;}
-		
-		Transform& GetTransform();
+
+		void Render();
 
 		
 	private:
 		MeshData myMeshData;
 		std::string myName;
-		Transform myTransform;
 	};
 }

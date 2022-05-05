@@ -86,6 +86,8 @@ namespace FGE
 		DX11& GetDX11();
 		HWND GetHandle();
 		
+		void SetWndFunctionToCall(callback_function_wndProc aFunction);
+
 	public:
 		static std::shared_ptr<Window> Create(const WindowProperties& aProperties);
 
@@ -99,7 +101,7 @@ namespace FGE
 		int myHeight;
 		HWND myHWnd;
 		std::unique_ptr<DX11> myDX11;
-
+		callback_function_wndProc myWndFunctionToCall;
 	};
 }
 

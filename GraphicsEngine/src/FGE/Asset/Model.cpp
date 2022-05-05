@@ -4,15 +4,15 @@
 namespace FGE
 {
 
-	void Model::Init(const MeshData& someMeshData, std::string aPath)
+	void Mesh::Init(const MeshData& someMeshData, std::string aPath)
 	{
 		myMeshData = someMeshData;
 		myName = aPath;
 	}
 
-	Transform& Model::GetTransform()
+	void Mesh::Render()
 	{
-		return myTransform;
+		
 	}
 
 

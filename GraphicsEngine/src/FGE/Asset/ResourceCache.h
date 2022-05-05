@@ -11,14 +11,14 @@ namespace FGE
 	public:
 		static void Initialize();
 		
-		static void SaveAsset(const std::string& aName, std::shared_ptr<Model> aModel);
+		static void SaveAsset(const std::string& aName, std::shared_ptr<Mesh> aModel);
 
-		static std::shared_ptr<Model> GetAsset(const std::string& aName);
+		static std::shared_ptr<Mesh> GetAsset(const std::string& aName);
 		
 	private:
-		static std::shared_ptr<Model> CreateUnitCube();
-		static std::shared_ptr<Model> CreateModelFromVertices(const std::vector<Vertex>& someVertices, const std::vector<unsigned int>& someIndices, std::string aName);
+		static std::shared_ptr<Mesh> CreateUnitCube();
+		static std::shared_ptr<Mesh> CreateModelFromVertices(const std::vector<Vertex>& someVertices, const std::vector<unsigned int>& someIndices, std::string aName);
 
-		static std::unordered_map<std::string, std::shared_ptr<Model>> myAssets;
+		static std::unordered_map<std::string, std::shared_ptr<Mesh>> myAssets;
 	};
 }

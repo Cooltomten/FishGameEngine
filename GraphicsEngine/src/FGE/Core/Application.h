@@ -4,6 +4,11 @@
 #include "FGE/Scene/Scene.h"
 #include <memory>
 
+namespace CommonUtilities
+{
+	class InputManager;
+	class Timer;
+}
 namespace FGE
 {
 	class Application
@@ -18,6 +23,8 @@ namespace FGE
 
 		inline std::shared_ptr<Window> GetWindow() { return myWindow; }
 	private:
+		LRESULT WndProc(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam);
+		
 		bool myRunning;
 
 		std::shared_ptr<Window> myWindow;
@@ -26,7 +33,10 @@ namespace FGE
 
 		Scene* myScene;
 
-		std::vector<std::shared_ptr<Model>> myModelsTest;
+		std::vector<std::shared_ptr<Mesh>> myModelsTest;
+
+		std::shared_ptr<CU::InputManager> myInputManager;
+		std::shared_ptr<CU::Timer> myTimer;
 
 		
 		

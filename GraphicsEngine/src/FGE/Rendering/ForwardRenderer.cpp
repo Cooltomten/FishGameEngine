@@ -23,7 +23,7 @@ namespace FGE
 		myObjectBuffer = dx11.CreateBuffer(&bufferDescription, nullptr);
 	}
 
-	void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList)
+	void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Mesh>>& aModelList)
 	{
 		D3D11_MAPPED_SUBRESOURCE bufferData;
 
@@ -40,7 +40,7 @@ namespace FGE
 
 		for (auto& model : aModelList)
 		{
-			const Model::MeshData& meshData = model->GetMeshData();
+			const Mesh::MeshData& meshData = model->GetMeshData();
 			myObjectBufferData.World = model->GetTransform().GetMatrix();
 
 			ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));

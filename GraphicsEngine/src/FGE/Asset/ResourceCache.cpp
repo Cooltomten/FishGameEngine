@@ -6,24 +6,24 @@
 
 namespace FGE
 {
-	std::unordered_map<std::string, std::shared_ptr<Model>> ResourceCache::myAssets;
+	std::unordered_map<std::string, std::shared_ptr<Mesh>> ResourceCache::myAssets;
 
 	void ResourceCache::Initialize()
 	{
 		SaveAsset("Cube", CreateUnitCube());
 	}
 
-	void ResourceCache::SaveAsset(const std::string& aName, std::shared_ptr<Model> aModel)
+	void ResourceCache::SaveAsset(const std::string& aName, std::shared_ptr<Mesh> aModel)
 	{
 		myAssets[aName] = aModel;
 	}
 
-	std::shared_ptr<Model> ResourceCache::GetAsset(const std::string& aName)
+	std::shared_ptr<Mesh> ResourceCache::GetAsset(const std::string& aName)
 	{
 		return myAssets[aName];
 	}
 
-	std::shared_ptr<Model> ResourceCache::CreateUnitCube()
+	std::shared_ptr<Mesh> ResourceCache::CreateUnitCube()
 	{
 		const float s = 50.f;
 		std::vector<Vertex> mdlVertices =
@@ -77,13 +77,13 @@ namespace FGE
 			4,5,1
 		};
 
-		std::shared_ptr<Model> mdl = CreateModelFromVertices(mdlVertices, mdlIndices, "Cube");
+		std::shared_ptr<Mesh> mdl = CreateModelFromVertices(mdlVertices, mdlIndices, "Cube");
 
 
 		return mdl;
 	}
 
-	std::shared_ptr<Model> ResourceCache::CreateModelFromVertices(const std::vector<Vertex>& someVertices, const std::vector<unsigned int>& someIndices, std::string aName)
+	std::shared_ptr<Mesh> ResourceCache::CreateModelFromVertices(const std::vector<Vertex>& someVertices, const std::vector<unsigned int>& someIndices, std::string aName)
 	{
 		//Create vertex buffer
 		D3D11_BUFFER_DESC vertexBufferDesc;
@@ -143,7 +143,7 @@ namespace FGE
 		ID3D11InputLayout* inputLayout = dx11.CreateInputLayout(inputElementDesc, ARRAYSIZE(inputElementDesc), vsData.data(), vsData.size());
 		//End layout
 		
-		Model::MeshData meshData;
+		Mesh::MeshData meshData;
 		meshData.NumberOfVertices = static_cast<UINT>(someVertices.size());
 		meshData.NumberOfIndices = static_cast<UINT>(someIndices.size());
 		meshData.Stride = sizeof(Vertex);
@@ -155,7 +155,7 @@ namespace FGE
 		meshData.PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		meshData.InputLayout = inputLayout;
 
-		std::shared_ptr<Model> mdl = std::make_shared<Model>();
+		std::shared_ptr<Mesh> mdl = std::make_shared<Mesh>();
 		mdl->Init(meshData, aName);
 		
 		return mdl;

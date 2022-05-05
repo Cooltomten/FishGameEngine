@@ -7,14 +7,14 @@ struct ID3D11Buffer;
 namespace FGE
 {
 	class Camera;
-	class Model;
+	class Mesh;
 	class ForwardRenderer
 	{
 
 	public:
 		void Initialize();
 
-		void Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Model>>& aModelList );
+		void Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Mesh>>& aModelList );
 	private:
 		struct FrameBufferData
 		{

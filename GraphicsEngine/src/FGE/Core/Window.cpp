@@ -141,7 +141,7 @@ namespace FGE
 		try
 		{
 			window = std::make_shared<Window>(aProperties);
-			
+
 		}
 		catch (const FabException& e)
 		{
@@ -183,13 +183,26 @@ namespace FGE
 
 	LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
+		if (myWndFunctionToCall)
+		{
+			myWndFunctionToCall(hWnd, msg, wParam, lParam);
+		}
 		switch (msg)
 		{
 		case WM_CLOSE:
 			PostQuitMessage(0);
-			return 0;
+			break;
+		case WM_DESTROY:
+			break;
+		default:
+			return DefWindowProc(hWnd, msg, wParam, lParam);
 		}
-		return DefWindowProc(hWnd, msg, wParam, lParam);
+		return 0;
+	}
+
+	void Window::SetWndFunctionToCall(callback_function_wndProc aFunction)
+	{
+		myWndFunctionToCall = aFunction;
 	}
 
 	//Window exception stuff

@@ -8,7 +8,7 @@ namespace FGE
 	class Transform
 	{
 	public:
-		Transform() = default;
+		Transform();
 		~Transform() = default;
 
 		void SetPosition(float aX, float aY, float aZ);
@@ -27,6 +27,7 @@ namespace FGE
 		const CU::Matrix4x4<float>& GetMatrix() const;
 		
 	private:
+		void RecalculateTransform();
 		CU::Vector3f myPosition;
 		CU::Vector3f myRotation;
 		CU::Vector3f myScale;

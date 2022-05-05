@@ -2,6 +2,9 @@
 #include "Application.h"
 #include "FGE/Rendering/Camera/Camera.h"
 #include "FGE/Asset/ResourceCache.h"
+#include <iostream>
+#include <CommonUtilities/InputManager.h>
+#include <CommonUtilities/Timer.h>
 
 namespace FGE
 {
@@ -11,8 +14,15 @@ namespace FGE
 	{
 		myInstance = this;
 		myWindow = Window::Create(aProperties);
+		myWindow->SetWndFunctionToCall([this](HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam) -> LRESULT
+		{
+				return WndProc(aHwnd, aMessage, aWParam, aLParam);
+		});
+		
 		try
 		{
+			myTimer = std::make_shared<CU::Timer>();
+			myInputManager = std::make_shared<CU::InputManager>();
 			myForwardRenderer.Initialize();
 			ResourceCache::Initialize();
 
@@ -53,17 +63,36 @@ namespace FGE
 		while (myRunning)
 		{
 			Window::ProcessMessages();
+			
+			myTimer->Update();
+			myInputManager->UpdateInput();
+
+			std::cout << myInputManager->GetMousePosDelta().x << " " << myInputManager->GetMousePosDelta().y << std::endl;
+
 
 			myWindow->GetDX11().BeginFrame({ 0.8f,0.4f,0.2f,1 });
-
-			myModelsTest[0]->GetTransform().SetRotation({ myModelsTest[0]->GetTransform().GetRotation().x + 0.01f,
-				myModelsTest[0]->GetTransform().GetRotation().y + 0.01f,
-				myModelsTest[0]->GetTransform().GetRotation().z + 0.01f });
 			
 			myForwardRenderer.Render(myScene->GetMainCamera(), myModelsTest);
 
 			myWindow->GetDX11().EndFrame();
 		}
+	}
+
+	LRESULT FGE::Application::WndProc(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam)
+	{
+		if (myInputManager)
+		{
+			myInputManager->UpdateEvents(aMessage, aWParam, aLParam);
+		}
+		
+		switch (aMessage)
+		{
+		case WM_CLOSE:
+			myRunning = false;
+			break;
+		}
+
+		return 0;
 	}
 
 }
