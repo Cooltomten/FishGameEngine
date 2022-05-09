@@ -72,7 +72,7 @@ namespace FGE
 
 		ID3D11VertexShader* CreateVertexShader(const char* aData, size_t aSize);
 		ID3D11PixelShader* CreatePixelShader(const char* aData, size_t aSize);
-		ID3D11InputLayout* CreateInputLayout( D3D11_INPUT_ELEMENT_DESC aDesc[], size_t aSize, char* aData, size_t aDataSize);
+		ID3D11InputLayout* CreateInputLayout( D3D11_INPUT_ELEMENT_DESC aDesc[], size_t aSize, const char* aData, size_t aDataSize);
 		
 		ComPtr<ID3D11DeviceContext>& GetDeviceContext();
 

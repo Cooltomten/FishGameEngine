@@ -1,7 +1,10 @@
 #include "GraphicsEngine.pch.h"
 #include "Application.h"
-#include "FGE/Rendering/Camera/Camera.h"
 #include "FGE/Asset/ResourceCache.h"
+
+#include "FGE/Rendering/Camera/Camera.h"
+#include "FGE/Rendering/Renderer.h"
+
 #include <iostream>
 #include <CommonUtilities/InputManager.h>
 #include <CommonUtilities/Timer.h>
@@ -23,7 +26,8 @@ namespace FGE
 		{
 			myTimer = std::make_shared<CU::Timer>();
 			myInputManager = std::make_shared<CU::InputManager>();
-			myForwardRenderer.Initialize();
+			Renderer::Init();
+			//myForwardRenderer.Initialize();
 			ResourceCache::Initialize();
 
 		}
@@ -49,7 +53,6 @@ namespace FGE
 		myScene->SetMainCamera(camera);
 		
 		myModelsTest.push_back(ResourceCache::GetAsset("Cube"));
-		myModelsTest[0]->GetTransform().SetRotation({0,0.8,0});
 	}
 
 	Application::~Application()
@@ -70,10 +73,16 @@ namespace FGE
 			std::cout << myInputManager->GetMousePosDelta().x << " " << myInputManager->GetMousePosDelta().y << std::endl;
 
 
-			myWindow->GetDX11().BeginFrame({ 0.8f,0.4f,0.2f,1 });
-			
-			myForwardRenderer.Render(myScene->GetMainCamera(), myModelsTest);
+			myTestTransform.SetRotation(myTestTransform.GetRotation().x + myTimer->GetDeltaTime() * 0.5f,
+				myTestTransform.GetRotation().y + myTimer->GetDeltaTime() * 0.5f,
+				myTestTransform.GetRotation().z);
+			Renderer::Submit(myModelsTest[0]->GetVertexArray(), myTestTransform.GetMatrix());
 
+
+			myWindow->GetDX11().BeginFrame({ 0.8f,0.4f,0.2f,1 });
+			Renderer::Begin(myScene->GetMainCamera());
+			Renderer::Render();
+			Renderer::End();
 			myWindow->GetDX11().EndFrame();
 		}
 	}

@@ -178,6 +178,7 @@
     <ClInclude Include="src\FGE\Core\DXErrorHandling\DxgiInfoManager.h" />
     <ClInclude Include="src\FGE\Core\Game.h" />
     <ClInclude Include="src\FGE\Entity\Entity.h" />
+    <ClInclude Include="src\FGE\Rendering\Buffers\ConstantBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexArray.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\ForwardRenderer.h" />
@@ -203,6 +204,7 @@
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\FGE\Rendering\ForwardRenderer.cpp" />
+    <ClCompile Include="src\FGE\Rendering\Renderer.cpp" />
     <ClCompile Include="src\FGE\Transform.cpp" />
     <ClCompile Include="src\FGE\Rendering\Camera\Camera.cpp" />
     <ClCompile Include="src\FGE\Scene\Scene.cpp" />

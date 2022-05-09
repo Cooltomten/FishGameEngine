@@ -19,17 +19,6 @@
 namespace FGE
 {
 
-	//ComPtr<ID3D11Device> DX11::Device;
-	//ComPtr<ID3D11DeviceContext> DX11::Context;
-	//ComPtr<IDXGISwapChain> DX11::SwapChain;
-
-	//ComPtr<ID3D11SamplerState> DX11::SamplerStateDefault;
-	//ComPtr<ID3D11SamplerState> DX11::SamplerStateWrap;
-
-	//ComPtr<ID3D11RenderTargetView> DX11::BackBuffer;
-	//ComPtr<ID3D11DepthStencilView> DX11::DepthBuffer;
-
-
 	DX11::DX11()
 	{
 	}
@@ -182,7 +171,7 @@ namespace FGE
 		return shader;
 	}
 
-	ID3D11InputLayout* DX11::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC aDesc[], size_t aSize, char* aData, size_t aDataSize)
+	ID3D11InputLayout* DX11::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC aDesc[], size_t aSize, const char* aData, size_t aDataSize)
 	{
 		ID3D11InputLayout* layout = nullptr;
 		HRESULT hr;

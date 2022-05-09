@@ -1,8 +1,9 @@
 #pragma once
-#include "FGE/Transform.h"
+#include <CommonUtilities/Math/Matrix4x4.hpp>
 #include <string>
 #include <wrl.h>
 
+namespace CU = CommonUtilities;
 using namespace Microsoft::WRL;
 
 struct ID3D11Buffer;
@@ -12,36 +13,23 @@ struct ID3D11InputLayout;
 
 namespace FGE
 {
+	class VertexArray;
 	class Mesh
 	{
-	public:
-		struct MeshData
-		{
-			UINT NumberOfVertices;
-			UINT NumberOfIndices;
-			UINT Stride;
-			UINT Offset;
-			ComPtr<ID3D11Buffer> VertexBuffer;
-			ComPtr<ID3D11Buffer> IndexBuffer;
-			ComPtr<ID3D11VertexShader> VertexShader;
-			ComPtr<ID3D11PixelShader> PixelShader;
-			ComPtr<ID3D11InputLayout> InputLayout;
-			UINT PrimitiveTopology;
-		};
-
 	public:
 		Mesh() = default;
 		~Mesh() = default;
 
-		void Init(const MeshData& someMeshData, std::string aPath);
-		FORCEINLINE MeshData const& GetMeshData() const { return myMeshData; };
+		void Init(std::shared_ptr<VertexArray> aVertexArray, std::string aPath);
 		FORCEINLINE std::string const& GetName() const{return myName;}
+		FORCEINLINE std::shared_ptr<VertexArray> GetVertexArray() const{return myVertexArray;}
 
-		void Render();
+		void Render(const CU::Matrix4x4<float>& aTransform);
 
 		
 	private:
-		MeshData myMeshData;
 		std::string myName;
+		
+		std::shared_ptr<VertexArray> myVertexArray;
 	};
 }

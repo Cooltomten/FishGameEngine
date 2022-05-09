@@ -25,7 +25,7 @@ namespace FGE
 
 	void ForwardRenderer::Render(const std::shared_ptr<Camera>& aCamera, const std::vector<std::shared_ptr<Mesh>>& aModelList)
 	{
-		D3D11_MAPPED_SUBRESOURCE bufferData;
+		/*D3D11_MAPPED_SUBRESOURCE bufferData;
 
 		myFrameBufferData.View = aCamera->GetViewMatrix();
 		myFrameBufferData.Projection = aCamera->GetProjectionMatrix();
@@ -64,7 +64,7 @@ namespace FGE
 			
 			context->DrawIndexed(meshData.NumberOfIndices, 0, 0);
 
-		}
+		}*/
 	}
 
 }

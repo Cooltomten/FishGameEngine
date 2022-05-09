@@ -2,6 +2,7 @@
 #include "FGE/Core/Window.h"
 #include "FGE/Rendering/ForwardRenderer.h"
 #include "FGE/Scene/Scene.h"
+#include "FGE/Transform.h"
 #include <memory>
 
 namespace CommonUtilities
@@ -37,6 +38,8 @@ namespace FGE
 
 		std::shared_ptr<CU::InputManager> myInputManager;
 		std::shared_ptr<CU::Timer> myTimer;
+
+		FGE::Transform myTestTransform;
 
 		
 		

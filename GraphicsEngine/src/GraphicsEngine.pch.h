@@ -13,6 +13,8 @@
 #include <Windows.h>
 #include <d3d11.h>
 
+#include <string>
+
 #define PI 3.14159265358979323846
 #define PIF 3.14159265358979323846f
 
