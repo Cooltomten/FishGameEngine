@@ -27,3 +27,9 @@ struct VertexToPixel
     float4 myVxColor4 : COLOR3;
 };
 
+
+struct PixelOutput
+{
+    float4 myColor : SV_TARGET;
+};
+

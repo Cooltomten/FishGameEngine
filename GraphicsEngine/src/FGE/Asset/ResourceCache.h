@@ -18,8 +18,7 @@ namespace FGE
 		
 	private:
 		static std::shared_ptr<Mesh> CreateUnitCube();
-		static std::shared_ptr<Mesh> CreateSubMeshFromVertices(const std::vector<Vertex>& someVertices, const std::vector<unsigned int>& someIndices, std::string aName);
-
+		
 		static std::unordered_map<std::string, std::shared_ptr<Mesh>> myAssets;
 
 		static std::unique_ptr<FBXImporter> myFBXImporter;

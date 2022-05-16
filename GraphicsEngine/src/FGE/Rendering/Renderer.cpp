@@ -29,19 +29,19 @@ namespace FGE
 		auto& dx11 = Application::Get().GetWindow()->GetDX11();
 		//Create shaders
 		std::ifstream vsFile;
-		vsFile.open("DefaultVS.cso", std::ios::binary);
+		vsFile.open("Assets/Shaders/DefaultVS.cso", std::ios::binary);
 		myVsData = { std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>() };
 		vsFile.close();
 		ID3D11VertexShader* vertexShader = dx11.CreateVertexShader(myVsData.data(), myVsData.size());
 		myVertexShader = vertexShader;;
 
 		std::ifstream psFile;
-		psFile.open("DefaultPS.cso", std::ios::binary);
+		psFile.open("Assets/Shaders/DefaultPS.cso", std::ios::binary);
 		std::string psData = { std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>() };
 		psFile.close();
 		ID3D11PixelShader* pixelShader = dx11.CreatePixelShader(psData.data(), psData.size());
 		myPixelShader = pixelShader;
-		//end shader
+		//end shaders
 
 		D3D11_BUFFER_DESC bufferDescription = { 0 };
 		bufferDescription.Usage = D3D11_USAGE_DYNAMIC;

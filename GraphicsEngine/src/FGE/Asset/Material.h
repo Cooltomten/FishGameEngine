@@ -11,6 +11,8 @@ namespace FGE
 		Material();
 		~Material();
 		
+		void Init();
+		
 		void SetAlbedo(const CU::Vector3f& aAlbedo);
 		inline const CU::Vector3f& GetAlbedo() const { return myAlbedo; };
 		

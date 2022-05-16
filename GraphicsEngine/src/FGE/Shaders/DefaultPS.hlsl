@@ -1,5 +1,7 @@
 #include "ShaderStructs.hlsli" 
-float4 main() : SV_TARGET
+PixelOutput main(VertexToPixel input)
 {
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+	PixelOutput output;
+    output.myColor = input.myVxColor;
+    return output;
 }
