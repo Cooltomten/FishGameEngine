@@ -1,6 +1,5 @@
 #pragma once
 #include "FGE/Core/Window.h"
-#include "FGE/Rendering/ForwardRenderer.h"
 #include "FGE/Scene/Scene.h"
 #include "FGE/Transform.h"
 #include <memory>
@@ -12,6 +11,7 @@ namespace CommonUtilities
 }
 namespace FGE
 {
+	class Mesh;
 	class Application
 	{
 	public:
@@ -25,12 +25,12 @@ namespace FGE
 		inline std::shared_ptr<Window> GetWindow() { return myWindow; }
 	private:
 		LRESULT WndProc(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam);
+
+		void CameraController();
 		
 		bool myRunning;
 
 		std::shared_ptr<Window> myWindow;
-
-		ForwardRenderer myForwardRenderer;
 
 		Scene* myScene;
 

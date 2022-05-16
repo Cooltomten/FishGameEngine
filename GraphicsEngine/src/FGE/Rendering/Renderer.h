@@ -13,12 +13,14 @@ struct ID3D11PixelShader;
 
 namespace FGE
 {
-
+	class Material;
 	struct SubmitCommand
 	{
-		SubmitCommand(std::shared_ptr<VertexArray> aData, CU::Matrix4x4<float> aTransform)
-			: Data(aData), Transform(aTransform) {}
+		SubmitCommand(std::shared_ptr<VertexArray> aData, CU::Matrix4x4<float> aTransform, std::shared_ptr<Material> aMaterial)
+			: Data(aData), Transform(aTransform) , Material(aMaterial) {}
+
 		std::shared_ptr<VertexArray> Data;
+		std::shared_ptr<Material> Material;
 		CU::Matrix4x4<float> Transform;
 	};
 	class Renderer
@@ -26,7 +28,7 @@ namespace FGE
 	public:
 		static void Init();
 
-		static void Submit(std::shared_ptr<VertexArray> aData , const CU::Matrix4x4<float>& aTransform);
+		static void Submit(std::shared_ptr<VertexArray> aData , const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Material> aMaterial);
 
 		static void Begin(std::shared_ptr<Camera> aCamera);
 		static void End();
@@ -43,13 +45,22 @@ namespace FGE
 			CU::Matrix4x4<float> View;
 			CU::Matrix4x4<float> Projection;
 		}myFrameBufferData;
+		
 		static struct ObjectBufferData
 		{
 			CU::Matrix4x4<float> World;
 		} myObjectBufferData;
 		
+		static struct MaterialBufferData
+		{
+			CU::Vector3f Albedo;
+			float Padding;
+		} myMaterialBufferData;
+		
+		
 		static Microsoft::WRL::ComPtr<ID3D11Buffer> myFrameBuffer;
 		static Microsoft::WRL::ComPtr<ID3D11Buffer> myObjectBuffer;
+		static Microsoft::WRL::ComPtr<ID3D11Buffer> myMaterialBuffer;
 
 		static std::vector<SubmitCommand> myCommands;
 		static Microsoft::WRL::ComPtr<ID3D11VertexShader> myVertexShader;

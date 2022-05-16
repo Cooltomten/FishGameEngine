@@ -63,16 +63,13 @@
     <ClInclude Include="src\FGE\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\FGE\Asset\Model.h">
+    <ClInclude Include="src\FGE\Asset\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\FGE\Asset\ResourceCache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\FGE\Asset\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FGE\Rendering\ForwardRenderer.h">
+    <ClInclude Include="src\FGE\Rendering\Buffers\Vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\FGE\Rendering\Renderer.h">
@@ -85,6 +82,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\FGE\Rendering\Buffers\ConstantBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Asset\SubMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Asset\FBXImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Asset\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -122,13 +128,10 @@
     <ClCompile Include="src\FGE\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FGE\Asset\Model.cpp">
+    <ClCompile Include="src\FGE\Asset\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FGE\Asset\ResourceCache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FGE\Rendering\ForwardRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexArray.cpp">
@@ -138,6 +141,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FGE\Rendering\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\Asset\FBXImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\Asset\SubMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\Asset\Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -160,5 +172,10 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="cpp.hint" />
+    <None Include="src\FGE\Shaders\ShaderStructs.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\FGE\Shaders\DefaultPS.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\DefaultVS.hlsl" />
   </ItemGroup>
 </Project>

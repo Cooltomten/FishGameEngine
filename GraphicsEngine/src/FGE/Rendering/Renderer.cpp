@@ -1,15 +1,20 @@
 #include "GraphicsEngine.pch.h"
 #include "Renderer.h"
+
 #include "FGE/Core/Application.h"
+#include "FGE/Asset/Material.h"
 #include "FGE/Rendering/Buffers/VertexBuffer.h"
+
 #include <fstream>
 namespace FGE
 {
 	Renderer::FrameBufferData Renderer::myFrameBufferData;
 	Renderer::ObjectBufferData Renderer::myObjectBufferData;
+	Renderer::MaterialBufferData Renderer::myMaterialBufferData;
 
 	 Microsoft::WRL::ComPtr<ID3D11Buffer> Renderer::myFrameBuffer;
 	 Microsoft::WRL::ComPtr<ID3D11Buffer> Renderer::myObjectBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> Renderer::myMaterialBuffer;
 
 	 std::vector<SubmitCommand> Renderer::myCommands;
 	 Microsoft::WRL::ComPtr<ID3D11VertexShader> Renderer::myVertexShader;
@@ -48,10 +53,13 @@ namespace FGE
 
 		bufferDescription.ByteWidth = sizeof(ObjectBufferData);
 		myObjectBuffer = dx11.CreateBuffer(&bufferDescription, nullptr);
+
+		bufferDescription.ByteWidth = sizeof(MaterialBufferData);
+		myMaterialBuffer = dx11.CreateBuffer(&bufferDescription, nullptr);
 	}
-	void FGE::Renderer::Submit(std::shared_ptr<VertexArray> aData, const CU::Matrix4x4<float>& aTransform)
+	void FGE::Renderer::Submit(std::shared_ptr<VertexArray> aData, const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Material> aMaterial)
 	{
-		myCommands.emplace_back(SubmitCommand(aData, aTransform));
+		myCommands.emplace_back(SubmitCommand(aData, aTransform, aMaterial));
 	}
 	void Renderer::Begin(std::shared_ptr<Camera> aCamera)
 	{
@@ -82,12 +90,21 @@ namespace FGE
 
 		for (auto& command : myCommands)
 		{
+			//map Object buffer
 			myObjectBufferData.World = command.Transform;
-
 			ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
 			dx11.Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
 			memcpy(bufferData.pData, &myObjectBufferData, sizeof(ObjectBufferData));
 			dx11.Unmap(myObjectBuffer.Get(), 0);
+			
+			//map Material buffer
+			myMaterialBufferData.Albedo = command.Material->GetAlbedo();
+			ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
+			
+			dx11.Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
+			memcpy(bufferData.pData, &myMaterialBufferData, sizeof(MaterialBufferData));
+			dx11.Unmap(myMaterialBuffer.Get(), 0);
 
 
 			command.Data->Bind();
@@ -98,6 +115,7 @@ namespace FGE
 
 			context->VSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
 			context->PSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
+			context->PSSetConstantBuffers(2, 1, myMaterialBuffer.GetAddressOf());
 
 			context->DrawIndexed(command.Data->GetIndexBuffer().GetCount(), 0, 0);
 		}

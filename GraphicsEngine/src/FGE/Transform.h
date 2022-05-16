@@ -25,6 +25,10 @@ namespace FGE
 		const CU::Vector3f& GetScale() const;
 
 		const CU::Matrix4x4<float>& GetMatrix() const;
+
+		const CU::Vector3f GetForward();
+		const CU::Vector3f GetRight();
+		const CU::Vector3f GetUp();
 		
 	private:
 		void RecalculateTransform();

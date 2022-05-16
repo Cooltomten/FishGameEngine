@@ -65,6 +65,21 @@ namespace FGE
 		return myMatrix;
 	}
 
+	const CU::Vector3f Transform::GetForward()
+	{
+		return {myMatrix(3,1), myMatrix(3,2), myMatrix(3,3)};
+	}
+
+	const CU::Vector3f Transform::GetRight()
+	{
+		return {myMatrix(1,1), myMatrix(1,2), myMatrix(1,3)};
+	}
+
+	const CU::Vector3f Transform::GetUp()
+	{
+		return {myMatrix(2,1), myMatrix(2,2), myMatrix(2,3)};
+	}
+
 	void Transform::RecalculateTransform()
 	{
 		myMatrix = CU::Matrix4x4<float>();

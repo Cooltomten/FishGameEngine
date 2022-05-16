@@ -12,8 +12,14 @@
 // add headers that you want to pre-compile here
 #include <Windows.h>
 #include <d3d11.h>
+#include <fstream>
 
 #include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <memory>
+#include <filesystem>
 
 #define PI 3.14159265358979323846
 #define PIF 3.14159265358979323846f

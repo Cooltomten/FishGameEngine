@@ -1,6 +1,7 @@
 #pragma once
-#include "FGE/Asset/Model.h"
-#include "FGE/Asset/Vertex.h"
+#include "FGE/Asset/Mesh.h"
+#include "FGE/Rendering/Buffers/Vertex.h"
+#include "FGE/Asset/FBXImporter.h"
 #include <memory>
 #include <unordered_map>
 #include <string>
@@ -17,8 +18,10 @@ namespace FGE
 		
 	private:
 		static std::shared_ptr<Mesh> CreateUnitCube();
-		static std::shared_ptr<Mesh> CreateModelFromVertices(const std::vector<Vertex>& someVertices, const std::vector<unsigned int>& someIndices, std::string aName);
+		static std::shared_ptr<Mesh> CreateSubMeshFromVertices(const std::vector<Vertex>& someVertices, const std::vector<unsigned int>& someIndices, std::string aName);
 
 		static std::unordered_map<std::string, std::shared_ptr<Mesh>> myAssets;
+
+		static std::unique_ptr<FBXImporter> myFBXImporter;
 	};
 }

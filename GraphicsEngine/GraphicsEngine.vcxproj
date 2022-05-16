@@ -131,7 +131,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GraphicsEngine.pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>src;..\CommonUtilities</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -142,6 +142,12 @@
       <ShaderModel>5.0</ShaderModel>
       <ObjectFileOutput>$(SolutionDir)Bin\$(Configuration)\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -154,7 +160,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GraphicsEngine.pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>src;..\CommonUtilities</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -167,11 +173,20 @@
       <ShaderModel>5.0</ShaderModel>
       <ObjectFileOutput>$(SolutionDir)Bin\$(Configuration)\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\FGE\Asset\Model.h" />
+    <ClInclude Include="src\FGE\Asset\FBXImporter.h" />
+    <ClInclude Include="src\FGE\Asset\Material.h" />
+    <ClInclude Include="src\FGE\Asset\Mesh.h" />
     <ClInclude Include="src\FGE\Asset\ResourceCache.h" />
-    <ClInclude Include="src\FGE\Asset\Vertex.h" />
+    <ClInclude Include="src\FGE\Asset\SubMesh.h" />
+    <ClInclude Include="src\FGE\Rendering\Buffers\Vertex.h" />
     <ClInclude Include="src\FGE\Core\Application.h" />
     <ClInclude Include="src\FGE\Core\DX11.h" />
     <ClInclude Include="src\FGE\Core\DXErrorHandling\dxerr.h" />
@@ -181,7 +196,6 @@
     <ClInclude Include="src\FGE\Rendering\Buffers\ConstantBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexArray.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexBuffer.h" />
-    <ClInclude Include="src\FGE\Rendering\ForwardRenderer.h" />
     <ClInclude Include="src\FGE\Rendering\Renderer.h" />
     <ClInclude Include="src\FGE\Transform.h" />
     <ClInclude Include="src\FGE\EntryPoint.h" />
@@ -193,8 +207,11 @@
     <ClInclude Include="src\FGE\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\FGE\Asset\Model.cpp" />
+    <ClCompile Include="src\FGE\Asset\FBXImporter.cpp" />
+    <ClCompile Include="src\FGE\Asset\Material.cpp" />
+    <ClCompile Include="src\FGE\Asset\Mesh.cpp" />
     <ClCompile Include="src\FGE\Asset\ResourceCache.cpp" />
+    <ClCompile Include="src\FGE\Asset\SubMesh.cpp" />
     <ClCompile Include="src\FGE\Core\Application.cpp" />
     <ClCompile Include="src\FGE\Core\DX11.cpp" />
     <ClCompile Include="src\FGE\Core\DXErrorHandling\dxerr.cpp" />
@@ -203,7 +220,6 @@
     <ClCompile Include="src\FGE\Entity\Entity.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexBuffer.cpp" />
-    <ClCompile Include="src\FGE\Rendering\ForwardRenderer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Renderer.cpp" />
     <ClCompile Include="src\FGE\Transform.cpp" />
     <ClCompile Include="src\FGE\Rendering\Camera\Camera.cpp" />
@@ -233,6 +249,30 @@
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorDescription.inl" />
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorString.inl" />
     <None Include="src\FGE\Core\DXErrorHandling\DXTrace.inl" />
+    <None Include="src\FGE\Shaders\ShaderStructs.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TGAFBXImporter\TGAFBXImporter.vcxproj">
+      <Project>{ccaa1397-531e-4263-b46b-f97ea01ef3d2}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\FGE\Shaders\DefaultPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="src\FGE\Shaders\DefaultVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
