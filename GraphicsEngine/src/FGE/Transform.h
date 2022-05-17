@@ -25,6 +25,7 @@ namespace FGE
 		const CU::Vector3f& GetScale() const;
 
 		const CU::Matrix4x4<float>& GetMatrix() const;
+		const CU::Matrix4x4<float>& GetInverseMatrix() const;
 
 		const CU::Vector3f GetForward();
 		const CU::Vector3f GetRight();
@@ -37,6 +38,8 @@ namespace FGE
 		CU::Vector3f myScale;
 
 		CU::Matrix4x4<float> myMatrix;
+		CU::Matrix4x4<float> myInverseMatrix;
+		
 
 
 	};

@@ -14,12 +14,13 @@ namespace FGE
 
 		const CU::Matrix4x4<float>& GetProjectionMatrix() const;
 		const CU::Matrix4x4<float>& GetViewMatrix() const;
-		Transform& GetTransform();
 
+		Transform& GetTransform();
 
 	private:
 		Transform myTransform;
 		CU::Matrix4x4<float> myProjectionMatrix;
+		CU::Matrix4x4<float> myViewMatrix;
 
 		float myNearPlane;
 		float myFarPlane;

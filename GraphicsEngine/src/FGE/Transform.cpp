@@ -65,6 +65,11 @@ namespace FGE
 		return myMatrix;
 	}
 
+	const CU::Matrix4x4<float>& Transform::GetInverseMatrix() const
+	{
+		return myInverseMatrix;
+	}
+
 	const CU::Vector3f Transform::GetForward()
 	{
 		return {myMatrix(3,1), myMatrix(3,2), myMatrix(3,3)};
@@ -94,6 +99,8 @@ namespace FGE
 		myMatrix(4, 1) = myPosition.x;
 		myMatrix(4, 2) = myPosition.y;
 		myMatrix(4, 3) = myPosition.z;
+
+		myInverseMatrix = myMatrix.GetFastInverse(myMatrix);
 	}
 
 }

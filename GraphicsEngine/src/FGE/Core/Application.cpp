@@ -1,6 +1,8 @@
 #include "GraphicsEngine.pch.h"
 #include "Application.h"
+
 #include "FGE/Asset/ResourceCache.h"
+#include "FGE/Asset/Material.h"
 
 #include "FGE/Rendering/Camera/Camera.h"
 #include "FGE/Rendering/Renderer.h"
@@ -8,6 +10,7 @@
 #include <iostream>
 #include <CommonUtilities/InputManager.h>
 #include <CommonUtilities/Timer.h>
+#include <CommonUtilities/UtilityFunctions.hpp>
 
 namespace FGE
 {
@@ -52,6 +55,9 @@ namespace FGE
 		myScene->SetMainCamera(camera);
 
 		myModelsTest.push_back(ResourceCache::GetAsset("Assets/Meshes/SM_Particle_Chest.fbx"));
+		std::shared_ptr<FGE::Material> material = std::make_shared<FGE::Material>();
+		material->SetAlbedo({ 0,0,0.5 });
+		myModelsTest[0]->SetMaterial(material, 0);
 
 		myTestTransform.SetPosition({ 0,0,0 });
 	}
@@ -64,6 +70,7 @@ namespace FGE
 	void Application::Run()
 	{
 		myRunning = true;
+		std::shared_ptr<FGE::Material> material = myModelsTest[0]->GetMaterial(0);
 		while (myRunning)
 		{
 			Window::ProcessMessages();
@@ -75,6 +82,11 @@ namespace FGE
 
 			std::cout << myInputManager->GetMousePosDelta().x << " " << myInputManager->GetMousePosDelta().y << std::endl;
 
+
+			//Fade material albedo to random color with myTimer.GetTotalTime()
+			float sinValue = 0.5 * (float)sin(myTimer->GetTotalTime() * 3) + 0.5;
+			float cosValue = 0.5 * (float)cos(myTimer->GetTotalTime() * 3) + 0.5;
+			material->SetAlbedo({ sinValue * cosValue,cosValue,sinValue * sinValue });
 
 			myModelsTest[0]->Render(myTestTransform.GetMatrix());
 
@@ -106,28 +118,39 @@ namespace FGE
 
 	void Application::CameraController()
 	{
-		CU::Vector2f moveInput;
+		CU::Vector2f moveXZInput = { 0,0 };
+		float moveYInput = 0;
 
 		if (myInputManager->GetKey(Keys::W))
 		{
-			moveInput.y += 1.f;
+			moveXZInput.y += 1.f;
 		}
 		if (myInputManager->GetKey(Keys::S))
 		{
-			moveInput.y -= 1.f;
+			moveXZInput.y -= 1.f;
 		}
 		if (myInputManager->GetKey(Keys::A))
 		{
-			moveInput.x -= 1.f;
+			moveXZInput.x -= 1.f;
 		}
 		if (myInputManager->GetKey(Keys::D))
 		{
-			moveInput.x += 1.f;
+			moveXZInput.x += 1.f;
 		}
 
-		if (moveInput.LengthSqr() > 0)
+		if (moveXZInput.LengthSqr() > 0)
 		{
-			moveInput.Normalize();
+			moveXZInput.Normalize();
+		}
+
+		//go up if space is pressed, go down if ctrl is pressed
+		if (myInputManager->GetKey(Keys::Space))
+		{
+			moveYInput += 1.f;
+		}
+		if (myInputManager->GetKey(Keys::Control))
+		{
+			moveYInput -= 1.f;
 		}
 
 
@@ -139,16 +162,26 @@ namespace FGE
 			CU::Vector3f cameraPos = cameraTransform.GetPosition();
 			CU::Vector3f forward = cameraTransform.GetForward();
 			CU::Vector3f right = cameraTransform.GetRight();
+			CU::Vector3f up = cameraTransform.GetUp();
 
-			cameraPos += forward * moveInput.y * myTimer->GetDeltaTime() * 500.f;
-			cameraPos += right * moveInput.x * myTimer->GetDeltaTime() * 500.f;
+			cameraPos += forward * moveXZInput.y * myTimer->GetDeltaTime() * 500.f;
+			cameraPos += right * moveXZInput.x * myTimer->GetDeltaTime() * 500.f;
+			cameraPos += up * moveYInput * myTimer->GetDeltaTime() * 500.f;
+
 
 			cameraTransform.SetPosition(cameraPos);
 
 
 			CU::Vector2f mouseDelta = { static_cast<float>(myInputManager->GetMousePosDelta().x), static_cast<float>(myInputManager->GetMousePosDelta().y) };
-			
-			cameraTransform.SetRotation(cameraTransform.GetRotation() + CU::Vector3f(mouseDelta.y, mouseDelta.x, 0) * 0.005f);
+
+			CU::Vector3f cameraRot = cameraTransform.GetRotation() + CU::Vector3f(mouseDelta.y, mouseDelta.x, 0) * 0.005f;
+
+			//Clamp camera rotation to prevent camera from flipping over (degrees)
+			cameraRot.x = CU::Clamp(cameraRot.x, -89.f, 89.f);
+
+
+			cameraTransform.SetRotation(cameraRot);
+
 		}
 
 

@@ -19,7 +19,15 @@ namespace FGE
 	{
 		for (int i = 0; i < mySubMeshes.size(); i++)
 		{
-			Renderer::Submit(mySubMeshes[i]->GetVertexArray(), aTransform, std::make_shared<Material>());
+			Renderer::Submit(mySubMeshes[i]->GetVertexArray(), aTransform, myMaterials[mySubMeshes[i]->GetMaterialIndex()]);
 		}
+	}
+	void Mesh::SetMaterial(std::shared_ptr<Material> aMaterial, uint32_t aIndex)
+	{
+		myMaterials[aIndex] = aMaterial;
+	}
+	std::shared_ptr<Material> Mesh::GetMaterial(uint32_t aIndex)
+	{
+		return myMaterials[aIndex];
 	}
 }
