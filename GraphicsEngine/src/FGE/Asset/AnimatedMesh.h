@@ -14,7 +14,7 @@ namespace FGE
 	struct Skeleton
 	{
 		std::string Name;
-		
+
 		struct Bone
 		{
 			CU::Matrix4x4<float> BindPoseInverse;
@@ -24,12 +24,11 @@ namespace FGE
 		};
 
 		std::vector<Bone> Bones;
-		
+
 		std::unordered_map<std::string, size_t> BoneNameToIndex;
-		
+
 		std::unordered_map<std::string, Animation> Animations;
 	};
-
 	
 	class SubMesh;
 	class Material;
@@ -43,7 +42,7 @@ namespace FGE
 
 		void Init(std::vector<std::shared_ptr<SubMesh>> aSubMesh, Skeleton& aSkeleton);
 
-		void Render(const CU::Matrix4x4<float>&aTransform);
+		void Render(const CU::Matrix4x4<float>& aTransform, float aAnimationTime);
 
 		void SetMaterial(std::shared_ptr<Material> aMaterial, uint32_t aIndex);
 		std::shared_ptr<Material> GetMaterial(uint32_t aIndex);

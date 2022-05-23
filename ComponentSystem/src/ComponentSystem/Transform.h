@@ -3,7 +3,7 @@
 #include "CommonUtilities/Math/Matrix4x4.hpp"
 
 namespace CU = CommonUtilities;
-namespace FGE
+namespace Comp
 {
 	class Transform
 	{

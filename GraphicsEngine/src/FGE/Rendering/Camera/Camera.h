@@ -1,6 +1,5 @@
 #pragma once
 #include "CommonUtilities/Math/Vector2.hpp"
-#include "FGE/Transform.h"
 namespace CU = CommonUtilities;
 
 namespace FGE
@@ -15,10 +14,9 @@ namespace FGE
 		const CU::Matrix4x4<float>& GetProjectionMatrix() const;
 		const CU::Matrix4x4<float>& GetViewMatrix() const;
 
-		Transform& GetTransform();
+		void RecalculateTransform(CU::Matrix4x4<float> aTransform);
 
 	private:
-		Transform myTransform;
 		CU::Matrix4x4<float> myProjectionMatrix;
 		CU::Matrix4x4<float> myViewMatrix;
 

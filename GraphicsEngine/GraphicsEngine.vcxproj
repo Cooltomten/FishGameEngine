@@ -200,7 +200,6 @@
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexArray.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Renderer.h" />
-    <ClInclude Include="src\FGE\Transform.h" />
     <ClInclude Include="src\FGE\EntryPoint.h" />
     <ClInclude Include="src\FabException.h" />
     <ClInclude Include="src\FabWin.h" />
@@ -226,7 +225,6 @@
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Renderer.cpp" />
-    <ClCompile Include="src\FGE\Transform.cpp" />
     <ClCompile Include="src\FGE\Rendering\Camera\Camera.cpp" />
     <ClCompile Include="src\FGE\Scene\Scene.cpp" />
     <ClCompile Include="src\GraphicsEngine.pch.cpp">

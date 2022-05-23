@@ -15,7 +15,7 @@ namespace FGE
 		memcpy_s(&mySkeleton, sizeof(Skeleton), &aSkeleton, sizeof(Skeleton));
 	}
 
-	void FGE::AnimatedMesh::Render(const CU::Matrix4x4<float>& aTransform)
+	void FGE::AnimatedMesh::Render(const CU::Matrix4x4<float>& aTransform, float aAnimationTime)
 	{
 		for (int i = 0; i < mySubMeshes.size(); i++)
 		{
