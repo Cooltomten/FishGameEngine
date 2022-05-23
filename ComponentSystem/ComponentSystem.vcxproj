@@ -156,14 +156,14 @@
     <ClInclude Include="src\ComponentSystem\Component.h" />
     <ClInclude Include="src\ComponentSystem\ComponentRegistry.hpp" />
     <ClInclude Include="src\ComponentSystem\Entity.h" />
-    <ClInclude Include="src\ComponentSystem\Scene\Scene.h" />
+    <ClInclude Include="src\ComponentSystem\Scene.h" />
     <ClInclude Include="src\ComponentSystem\Transform.h" />
     <ClInclude Include="src\CompSysPch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ComponentSystem\Component.cpp" />
     <ClCompile Include="src\ComponentSystem\Entity.cpp" />
-    <ClCompile Include="src\ComponentSystem\Scene\Scene.cpp" />
+    <ClCompile Include="src\ComponentSystem\Scene.cpp" />
     <ClCompile Include="src\ComponentSystem\Transform.cpp" />
     <ClCompile Include="src\CompSysPch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

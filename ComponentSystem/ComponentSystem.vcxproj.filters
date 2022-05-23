@@ -18,7 +18,7 @@
     <ClInclude Include="src\CompSysPch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ComponentSystem\Scene\Scene.h">
+    <ClInclude Include="src\ComponentSystem\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ComponentSystem\Entity.h">
@@ -38,7 +38,7 @@
     <ClCompile Include="src\CompSysPch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ComponentSystem\Scene\Scene.cpp">
+    <ClCompile Include="src\ComponentSystem\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\ComponentSystem\Transform.cpp">
