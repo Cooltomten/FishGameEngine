@@ -3,6 +3,7 @@
 
 #include "FGE/Asset/ResourceCache.h"
 #include "FGE/Asset/Material.h"
+#include "FGE/Asset/AnimatedMesh.h"
 
 #include "FGE/Rendering/Camera/Camera.h"
 #include "FGE/Rendering/Renderer.h"
@@ -54,12 +55,16 @@ namespace FGE
 		camera->GetTransform().SetPosition({ 0,0,-200 });
 		myScene->SetMainCamera(camera);
 
-		myModelsTest.push_back(ResourceCache::GetAsset("Assets/Meshes/SM_Particle_Chest.fbx"));
+		myChestMesh = ResourceCache::GetAsset<Mesh>("Assets/Meshes/SM_Particle_Chest.fbx");
 		std::shared_ptr<FGE::Material> material = std::make_shared<FGE::Material>();
 		material->SetAlbedo({ 0,0,0.5 });
-		myModelsTest[0]->SetMaterial(material, 0);
+		myChestMesh->SetMaterial(material, 0);
 
-		myTestTransform.SetPosition({ 0,0,0 });
+		myGremlinMesh = ResourceCache::GetAsset<AnimatedMesh>("Assets/Animations/Gremlin/gremlin_sk.fbx");
+		myGremlinMesh->SetMaterial(material, 0);
+
+		myChestTransform.SetPosition({ 0,0,0 });
+		myGremlinTransform.SetPosition({ 200,0,0 });
 	}
 
 	Application::~Application()
@@ -70,7 +75,7 @@ namespace FGE
 	void Application::Run()
 	{
 		myRunning = true;
-		std::shared_ptr<FGE::Material> material = myModelsTest[0]->GetMaterial(0);
+		std::shared_ptr<FGE::Material> material = myChestMesh->GetMaterial(0);
 		while (myRunning)
 		{
 			Window::ProcessMessages();
@@ -88,7 +93,8 @@ namespace FGE
 			float cosValue = 0.5 * (float)cos(myTimer->GetTotalTime() * 3) + 0.5;
 			material->SetAlbedo({ sinValue * cosValue,cosValue,sinValue * sinValue });
 
-			myModelsTest[0]->Render(myTestTransform.GetMatrix());
+			myChestMesh->Render(myChestTransform.GetMatrix());
+			myGremlinMesh->Render(myGremlinTransform.GetMatrix());
 
 
 			myWindow->GetDX11().BeginFrame({ 0.8f,0.4f,0.2f,1 });

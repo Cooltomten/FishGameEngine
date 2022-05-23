@@ -10,32 +10,21 @@
 
 namespace FGE
 {
-	std::unordered_map<std::string, std::shared_ptr<Mesh>> ResourceCache::myAssets;
+	std::unordered_map<std::string, std::shared_ptr<Asset>> ResourceCache::myAssets;
 	std::unique_ptr<FBXImporter> ResourceCache::myFBXImporter;
 
 
 	void ResourceCache::Initialize()
 	{
-		SaveAsset("Cube", CreateUnitCube());
+		SaveAsset(CreateUnitCube());
 	}
 
-	void ResourceCache::SaveAsset(const std::string& aName, std::shared_ptr<Mesh> aModel)
+	void ResourceCache::SaveAsset(std::shared_ptr<Asset> aAsset)
 	{
-		myAssets[aName] = aModel;
+		myAssets[aAsset->GetPath().string()] = aAsset;
 	}
 
-	std::shared_ptr<Mesh> ResourceCache::GetAsset(const std::string& aName)
-	{
-		auto it = myAssets.find(aName);
-		if (it != myAssets.end())
-		{
-			return it->second;
-		}
 
-		myAssets[aName] = myFBXImporter->ImportMesh(aName);
-
-		return myAssets[aName];
-	}
 
 	std::shared_ptr<Mesh> ResourceCache::CreateUnitCube()
 	{
@@ -97,9 +86,10 @@ namespace FGE
 
 		std::shared_ptr<Mesh> mdl = std::make_shared<Mesh>();
 
-		mdl->Init("Cube", { subMesh });
+		mdl->Init({ subMesh });
 
 
+		mdl->SetPath("Cube");
 		return mdl;
 	}
 

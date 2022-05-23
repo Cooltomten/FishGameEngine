@@ -76,7 +76,7 @@ namespace TGA
 			inline void hash_combine(size_t& s, const T& v) const
 			{
 				std::hash<T> h;
-				s^=h(v) + 0x9e3779b9 + (s<< 6) + (s>> 2);
+				s ^= h(v) + 0x9e3779b9 + (s << 6) + (s >> 2);
 			}
 		};
 
@@ -89,57 +89,57 @@ namespace TGA
 		unsigned int GatherMeshes(FbxNode* aNode, std::vector<FbxNode*>& outMeshes)
 		{
 			// For each child of our current node...
-			for(int i = 0; i < aNode->GetChildCount(); i++)
+			for (int i = 0; i < aNode->GetChildCount(); i++)
 			{
-		        // Get the node attribute if it has one, the data that denotes what type this node is.
-		        // If there is no type it's usually just an organizational node (folder).
+				// Get the node attribute if it has one, the data that denotes what type this node is.
+				// If there is no type it's usually just an organizational node (folder).
 				FbxNode* childNode = aNode->GetChild(i);
-		        FbxNodeAttribute* childAttribute = childNode->GetNodeAttribute();
-		        if(!childAttribute)
-		        {
-		            // Even if it's not a valid node, step down since it may contain meshes.
-			        GatherMeshes(childNode, outMeshes);
-		        }            
-		        else
-		        {
-		            // Check if this is a mesh node.
-			        FbxNodeAttribute::EType childAttributeType = childAttribute->GetAttributeType();
-		            if(childAttributeType != FbxNodeAttribute::eMesh)
-		            {
-		                // If it's not, step down and look for meshes underneath.
-			            GatherMeshes(childNode, outMeshes);
-		            }
-		            else
-		            {
-		                // Otherwise gather the node.
-			            outMeshes.push_back(childNode);
-		                GatherMeshes(childNode, outMeshes);
-		            }
-		        }
+				FbxNodeAttribute* childAttribute = childNode->GetNodeAttribute();
+				if (!childAttribute)
+				{
+					// Even if it's not a valid node, step down since it may contain meshes.
+					GatherMeshes(childNode, outMeshes);
+				}
+				else
+				{
+					// Check if this is a mesh node.
+					FbxNodeAttribute::EType childAttributeType = childAttribute->GetAttributeType();
+					if (childAttributeType != FbxNodeAttribute::eMesh)
+					{
+						// If it's not, step down and look for meshes underneath.
+						GatherMeshes(childNode, outMeshes);
+					}
+					else
+					{
+						// Otherwise gather the node.
+						outMeshes.push_back(childNode);
+						GatherMeshes(childNode, outMeshes);
+					}
+				}
 			}
 
-		    // Good idea to return how many meshes we found. Might be useful later.
-		    return static_cast<unsigned int>(outMeshes.size());
+			// Good idea to return how many meshes we found. Might be useful later.
+			return static_cast<unsigned int>(outMeshes.size());
 		}
 
 		int GatherSkeletonInternal(FbxNode* aNode, FBXSkeleton& outSkeleton, std::string& outMessage, int someParentIdx = -1)
 		{
 			// Check if this node is a skeleton type.
-		    int myIdx = someParentIdx;
-		    if (aNode->GetNodeAttribute() && aNode->GetNodeAttribute()->GetAttributeType() && aNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
-		    {
-		        // If it is we'll make a joint and add it to the skeleton.
-		        // It's also important to keep track of the name of the joint
-		        // since some types of data is stored with names instead of IDs.
+			int myIdx = someParentIdx;
+			if (aNode->GetNodeAttribute() && aNode->GetNodeAttribute()->GetAttributeType() && aNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+			{
+				// If it is we'll make a joint and add it to the skeleton.
+				// It's also important to keep track of the name of the joint
+				// since some types of data is stored with names instead of IDs.
 
-    			FBXSkeleton::Bone bone;
-		        bone.Name = aNode->GetName();
-		        bone.Parent = someParentIdx;
+				FBXSkeleton::Bone bone;
+				bone.Name = aNode->GetName();
+				bone.Parent = someParentIdx;
 
-		        outSkeleton.Bones.push_back(bone);
-		        myIdx = static_cast<int>(outSkeleton.Bones.size() - 1ULL);
+				outSkeleton.Bones.push_back(bone);
+				myIdx = static_cast<int>(outSkeleton.Bones.size() - 1ULL);
 
-				if(outSkeleton.BoneNameToIndex.find(bone.Name) != outSkeleton.BoneNameToIndex.end())
+				if (outSkeleton.BoneNameToIndex.find(bone.Name) != outSkeleton.BoneNameToIndex.end())
 				{
 					char stringBuffer[256]{};
 					sprintf_s(stringBuffer, 256, "Found more than one bone with the same name! Name was %s", bone.Name.c_str());
@@ -147,31 +147,31 @@ namespace TGA
 					return -2;
 				}
 
-		        outSkeleton.BoneNameToIndex.insert({ bone.Name, myIdx });
+				outSkeleton.BoneNameToIndex.insert({ bone.Name, myIdx });
 
-		        if(someParentIdx >= 0)
-		        {
-			        outSkeleton.Bones[someParentIdx].Children.push_back(myIdx);
-		        }
-		    }
+				if (someParentIdx >= 0)
+				{
+					outSkeleton.Bones[someParentIdx].Children.push_back(myIdx);
+				}
+			}
 
-		    // And keep stepping down to gather all children.
-		    for (int i = 0; i < aNode->GetChildCount(); i++)
-		    {
-		        const int result = GatherSkeletonInternal(aNode->GetChild(i), outSkeleton, outMessage, myIdx);
-				if(result != 0)
-		        {
-			        return result;
-		        }
-		    }
+			// And keep stepping down to gather all children.
+			for (int i = 0; i < aNode->GetChildCount(); i++)
+			{
+				const int result = GatherSkeletonInternal(aNode->GetChild(i), outSkeleton, outMessage, myIdx);
+				if (result != 0)
+				{
+					return result;
+				}
+			}
 
-		    return 0;
+			return 0;
 		}
 
 		int GatherSkeletonData(FbxNode* aNode, FBXSkeleton& outSkeleton, std::string& outMessage, int someParentIdx = -1)
 		{
 			GatherSkeletonInternal(aNode, outSkeleton, outMessage, someParentIdx);
-			if(outMessage.empty() && outSkeleton.Bones.empty())
+			if (outMessage.empty() && outSkeleton.Bones.empty())
 			{
 				outMessage = "No skeleton found";
 				return -1;
@@ -182,64 +182,64 @@ namespace TGA
 
 		void GetElementMappingdata(FbxLayerElementTemplate<FbxVector4>* anElement, int aFbxContolPointIdx, int aPolygonIdx, FbxVector4& outData)
 		{
-			switch(anElement->GetMappingMode())
+			switch (anElement->GetMappingMode())
 			{
 			case FbxGeometryElement::eByControlPoint:
-			    {
-			        switch(anElement->GetReferenceMode())
-			        {
-			        case FbxGeometryElement::eDirect:
-			            {
-			                outData.mData[0] = anElement->GetDirectArray().GetAt(aFbxContolPointIdx).mData[0];
-			                outData.mData[1] = anElement->GetDirectArray().GetAt(aFbxContolPointIdx).mData[1];
-			                outData.mData[2] = anElement->GetDirectArray().GetAt(aFbxContolPointIdx).mData[2];
-			            }
-			            break;
-			        case FbxGeometryElement::eIndexToDirect:
-			            {
-			                const int Idx = anElement->GetIndexArray().GetAt(aFbxContolPointIdx);
-			                outData.mData[0] = anElement->GetDirectArray().GetAt(Idx).mData[0];
-			                outData.mData[1] = anElement->GetDirectArray().GetAt(Idx).mData[1];
-			                outData.mData[2] = anElement->GetDirectArray().GetAt(Idx).mData[2];
-			            }
-			            break;
-			        default:
-			            throw std::exception("Invalid Reference Mode!");
-			        }
-			    }
-			    break;
+			{
+				switch (anElement->GetReferenceMode())
+				{
+				case FbxGeometryElement::eDirect:
+				{
+					outData.mData[0] = anElement->GetDirectArray().GetAt(aFbxContolPointIdx).mData[0];
+					outData.mData[1] = anElement->GetDirectArray().GetAt(aFbxContolPointIdx).mData[1];
+					outData.mData[2] = anElement->GetDirectArray().GetAt(aFbxContolPointIdx).mData[2];
+				}
+				break;
+				case FbxGeometryElement::eIndexToDirect:
+				{
+					const int Idx = anElement->GetIndexArray().GetAt(aFbxContolPointIdx);
+					outData.mData[0] = anElement->GetDirectArray().GetAt(Idx).mData[0];
+					outData.mData[1] = anElement->GetDirectArray().GetAt(Idx).mData[1];
+					outData.mData[2] = anElement->GetDirectArray().GetAt(Idx).mData[2];
+				}
+				break;
+				default:
+					throw std::exception("Invalid Reference Mode!");
+				}
+			}
+			break;
 
 			case FbxGeometryElement::eByPolygonVertex:
-			    {
-			        switch(anElement->GetReferenceMode())
-			        {
-			        case FbxGeometryElement::eDirect:
-			            {
-			                outData.mData[0] = anElement->GetDirectArray().GetAt(aPolygonIdx).mData[0];
-			                outData.mData[1] = anElement->GetDirectArray().GetAt(aPolygonIdx).mData[1];
-			                outData.mData[2] = anElement->GetDirectArray().GetAt(aPolygonIdx).mData[2];
-			            }
-			            break;
-			        case FbxGeometryElement::eIndexToDirect:
-			            {
-			                const int Idx = anElement->GetIndexArray().GetAt(aPolygonIdx);
-			                outData.mData[0] = anElement->GetDirectArray().GetAt(Idx).mData[0];
-			                outData.mData[1] = anElement->GetDirectArray().GetAt(Idx).mData[1];
-			                outData.mData[2] = anElement->GetDirectArray().GetAt(Idx).mData[2];
-			            }
-			            break;
-			        default:
-			            throw std::exception("Invalid Reference Mode!");
-			        }
-			    }
-			    break;
+			{
+				switch (anElement->GetReferenceMode())
+				{
+				case FbxGeometryElement::eDirect:
+				{
+					outData.mData[0] = anElement->GetDirectArray().GetAt(aPolygonIdx).mData[0];
+					outData.mData[1] = anElement->GetDirectArray().GetAt(aPolygonIdx).mData[1];
+					outData.mData[2] = anElement->GetDirectArray().GetAt(aPolygonIdx).mData[2];
+				}
+				break;
+				case FbxGeometryElement::eIndexToDirect:
+				{
+					const int Idx = anElement->GetIndexArray().GetAt(aPolygonIdx);
+					outData.mData[0] = anElement->GetDirectArray().GetAt(Idx).mData[0];
+					outData.mData[1] = anElement->GetDirectArray().GetAt(Idx).mData[1];
+					outData.mData[2] = anElement->GetDirectArray().GetAt(Idx).mData[2];
+				}
+				break;
+				default:
+					throw std::exception("Invalid Reference Mode!");
+				}
+			}
+			break;
 			}
 		}
 
 		Matrix4x4f ConvertFBXMatrix(fbxsdk::FbxAMatrix anFbxMatrix)
 		{
 			Matrix4x4f result = Matrix4x4f::CreateIdentityMatrix();
-			
+
 			for (int i = 0; i < 4; i++)
 			{
 				// The FBX Matrix might need a Transpose!
@@ -256,7 +256,7 @@ namespace TGA
 		void ConvertFBXMatrixToArray(fbxsdk::FbxAMatrix anFbxMatrix, float anArray[16])
 		{
 			Matrix4x4f result = Matrix4x4f::CreateIdentityMatrix();
-			
+
 			for (int i = 0; i < 4; i++)
 			{
 				// The FBX Matrix might need a Transpose!
@@ -274,8 +274,8 @@ namespace TGA
 		{
 			char buffer[256]{};
 			sprintf_s(buffer, 256, "M11: \t%.3f\t M12: \t%.3f\t M13: \t%.3f\t M14: \t%.3f\t \nM21: \t%.3f\t M22: \t%.3f\t M23: \t%.3f\t M24: \t%.3f\t \nM31: \t%.3f\t M32: \t%.3f\t M33: \t%.3f\t M34: \t%.3f\t \nM41: \t%.3f\t M42: \t%.3f\t M43: \t%.3f\t M44: \t%.3f\t"
-				,matrix.Data[0], matrix.Data[1],matrix.Data[2],matrix.Data[3],matrix.Data[4],matrix.Data[5],matrix.Data[6], matrix.Data[7]
-				,matrix.Data[8],matrix.Data[9],matrix.Data[10],matrix.Data[11],matrix.Data[12],matrix.Data[13],matrix.Data[14],matrix.Data[15]);
+				, matrix.Data[0], matrix.Data[1], matrix.Data[2], matrix.Data[3], matrix.Data[4], matrix.Data[5], matrix.Data[6], matrix.Data[7]
+				, matrix.Data[8], matrix.Data[9], matrix.Data[10], matrix.Data[11], matrix.Data[12], matrix.Data[13], matrix.Data[14], matrix.Data[15]);
 
 			return buffer;
 		}
@@ -295,7 +295,7 @@ namespace TGA
 		}
 
 	public:
-		static Internals& Get() { static Internals theInstance;  return theInstance;  }
+		static Internals& Get() { static Internals theInstance;  return theInstance; }
 
 		FbxManager* fbxManager = nullptr;
 		FbxIOSettings* fbxIOSettings = nullptr;
@@ -316,49 +316,49 @@ namespace TGA
 		// Used to denote a local error not detectable via FbxStatus.
 		bool bImporterError = false;
 
-		if(!fbxImporter->Initialize(someFilePath.c_str(), -1, Internals::Get().fbxIOSettings))
+		if (!fbxImporter->Initialize(someFilePath.c_str(), -1, Internals::Get().fbxIOSettings))
 		{
 			const FbxStatus& Status = fbxImporter->GetStatus();
 			myLastError = Status.GetErrorString();
 			fbxImporter->Destroy();
 			return false;
-		}			
+		}
 
-		if(!fbxImporter->IsFBX())
+		if (!fbxImporter->IsFBX())
 		{
 			const FbxStatus& Status = fbxImporter->GetStatus();
 			myLastError = Status.GetErrorString();
 			fbxImporter->Destroy();
 			return false;
-		}			
+		}
 
 		FbxScene* fbxScene = FbxScene::Create(Internals::Get().fbxManager, "The Scene");
 
-		if(fbxImporter->Import(fbxScene))
+		if (fbxImporter->Import(fbxScene))
 		{
 			fbxScene->ConnectMaterials();
 
-			if(!Internals::Get().fbxConverter.Triangulate(fbxScene, true, true))
-	        {
-		        // Failed to use the faster legacy method so try to use the new method
+			if (!Internals::Get().fbxConverter.Triangulate(fbxScene, true, true))
+			{
+				// Failed to use the faster legacy method so try to use the new method
 				DebugMessage("Model failed quick Triangulation, using advanced (slower).");
-	            Internals::Get().fbxConverter.Triangulate(fbxScene, true, false);
-	        }
+				Internals::Get().fbxConverter.Triangulate(fbxScene, true, false);
+			}
 
 			std::vector<FbxNode*> mdlMeshNodes;
 			const unsigned int numSceneMaterials = fbxScene->GetMaterialCount();
 			mdlMeshNodes.reserve(numSceneMaterials);
-	        const unsigned int numMeshes = FBX::GatherMeshes(fbxScene->GetRootNode(), mdlMeshNodes);	        
+			const unsigned int numMeshes = FBX::GatherMeshes(fbxScene->GetRootNode(), mdlMeshNodes);
 
-			for(FbxNode* mdlMeshNode : mdlMeshNodes)
+			for (FbxNode* mdlMeshNode : mdlMeshNodes)
 			{
 				FbxMesh* fbxMesh = mdlMeshNode->GetMesh();
-				
-				if(fbxMesh->GetElementBinormalCount() == 0 || fbxMesh->GetElementTangentCount() == 0)
+
+				if (fbxMesh->GetElementBinormalCount() == 0 || fbxMesh->GetElementTangentCount() == 0)
 				{
-				    bool result = fbxMesh->GenerateTangentsData(0, true, false);
+					bool result = fbxMesh->GenerateTangentsData(0, true, false);
 					// This shouldn't explode since result only returns false if there is data and overwrite is false.
-				    assert(result);
+					assert(result);
 				}
 			}
 
@@ -370,7 +370,7 @@ namespace TGA
 			FBXSkeleton mdlSkeleton;
 			bool hasBones = false;
 			std::string gatherBonesMessage;
-			switch(FBX::GatherSkeletonData(fbxScene->GetRootNode(), mdlSkeleton, gatherBonesMessage))
+			switch (FBX::GatherSkeletonData(fbxScene->GetRootNode(), mdlSkeleton, gatherBonesMessage))
 			{
 			case 0: // A skeleton was found
 				hasBones = true;
@@ -384,14 +384,14 @@ namespace TGA
 				break;
 			}
 
-			if(!bImporterError)
+			if (!bImporterError)
 			{
 				std::unordered_multimap<unsigned int, std::pair<size_t, float>> ControlPointWeights;
 
 				std::vector<FBXModel::FBXMesh> mdlMeshData;
 				mdlMeshData.reserve(numMeshes * numSceneMaterials);
 
-				for(FbxNode* mdlMeshNode : mdlMeshNodes)
+				for (FbxNode* mdlMeshNode : mdlMeshNodes)
 				{
 					const unsigned int numMeshMaterials = mdlMeshNode->GetMaterialCount();
 					FbxMesh* fbxMesh = mdlMeshNode->GetMesh();
@@ -399,69 +399,69 @@ namespace TGA
 					if (hasBones)
 					{
 						// Load the FBX root transform. This is something provided by the modeling software.
-		                // All we need to do is assemble it.
-		                const FbxVector4 fbxTranslation = mdlMeshNode->GetGeometricTranslation(FbxNode::eSourcePivot);
-		                const FbxVector4 fbxRotation = mdlMeshNode->GetGeometricRotation(FbxNode::eSourcePivot);
-		                const FbxVector4 fbxScale = mdlMeshNode->GetGeometricScaling(FbxNode::eSourcePivot);
-		                const fbxsdk::FbxAMatrix rootTransform = FbxAMatrix(fbxTranslation, fbxRotation, fbxScale);
+						// All we need to do is assemble it.
+						const FbxVector4 fbxTranslation = mdlMeshNode->GetGeometricTranslation(FbxNode::eSourcePivot);
+						const FbxVector4 fbxRotation = mdlMeshNode->GetGeometricRotation(FbxNode::eSourcePivot);
+						const FbxVector4 fbxScale = mdlMeshNode->GetGeometricScaling(FbxNode::eSourcePivot);
+						const fbxsdk::FbxAMatrix rootTransform = FbxAMatrix(fbxTranslation, fbxRotation, fbxScale);
 
-		                // The FBX world has many different kinds of deformers. They can be skeleton bones but
-		                // they can also be several other things such as forces, effects, scripts, warps, what not.
-		                // The deformer that deforms a mesh based on bones is called Skin.
-		                for (int deformIdx = 0; deformIdx < fbxMesh->GetDeformerCount(); deformIdx++)
-		                {
-		                    FbxSkin* fbxSkin = reinterpret_cast<FbxSkin*>(fbxMesh->GetDeformer(deformIdx, FbxDeformer::eSkin));
+						// The FBX world has many different kinds of deformers. They can be skeleton bones but
+						// they can also be several other things such as forces, effects, scripts, warps, what not.
+						// The deformer that deforms a mesh based on bones is called Skin.
+						for (int deformIdx = 0; deformIdx < fbxMesh->GetDeformerCount(); deformIdx++)
+						{
+							FbxSkin* fbxSkin = reinterpret_cast<FbxSkin*>(fbxMesh->GetDeformer(deformIdx, FbxDeformer::eSkin));
 
-		                    // If it's not a skin keep looking.
-		                    if (!fbxSkin)
-		                        continue;
+							// If it's not a skin keep looking.
+							if (!fbxSkin)
+								continue;
 
-		                    // The Skin deform is made up out of skin clusters. These are for all intents
-		                    // and purposes the joints that affect that section of the skin.
-		                    for (int clusterIdx = 0; clusterIdx < fbxSkin->GetClusterCount(); clusterIdx++)
-		                    {
-		                        // So we go through each cluster.
-		                        FbxCluster* fbxCluster = fbxSkin->GetCluster(clusterIdx);
+							// The Skin deform is made up out of skin clusters. These are for all intents
+							// and purposes the joints that affect that section of the skin.
+							for (int clusterIdx = 0; clusterIdx < fbxSkin->GetClusterCount(); clusterIdx++)
+							{
+								// So we go through each cluster.
+								FbxCluster* fbxCluster = fbxSkin->GetCluster(clusterIdx);
 
-		                        // We get the transform of the cluster that was present at skin binding time.
-		                        // This is the "resting pose" if you like.
-		                        fbxsdk::FbxAMatrix meshBindTransform;
-		                        fbxCluster->GetTransformMatrix(meshBindTransform);
+								// We get the transform of the cluster that was present at skin binding time.
+								// This is the "resting pose" if you like.
+								fbxsdk::FbxAMatrix meshBindTransform;
+								fbxCluster->GetTransformMatrix(meshBindTransform);
 
-		                        // We also need the link transform. In the case of a Skin it will be the
-		                        // transform to go from local Joint Space to World Space.
-		                        fbxsdk::FbxAMatrix linkTransform;
-		                        fbxCluster->GetTransformLinkMatrix(linkTransform);
-		                        
-		                        // And finally assemble the Bind Pose Transform.
-		                        // This is the default position of the vertices.
-		                        fbxsdk::FbxAMatrix bindPoseInverseTransform = linkTransform.Inverse() * meshBindTransform * rootTransform;
-		                        // Remember to do this or you will get very interesting results :).
-		                        bindPoseInverseTransform = bindPoseInverseTransform.Transpose();
+								// We also need the link transform. In the case of a Skin it will be the
+								// transform to go from local Joint Space to World Space.
+								fbxsdk::FbxAMatrix linkTransform;
+								fbxCluster->GetTransformLinkMatrix(linkTransform);
 
-		                        // The Link in the skin cluster is the actual joint.
-		                        // Because we already collected all joints we should be able to find it using
-		                        // the acceleration map in the Skeleton.
-		                        size_t jointIndex = mdlSkeleton.BoneNameToIndex[fbxCluster->GetLink()->GetName()];
-		                        
-		                        // Store the bind pose on the joint so we can access it later.
+								// And finally assemble the Bind Pose Transform.
+								// This is the default position of the vertices.
+								fbxsdk::FbxAMatrix bindPoseInverseTransform = linkTransform.Inverse() * meshBindTransform * rootTransform;
+								// Remember to do this or you will get very interesting results :).
+								bindPoseInverseTransform = bindPoseInverseTransform.Transpose();
+
+								// The Link in the skin cluster is the actual joint.
+								// Because we already collected all joints we should be able to find it using
+								// the acceleration map in the Skeleton.
+								size_t jointIndex = mdlSkeleton.BoneNameToIndex[fbxCluster->GetLink()->GetName()];
+
+								// Store the bind pose on the joint so we can access it later.
 								FBX::ConvertFBXMatrixToArray(bindPoseInverseTransform, mdlSkeleton.Bones[jointIndex].BindPoseInverse.Data);
 
-		                        // Here comes some more control point stuff.
-		                        // We need to collect all the control points that this skin cluster affects.
-		                        // And for those we need to store which joint affects it and its weights.
+								// Here comes some more control point stuff.
+								// We need to collect all the control points that this skin cluster affects.
+								// And for those we need to store which joint affects it and its weights.
 								for (int i = 0; i < fbxCluster->GetControlPointIndicesCount(); i++)
-		                        {
-		                            const unsigned int c = fbxCluster->GetControlPointIndices()[i];
-		                            const float w = static_cast<float>(fbxCluster->GetControlPointWeights()[i]);
-		                            // This inserts into a multimap.
-		                            // c - control point index.
-		                            // jointIndex - self explanatory.
-		                            // w - the weight for this joint.
-		                            ControlPointWeights.insert({ c, { jointIndex, w }});
-		                        }
-		                    }
-		                }
+								{
+									const unsigned int c = fbxCluster->GetControlPointIndices()[i];
+									const float w = static_cast<float>(fbxCluster->GetControlPointWeights()[i]);
+									// This inserts into a multimap.
+									// c - control point index.
+									// jointIndex - self explanatory.
+									// w - the weight for this joint.
+									ControlPointWeights.insert({ c, { jointIndex, w } });
+								}
+							}
+						}
 					}
 
 					// DB: Removed 220419 - Generated Bi/Tangents are in the wrong direction if you do this after running DeepConvert.
@@ -475,34 +475,34 @@ namespace TGA
 					const bool bHasMaterials = mdlMeshNode->GetMaterialCount() != 0;
 					FbxSurfaceMaterial* currentSceneMaterial = nullptr;
 
-					for(int meshMaterialIndex = 0; meshMaterialIndex < mdlMeshNode->GetMaterialCount() || meshMaterialIndex == 0; meshMaterialIndex++)
+					for (int meshMaterialIndex = 0; meshMaterialIndex < mdlMeshNode->GetMaterialCount() || meshMaterialIndex == 0; meshMaterialIndex++)
 					{
 						FBXModel::FBXMesh meshData = {};
 						meshData.MeshName = mdlMeshNode->GetName();
 
-            			if(bHasMaterials)
-		                {
-			                for( int sceneMaterialIndex = 0; sceneMaterialIndex < fbxScene->GetMaterialCount(); sceneMaterialIndex++)
-			                {
-		                        FbxSurfaceMaterial* sceneMaterial = fbxScene->GetMaterial(sceneMaterialIndex);
-		                        FbxSurfaceMaterial* meshNodeMaterial = mdlMeshNode->GetMaterial(meshMaterialIndex);
-				                if(sceneMaterial == meshNodeMaterial)
-				                {
-		                            currentSceneMaterial = sceneMaterial;
-					                meshData.MaterialIndex = sceneMaterialIndex;
+						if (bHasMaterials)
+						{
+							for (int sceneMaterialIndex = 0; sceneMaterialIndex < fbxScene->GetMaterialCount(); sceneMaterialIndex++)
+							{
+								FbxSurfaceMaterial* sceneMaterial = fbxScene->GetMaterial(sceneMaterialIndex);
+								FbxSurfaceMaterial* meshNodeMaterial = mdlMeshNode->GetMaterial(meshMaterialIndex);
+								if (sceneMaterial == meshNodeMaterial)
+								{
+									currentSceneMaterial = sceneMaterial;
+									meshData.MaterialIndex = sceneMaterialIndex;
 									meshData.MaterialName = sceneMaterial->GetName();
-		                            break;
-				                }
-			                }
-		                }
-		                else
-		                {
-			                meshData.MaterialIndex = 0;
+									break;
+								}
+							}
+						}
+						else
+						{
+							meshData.MaterialIndex = 0;
 							meshData.MaterialName = "";
-		                }
+						}
 
 						FbxLayerElementMaterial* fbxElementMaterial = fbxMesh->GetElementMaterial();
-						FbxLayerElement::EMappingMode elementMappingMode =  fbxElementMaterial->GetMappingMode();
+						FbxLayerElement::EMappingMode elementMappingMode = fbxElementMaterial->GetMappingMode();
 
 						const int fbxMeshPolygonCount = fbxMesh->GetPolygonCount();
 
@@ -514,22 +514,22 @@ namespace TGA
 						unsigned int IndexCounter = 0;
 						VertexDuplicateAccelMap.reserve(meshData.Vertices.capacity());
 
-						for(int p = 0; p < fbxMeshPolygonCount; p++)
+						for (int p = 0; p < fbxMeshPolygonCount; p++)
 						{
-							if(bHasMaterials)
-		                    {
-		                        // This is the index of the materials in the mesh element array.
-		                        // It doesn't always correspond to the scene material list since the first
-		                        // material here might be material n in the scene.
-		                        const int IndexAtP = fbxElementMaterial->GetIndexArray().GetAt(p);
-		                        FbxSurfaceMaterial* polygonMaterial = mdlMeshNode->GetMaterial(IndexAtP);
-		                        if(currentSceneMaterial != polygonMaterial)
-		                        {
-			                        continue;
-		                        }
-		                    }
+							if (bHasMaterials)
+							{
+								// This is the index of the materials in the mesh element array.
+								// It doesn't always correspond to the scene material list since the first
+								// material here might be material n in the scene.
+								const int IndexAtP = fbxElementMaterial->GetIndexArray().GetAt(p);
+								FbxSurfaceMaterial* polygonMaterial = mdlMeshNode->GetMaterial(IndexAtP);
+								if (currentSceneMaterial != polygonMaterial)
+								{
+									continue;
+								}
+							}
 
-							for(int v = 0; v < 3; v++)
+							for (int v = 0; v < 3; v++)
 							{
 								const int fbxControlPtIndex = fbxMesh->GetPolygonVertex(p, v);
 								const FbxVector4 fbxVxPos = fbxMesh->GetControlPointAt(fbxControlPtIndex);
@@ -538,11 +538,11 @@ namespace TGA
 								const int fbxNumUVs = fbxMesh->GetElementUVCount();
 
 								const int fbxTextureUVIndex = fbxMesh->GetTextureUVIndex(p, v);
-			                    for(int uv = 0; uv < fbxNumUVs && uv < 4; uv++)
-			                    {
-				                    FbxGeometryElementUV* fbxUvElement = fbxMesh->GetElementUV(uv);
+								for (int uv = 0; uv < fbxNumUVs && uv < 4; uv++)
+								{
+									FbxGeometryElementUV* fbxUvElement = fbxMesh->GetElementUV(uv);
 									fbxVxUVs[uv] = fbxUvElement->GetDirectArray().GetAt(fbxTextureUVIndex);
-			                    }
+								}
 
 								const int polygonIndex = p * 3 + v;
 
@@ -551,7 +551,7 @@ namespace TGA
 								FBX::GetElementMappingdata(fbxNormalElement, fbxControlPtIndex, polygonIndex, fbxNormal);
 
 								FbxVector4 fbxTangent;
-			                    FbxGeometryElementTangent* fbxTangentElement = fbxMesh->GetElementTangent(0);
+								FbxGeometryElementTangent* fbxTangentElement = fbxMesh->GetElementTangent(0);
 								FBX::GetElementMappingdata(fbxTangentElement, fbxControlPtIndex, polygonIndex, fbxTangent);
 
 								FbxVector4 fbxBinormal;
@@ -559,149 +559,149 @@ namespace TGA
 								FBX::GetElementMappingdata(fbxBinormalElement, fbxControlPtIndex, polygonIndex, fbxBinormal);
 
 								// BUG: FBX SDK 2020 doesn't handle winding for these for some reason. Even when we
-		                        // BUG: use DeepConvert. This has been reported and is on their fix list. Be aware
-		                        // BUG: of this if there's an SDK upgrade and things look weird.
+								// BUG: use DeepConvert. This has been reported and is on their fix list. Be aware
+								// BUG: of this if there's an SDK upgrade and things look weird.
 
-		                        int windCorrection;
-		                        switch(polygonIndex)
-				                {
-		                			case 1:
-		                                windCorrection = 2;
-										break;
-		                			case 2:
-		                                windCorrection = 1;
-										break;
-									default:
-		                                windCorrection = polygonIndex;
-										break;
-				                }
+								int windCorrection;
+								switch (polygonIndex)
+								{
+								case 1:
+									windCorrection = 2;
+									break;
+								case 2:
+									windCorrection = 1;
+									break;
+								default:
+									windCorrection = polygonIndex;
+									break;
+								}
 
 								const int windedPolygonIndex = p * 3 + windCorrection;
 
 								FbxColor fbxColors[4];
-			                    const int fbxNumVxColorChannels = fbxMesh->GetElementVertexColorCount();
-			                    for(int col = 0; col < fbxNumVxColorChannels && col < 4; col++)
-				                {
-					                FbxGeometryElementVertexColor* colElement = fbxMesh->GetElementVertexColor(col);
-									switch(colElement->GetMappingMode())
+								const int fbxNumVxColorChannels = fbxMesh->GetElementVertexColorCount();
+								for (int col = 0; col < fbxNumVxColorChannels && col < 4; col++)
+								{
+									FbxGeometryElementVertexColor* colElement = fbxMesh->GetElementVertexColor(col);
+									switch (colElement->GetMappingMode())
 									{
 									case FbxGeometryElement::eByControlPoint:
-									    {
-									        switch(fbxNormalElement->GetReferenceMode())
-									        {
-									        case FbxGeometryElement::eDirect:
-									            {
-									                fbxColors[col] = colElement->GetDirectArray().GetAt(fbxControlPtIndex);
-									            }
-									            break;
-									        case FbxGeometryElement::eIndexToDirect:
-									            {
-									                const int Idx = colElement->GetIndexArray().GetAt(fbxControlPtIndex);
-									                fbxColors[col] = colElement->GetDirectArray().GetAt(Idx);
-									            }
-									            break;
-									        default:
-									            throw std::exception("Invalid Reference Mode!");
-									        }
-									    }
-									    break;
+									{
+										switch (fbxNormalElement->GetReferenceMode())
+										{
+										case FbxGeometryElement::eDirect:
+										{
+											fbxColors[col] = colElement->GetDirectArray().GetAt(fbxControlPtIndex);
+										}
+										break;
+										case FbxGeometryElement::eIndexToDirect:
+										{
+											const int Idx = colElement->GetIndexArray().GetAt(fbxControlPtIndex);
+											fbxColors[col] = colElement->GetDirectArray().GetAt(Idx);
+										}
+										break;
+										default:
+											throw std::exception("Invalid Reference Mode!");
+										}
+									}
+									break;
 
 									case FbxGeometryElement::eByPolygonVertex:
-									    {
-									        switch(colElement->GetReferenceMode())
-									        {
-									        case FbxGeometryElement::eDirect:
-									            {
-													fbxColors[col] = colElement->GetDirectArray().GetAt(windedPolygonIndex);
-									            }
-									            break;
-									        case FbxGeometryElement::eIndexToDirect:
-									            {
-									                const int Idx = colElement->GetIndexArray().GetAt(windedPolygonIndex);
-													fbxColors[col] = colElement->GetDirectArray().GetAt(Idx);
-									            }
-									            break;
-									        default:
-									            throw std::exception("Invalid Reference Mode!");
-									        }
-									    }
-									    break;
+									{
+										switch (colElement->GetReferenceMode())
+										{
+										case FbxGeometryElement::eDirect:
+										{
+											fbxColors[col] = colElement->GetDirectArray().GetAt(windedPolygonIndex);
+										}
+										break;
+										case FbxGeometryElement::eIndexToDirect:
+										{
+											const int Idx = colElement->GetIndexArray().GetAt(windedPolygonIndex);
+											fbxColors[col] = colElement->GetDirectArray().GetAt(Idx);
+										}
+										break;
+										default:
+											throw std::exception("Invalid Reference Mode!");
+										}
 									}
-				                }
+									break;
+									}
+								}
 
 								FBXVertex vx =
 								{
 									static_cast<float>(fbxVxPos[0]),
-			                        static_cast<float>(fbxVxPos[1]),
-			                        static_cast<float>(fbxVxPos[2]),
-			                        static_cast<float>(fbxNormal[0]),
-			                        static_cast<float>(fbxNormal[1]),
-			                        static_cast<float>(fbxNormal[2]),
-			                        static_cast<float>(fbxTangent[0]),
-			                        static_cast<float>(fbxTangent[1]),
-			                        static_cast<float>(fbxTangent[2]),
-			                        static_cast<float>(fbxBinormal[0]),
-			                        static_cast<float>(fbxBinormal[1]),
-			                        static_cast<float>(fbxBinormal[2]),
-			                        static_cast<float>(fbxColors[0][0]),
-			                        static_cast<float>(fbxColors[0][1]),
-			                        static_cast<float>(fbxColors[0][2]),
-			                        static_cast<float>(fbxColors[0][3]),
-			                        static_cast<float>(fbxVxUVs[0][0]),
-			                        1 - static_cast<float>(fbxVxUVs[0][1])
+									static_cast<float>(fbxVxPos[1]),
+									static_cast<float>(fbxVxPos[2]),
+									static_cast<float>(fbxNormal[0]),
+									static_cast<float>(fbxNormal[1]),
+									static_cast<float>(fbxNormal[2]),
+									static_cast<float>(fbxTangent[0]),
+									static_cast<float>(fbxTangent[1]),
+									static_cast<float>(fbxTangent[2]),
+									static_cast<float>(fbxBinormal[0]),
+									static_cast<float>(fbxBinormal[1]),
+									static_cast<float>(fbxBinormal[2]),
+									static_cast<float>(fbxColors[0][0]),
+									static_cast<float>(fbxColors[0][1]),
+									static_cast<float>(fbxColors[0][2]),
+									static_cast<float>(fbxColors[0][3]),
+									static_cast<float>(fbxVxUVs[0][0]),
+									1 - static_cast<float>(fbxVxUVs[0][1])
 								};
 
-								unsigned int BoneIDs[] = {0, 0, 0, 0};
-			                    float BoneWeights[] = { 0, 0, 0, 0};
-			                    // Get animation weight data
-			                    if(hasBones)
-			                    {
-			                        // Since we're making a bit of a complex iteration we need to define the iterator.
-			                        // It's a lot less to type that way.
-			                        typedef std::unordered_multimap<unsigned int, std::pair<size_t, float>>::iterator MMIter;
+								unsigned int BoneIDs[] = { 0, 0, 0, 0 };
+								float BoneWeights[] = { 0, 0, 0, 0 };
+								// Get animation weight data
+								if (hasBones)
+								{
+									// Since we're making a bit of a complex iteration we need to define the iterator.
+									// It's a lot less to type that way.
+									typedef std::unordered_multimap<unsigned int, std::pair<size_t, float>>::iterator MMIter;
 
-			                        // Then we use equal range to get all the data stored for this specific control point.
-			                        std::pair<MMIter, MMIter> values = ControlPointWeights.equal_range(fbxControlPtIndex);
+									// Then we use equal range to get all the data stored for this specific control point.
+									std::pair<MMIter, MMIter> values = ControlPointWeights.equal_range(fbxControlPtIndex);
 
-			                        // This idx is to loop on the 4 indices of ID and Weight.
+									// This idx is to loop on the 4 indices of ID and Weight.
 									int idx = 0;
-									for(MMIter it = values.first; it != values.second && idx < 4; ++it)
-			                        {
-				                        std::pair<size_t, float> BoneAndWeight = it->second;
-			                            BoneIDs[idx] = static_cast<unsigned>(BoneAndWeight.first);
-			                            BoneWeights[idx] = BoneAndWeight.second;
-                        				idx++;
-			                        }
-			                    }
+									for (MMIter it = values.first; it != values.second && idx < 4; ++it)
+									{
+										std::pair<size_t, float> BoneAndWeight = it->second;
+										BoneIDs[idx] = static_cast<unsigned>(BoneAndWeight.first);
+										BoneWeights[idx] = BoneAndWeight.second;
+										idx++;
+									}
+								}
 
 								vx.BoneIDs[0] = BoneIDs[0];
 								vx.BoneIDs[1] = BoneIDs[1];
 								vx.BoneIDs[2] = BoneIDs[2];
 								vx.BoneIDs[3] = BoneIDs[3];
 
-				                vx.BoneWeights[0] = BoneWeights[0];
+								vx.BoneWeights[0] = BoneWeights[0];
 								vx.BoneWeights[1] = BoneWeights[1];
 								vx.BoneWeights[2] = BoneWeights[2];
 								vx.BoneWeights[3] = BoneWeights[3];
 
-			                    // A drawback of using control points is that we MAY get duplicate vertices.
-			                    // This means we'll need to compare and ensure that it is a unique vert.
+								// A drawback of using control points is that we MAY get duplicate vertices.
+								// This means we'll need to compare and ensure that it is a unique vert.
 								FBX::VertexHash Hasher;
-			                    size_t hash = Hasher(vx);
-			                    if(VertexDuplicateAccelMap.find(hash) == VertexDuplicateAccelMap.end())
-			                    {
-			                        VertexDuplicateAccelMap[hash] = { /*{ vx },*/ IndexCounter, hash };
-			                        meshData.Vertices.push_back(vx);
-			                        meshData.Indices.push_back(IndexCounter++);
-			                    }
-			                    else
-			                    {
-			                        meshData.Indices.push_back(VertexDuplicateAccelMap[hash].Idx);
-			                    }
+								size_t hash = Hasher(vx);
+								if (VertexDuplicateAccelMap.find(hash) == VertexDuplicateAccelMap.end())
+								{
+									VertexDuplicateAccelMap[hash] = { /*{ vx },*/ IndexCounter, hash };
+									meshData.Vertices.push_back(vx);
+									meshData.Indices.push_back(IndexCounter++);
+								}
+								else
+								{
+									meshData.Indices.push_back(VertexDuplicateAccelMap[hash].Idx);
+								}
 							}
 						}
 
-						if(!meshData.Vertices.empty())
+						if (!meshData.Vertices.empty())
 						{
 							mdlMeshData.push_back(meshData);
 						}
@@ -712,7 +712,7 @@ namespace TGA
 					ControlPointWeights.clear();
 				}
 
-				if(mdlMeshData.empty())
+				if (mdlMeshData.empty())
 				{
 					myLastError = "No mesh data was found!";
 					bImporterError = true;
@@ -721,14 +721,14 @@ namespace TGA
 				{
 					outModel.Name = someFilePath;
 					outModel.Meshes = std::move(mdlMeshData);
-					outModel.Skeleton = std::move(mdlSkeleton);		
+					outModel.Skeleton = std::move(mdlSkeleton);
 				}
 			}
 		}
 
 		const FbxStatus& Status = fbxImporter->GetStatus();
 
-		if(Status.Error())
+		if (Status.Error())
 			myLastError = Status.GetErrorString();
 		else if (!bImporterError)
 			myLastError = "Success";
@@ -746,15 +746,15 @@ namespace TGA
 	{
 		FbxImporter* fbxImporter = FbxImporter::Create(Internals::Get().fbxManager, "");
 
-		if(!fbxImporter->Initialize(someFilePath.c_str(), -1, Internals::Get().fbxIOSettings))
+		if (!fbxImporter->Initialize(someFilePath.c_str(), -1, Internals::Get().fbxIOSettings))
 		{
 			const FbxStatus& Status = fbxImporter->GetStatus();
 			myLastError = Status.GetErrorString();
 			fbxImporter->Destroy();
 			return false;
-		}			
+		}
 
-		if(!fbxImporter->IsFBX())
+		if (!fbxImporter->IsFBX())
 		{
 			const FbxStatus& Status = fbxImporter->GetStatus();
 			myLastError = Status.GetErrorString();
@@ -764,16 +764,16 @@ namespace TGA
 
 		FbxScene* fbxScene = FbxScene::Create(Internals::Get().fbxManager, "The Scene");
 
-		if(fbxImporter->Import(fbxScene))
+		if (fbxImporter->Import(fbxScene))
 		{
 			std::vector<FbxNode*> mdlMeshNodes;
-	        const unsigned int numMeshes = FBX::GatherMeshes(fbxScene->GetRootNode(), mdlMeshNodes);
+			const unsigned int numMeshes = FBX::GatherMeshes(fbxScene->GetRootNode(), mdlMeshNodes);
 			return numMeshes > 0;
 		}
 
 		const FbxStatus& Status = fbxImporter->GetStatus();
 
-		if(Status.Error())
+		if (Status.Error())
 			myLastError = Status.GetErrorString();
 		else
 			myLastError = "Success";
@@ -787,20 +787,30 @@ namespace TGA
 		return bResult;
 	}
 
-	bool FBXImporter::LoadAnimation(const std::string& someFilePath, const std::vector<std::string>& BoneNames, FBXAnimation& outAnimation)
+	//Changed by Fabian to not need joint names
+	bool FBXImporter::LoadAnimation(const std::string& someFilePath, FBXAnimation& outAnimation)
 	{
 		FbxImporter* fbxImporter = FbxImporter::Create(Internals::Get().fbxManager, "");
+
+		FBXModel mdl;
+		LoadSkeleton(someFilePath, mdl);
+
+		std::vector<std::string> BoneNames;
+		for (auto& bone : mdl.Skeleton.Bones)
+		{
+			BoneNames.push_back(bone.Name);
+		}
 
 		// Used to denote a local error not detectable via FbxStatus.
 		bool bImporterError = false;
 
-		if(BoneNames.empty())
+		if (BoneNames.empty())
 		{
 			myLastError = "No joint names provided!";
 			return false;
 		}
 
-		if(!fbxImporter->Initialize(someFilePath.c_str(), -1, Internals::Get().fbxIOSettings))
+		if (!fbxImporter->Initialize(someFilePath.c_str(), -1, Internals::Get().fbxIOSettings))
 		{
 			const FbxStatus& Status = fbxImporter->GetStatus();
 			myLastError = Status.GetErrorString();
@@ -808,7 +818,7 @@ namespace TGA
 			return false;
 		}
 
-		if(!fbxImporter->IsFBX())
+		if (!fbxImporter->IsFBX())
 		{
 			const FbxStatus& Status = fbxImporter->GetStatus();
 			myLastError = Status.GetErrorString();
@@ -818,7 +828,7 @@ namespace TGA
 
 		FbxScene* fbxScene = FbxScene::Create(Internals::Get().fbxManager, "The Scene");
 
-		if(fbxImporter->Import(fbxScene))
+		if (fbxImporter->Import(fbxScene))
 		{
 			Internals::Get().fbxAxisSystem.DeepConvertScene(fbxScene);
 
@@ -832,7 +842,7 @@ namespace TGA
 			const FbxVector4 fbxScale = skeletonRoot->GetGeometricScaling(::FbxNode::eSourcePivot);
 			const FbxAMatrix rootTransform = FbxAMatrix(fbxTranslation, fbxRotation, fbxScale);
 
-			if(const FbxAnimStack* fbxAnimStack = fbxScene->GetSrcObject<FbxAnimStack>(0))
+			if (const FbxAnimStack* fbxAnimStack = fbxScene->GetSrcObject<FbxAnimStack>(0))
 			{
 				// We get the name of it since Motion Builder can have several.
 				FbxString animStackName = fbxAnimStack->GetName();
@@ -843,11 +853,11 @@ namespace TGA
 				// support multiple right now, though. Check with the animators!
 
 				if (const FbxTakeInfo* fbxTakeInfo = fbxScene->GetTakeInfo(animStackName))
-			    {
-				    const FbxTime::EMode fbxGlobalTimeMode = fbxScene->GetGlobalSettings().GetTimeMode();
-	                const double framesPerSecond = FbxTime::GetFrameRate(fbxGlobalTimeMode);
+				{
+					const FbxTime::EMode fbxGlobalTimeMode = fbxScene->GetGlobalSettings().GetTimeMode();
+					const double framesPerSecond = FbxTime::GetFrameRate(fbxGlobalTimeMode);
 
-	                // Figure out the duration of the animation.
+					// Figure out the duration of the animation.
 					const FbxTime fbxAnimStart = fbxTakeInfo->mLocalTimeSpan.GetStart();
 					const FbxTime fbxAnimEnd = fbxTakeInfo->mLocalTimeSpan.GetStop();
 
@@ -868,20 +878,20 @@ namespace TGA
 
 					size_t localFrameCounter = 0;
 
-					for(FbxLongLong t = startFrame; t <= endFrame; t++)
+					for (FbxLongLong t = startFrame; t <= endFrame; t++)
 					{
 						FbxTime currentTime;
-					    currentTime.SetFrame(t, fbxGlobalTimeMode);
+						currentTime.SetFrame(t, fbxGlobalTimeMode);
 
-	                    outAnimation.Frames[localFrameCounter].LocalTransforms.resize(BoneNames.size());
-	                    outAnimation.Frames[localFrameCounter].GlobalTransforms.resize(BoneNames.size());
+						outAnimation.Frames[localFrameCounter].LocalTransforms.resize(BoneNames.size());
+						outAnimation.Frames[localFrameCounter].GlobalTransforms.resize(BoneNames.size());
 
-						for(size_t j = 0; j < BoneNames.size(); j++)
+						for (size_t j = 0; j < BoneNames.size(); j++)
 						{
 							::FbxNode* jointNode = fbxScene->FindNodeByName(FbxString(BoneNames[j].c_str()));
 
 							FbxAMatrix localFrameTransform = jointNode->EvaluateLocalTransform(currentTime);
-                    		FbxAMatrix globalFrameTransform = jointNode->EvaluateGlobalTransform(currentTime);
+							FbxAMatrix globalFrameTransform = jointNode->EvaluateGlobalTransform(currentTime);
 
 							FBX::ConvertFBXMatrixToArray(localFrameTransform, outAnimation.Frames[localFrameCounter].LocalTransforms[j].Data);
 							FBX::ConvertFBXMatrixToArray(globalFrameTransform, outAnimation.Frames[localFrameCounter].GlobalTransforms[j].Data);
@@ -889,13 +899,13 @@ namespace TGA
 
 						localFrameCounter++;
 					}
-			    }
+				}
 			}
 		}
 
 		const FbxStatus& Status = fbxImporter->GetStatus();
 
-		if(Status.Error())
+		if (Status.Error())
 			myLastError = Status.GetErrorString();
 		else if (!bImporterError)
 			myLastError = "Success";
@@ -915,29 +925,29 @@ namespace TGA
 
 		bool bImporterError = false;
 
-		if(!fbxImporter->Initialize(someFilePath.c_str(), -1, Internals::Get().fbxIOSettings))
+		if (!fbxImporter->Initialize(someFilePath.c_str(), -1, Internals::Get().fbxIOSettings))
 		{
 			const FbxStatus& Status = fbxImporter->GetStatus();
 			myLastError = Status.GetErrorString();
 			fbxImporter->Destroy();
 			return false;
-		}			
+		}
 
-		if(!fbxImporter->IsFBX())
+		if (!fbxImporter->IsFBX())
 		{
 			const FbxStatus& Status = fbxImporter->GetStatus();
 			myLastError = Status.GetErrorString();
 			fbxImporter->Destroy();
 			return false;
-		}			
+		}
 
 		FbxScene* fbxScene = FbxScene::Create(Internals::Get().fbxManager, "The Scene");
 
-		if(fbxImporter->Import(fbxScene))
+		if (fbxImporter->Import(fbxScene))
 		{
 			FBXSkeleton mdlSkeleton;
 			std::string gatherBonesMessage;
-			switch(FBX::GatherSkeletonData(fbxScene->GetRootNode(), mdlSkeleton, gatherBonesMessage))
+			switch (FBX::GatherSkeletonData(fbxScene->GetRootNode(), mdlSkeleton, gatherBonesMessage))
 			{
 			case 0: // A skeleton was found
 				break;
@@ -951,7 +961,7 @@ namespace TGA
 
 		const FbxStatus& Status = fbxImporter->GetStatus();
 
-		if(Status.Error())
+		if (Status.Error())
 			myLastError = Status.GetErrorString();
 		else if (!bImporterError)
 			myLastError = "Success";

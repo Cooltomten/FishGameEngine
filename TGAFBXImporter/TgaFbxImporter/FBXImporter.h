@@ -42,7 +42,7 @@ namespace TGA
 		 * @param outAnimation The animation data read from the file.
 		 * @returns True if the file was read successfully and an animation loaded.
 		 */
-		static bool LoadAnimation(const std::string& someFilePath, const std::vector<std::string>& BoneNames, FBXAnimation& outAnimation);
+		static bool LoadAnimation(const std::string& someFilePath, FBXAnimation& outAnimation);
 
 		/**
 		 * Attempts to load a skeleton only from the specified file.

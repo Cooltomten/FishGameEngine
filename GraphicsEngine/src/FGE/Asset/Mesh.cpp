@@ -9,9 +9,8 @@
 namespace FGE
 {
 
-	void Mesh::Init(std::string aPath, std::vector<std::shared_ptr<SubMesh>> aSubMesh)
+	void Mesh::Init(std::vector<std::shared_ptr<SubMesh>> aSubMesh)
 	{
-		myName = aPath;
 		mySubMeshes = aSubMesh;
 	}
 

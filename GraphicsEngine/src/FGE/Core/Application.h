@@ -12,6 +12,7 @@ namespace CommonUtilities
 namespace FGE
 {
 	class Mesh;
+	class AnimatedMesh;
 	class Application
 	{
 	public:
@@ -34,12 +35,15 @@ namespace FGE
 
 		Scene* myScene;
 
-		std::vector<std::shared_ptr<Mesh>> myModelsTest;
+		std::shared_ptr<Mesh> myChestMesh;
+		FGE::Transform myChestTransform;
+		
+		std::shared_ptr<AnimatedMesh> myGremlinMesh;
+		FGE::Transform myGremlinTransform;
 
 		std::shared_ptr<CU::InputManager> myInputManager;
 		std::shared_ptr<CU::Timer> myTimer;
 
-		FGE::Transform myTestTransform;
 
 		
 		

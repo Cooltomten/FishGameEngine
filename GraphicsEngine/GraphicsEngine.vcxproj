@@ -181,6 +181,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\FGE\Asset\AnimatedMesh.h" />
+    <ClInclude Include="src\FGE\Asset\Animation.h" />
+    <ClInclude Include="src\FGE\Asset\Asset.h" />
     <ClInclude Include="src\FGE\Asset\FBXImporter.h" />
     <ClInclude Include="src\FGE\Asset\Material.h" />
     <ClInclude Include="src\FGE\Asset\Mesh.h" />
@@ -207,6 +210,8 @@
     <ClInclude Include="src\FGE\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\FGE\Asset\AnimatedMesh.cpp" />
+    <ClCompile Include="src\FGE\Asset\Animation.cpp" />
     <ClCompile Include="src\FGE\Asset\FBXImporter.cpp" />
     <ClCompile Include="src\FGE\Asset\Material.cpp" />
     <ClCompile Include="src\FGE\Asset\Mesh.cpp" />
