@@ -12,16 +12,16 @@ namespace FGE
 	Renderer::ObjectBufferData Renderer::myObjectBufferData;
 	Renderer::MaterialBufferData Renderer::myMaterialBufferData;
 
-	 Microsoft::WRL::ComPtr<ID3D11Buffer> Renderer::myFrameBuffer;
-	 Microsoft::WRL::ComPtr<ID3D11Buffer> Renderer::myObjectBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> Renderer::myFrameBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> Renderer::myObjectBuffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> Renderer::myMaterialBuffer;
 
-	 std::vector<SubmitCommand> Renderer::myCommands;
-	 Microsoft::WRL::ComPtr<ID3D11VertexShader> Renderer::myVertexShader;
-	 Microsoft::WRL::ComPtr<ID3D11PixelShader> Renderer::myPixelShader;
+	std::vector<SubmitCommand> Renderer::myCommands;
+	Microsoft::WRL::ComPtr<ID3D11VertexShader> Renderer::myVertexShader;
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> Renderer::myPixelShader;
 
-	  std::string Renderer::myVsData;
-	
+	std::string Renderer::myVsData;
+
 
 	static std::string myVsData;
 	void Renderer::Init()
@@ -57,9 +57,10 @@ namespace FGE
 		bufferDescription.ByteWidth = sizeof(MaterialBufferData);
 		myMaterialBuffer = dx11.CreateBuffer(&bufferDescription, nullptr);
 	}
-	void FGE::Renderer::Submit(std::shared_ptr<VertexArray> aData, const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Material> aMaterial)
+	void FGE::Renderer::Submit(std::shared_ptr<VertexArray> aData, const CU::Matrix4x4<float>& aTransform,
+		std::shared_ptr<Material> aMaterial, std::vector<CU::Matrix4x4<float>> someAnimData)
 	{
-		myCommands.emplace_back(SubmitCommand(aData, aTransform, aMaterial));
+		myCommands.emplace_back(SubmitCommand(aData, aTransform, aMaterial, someAnimData));
 	}
 	void Renderer::Begin(std::shared_ptr<Camera> aCamera)
 	{
@@ -84,7 +85,7 @@ namespace FGE
 
 
 		auto& context = dx11.GetDeviceContext();
-		
+
 		context->VSSetShader(myVertexShader.Get(), nullptr, 0);
 		context->PSSetShader(myPixelShader.Get(), nullptr, 0);
 
@@ -94,14 +95,18 @@ namespace FGE
 			myObjectBufferData.World = command.Transform;
 			ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
+			if (!command.AnimData.empty())
+			{
+				memcpy_s(&myObjectBufferData.BoneData[0], sizeof(CU::Matrix4x4<float>) * 128, &command.AnimData[0], sizeof(CU::Matrix4x4<float>) * 128);
+			}
 			dx11.Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
 			memcpy(bufferData.pData, &myObjectBufferData, sizeof(ObjectBufferData));
 			dx11.Unmap(myObjectBuffer.Get(), 0);
-			
+
 			//map Material buffer
 			myMaterialBufferData.Albedo = command.Material->GetAlbedo();
 			ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-			
+
 			dx11.Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
 			memcpy(bufferData.pData, &myMaterialBufferData, sizeof(MaterialBufferData));
 			dx11.Unmap(myMaterialBuffer.Get(), 0);

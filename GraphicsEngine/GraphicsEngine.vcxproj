@@ -189,6 +189,8 @@
     <ClInclude Include="src\FGE\Asset\Mesh.h" />
     <ClInclude Include="src\FGE\Asset\ResourceCache.h" />
     <ClInclude Include="src\FGE\Asset\SubMesh.h" />
+    <ClInclude Include="src\FGE\Event\ApplicationEvents.h" />
+    <ClInclude Include="src\FGE\Event\Event.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\Vertex.h" />
     <ClInclude Include="src\FGE\Core\Application.h" />
     <ClInclude Include="src\FGE\Core\DX11.h" />

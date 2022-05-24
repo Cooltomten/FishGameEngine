@@ -3,7 +3,16 @@
 VertexToPixel main( VertexInput input) 
 {
 	
-    const float4 vertexObjectPosition = input.myPosition;
+    float4 vertexObjectPosition = input.myPosition;
+    
+    //if has bones
+    vertexObjectPosition = 0;
+    
+    vertexObjectPosition += input.myBoneWeights.x * mul(input.myPosition, OB_BoneData[input.myBoneIDs.x]);
+    vertexObjectPosition += input.myBoneWeights.y * mul(input.myPosition, OB_BoneData[input.myBoneIDs.y]);
+    vertexObjectPosition += input.myBoneWeights.z * mul(input.myPosition, OB_BoneData[input.myBoneIDs.z]);
+    vertexObjectPosition += input.myBoneWeights.w * mul(input.myPosition, OB_BoneData[input.myBoneIDs.w]);
+    //end if has bones
     
     const float4 vertexWorldPosition = mul(OB_ToWorld, vertexObjectPosition);
 

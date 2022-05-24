@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -140,7 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -155,10 +155,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Launcher.cpp" />
+    <ClCompile Include="src\LauncherApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonUtilities\CommonUtilities.vcxproj">
       <Project>{bc97d936-2140-4920-aeae-af4566dc8d9f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ComponentSystem\ComponentSystem.vcxproj">
+      <Project>{92dafa81-9091-4296-88f9-70e0b2973443}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Game\Game.vcxproj">
       <Project>{8efa2e56-a47d-4810-bf42-6105523410f6}</Project>
@@ -166,6 +170,9 @@
     <ProjectReference Include="..\GraphicsEngine\GraphicsEngine.vcxproj">
       <Project>{4a14b5d4-9d37-4a37-9d3b-d7b2bac7b312}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\LauncherApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

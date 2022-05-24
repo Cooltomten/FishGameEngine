@@ -950,6 +950,7 @@ namespace TGA
 			switch (FBX::GatherSkeletonData(fbxScene->GetRootNode(), mdlSkeleton, gatherBonesMessage))
 			{
 			case 0: // A skeleton was found
+				outModel.Skeleton = mdlSkeleton;
 				break;
 			default:
 				// Something went wrong or no skeleton found.

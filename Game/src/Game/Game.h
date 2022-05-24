@@ -1,5 +1,4 @@
 #pragma once
-#include "ComponentSystem/"
 #include <FGE/Core/Game.h>
 
 class Game : public FGE::Game

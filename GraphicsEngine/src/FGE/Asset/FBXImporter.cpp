@@ -42,10 +42,10 @@ namespace FGE
 		std::vector<std::shared_ptr<SubMesh>> subMeshes;
 		ExtractSubMeshes(tgaModel, subMeshes);
 
-		//if (!TGA::FBXImporter::LoadSkeleton(aPath, tgaModel))
-		//{
-		//	//Boom!
-		//}
+		if (!TGA::FBXImporter::LoadSkeleton(aPath, tgaModel))
+		{
+			//Boom!
+		}
 
 		std::shared_ptr<AnimatedMesh> mesh = std::make_shared<AnimatedMesh>();
 
@@ -113,8 +113,8 @@ namespace FGE
 				vertex.VertexColors[0][2] = (rand() / static_cast<float>(RAND_MAX) + 1) / 2;
 				vertex.VertexColors[0][3] = 1.0f;
 
-				vertices.emplace_back(Vertex(vertex.Position, vertex.VertexColors, vertex.UVs, vertex.Normal,
-					vertex.Tangent, vertex.Binormal, vertex.BoneIDs, vertex.BoneWeights));
+				vertices.emplace_back(vertex.Position, vertex.VertexColors, vertex.UVs, vertex.Normal,
+					vertex.Tangent, vertex.Binormal, vertex.BoneIDs, vertex.BoneWeights);
 			}
 
 

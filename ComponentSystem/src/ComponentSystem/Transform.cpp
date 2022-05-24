@@ -1,6 +1,6 @@
-#include "GraphicsEngine.pch.h"
+#include "CompSysPch.h"
 #include "Transform.h"
-namespace FGE
+namespace Comp
 {
 	Transform::Transform()
 	{

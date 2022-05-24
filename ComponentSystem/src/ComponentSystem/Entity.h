@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ComponentSystem/Transform.h"
+#include "ComponentSystem/Scene.h"
 
 #include <cassert>
 #include <unordered_map>

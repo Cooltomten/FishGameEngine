@@ -1,3 +1,4 @@
+#include "CompSysPch.h"
 #include "Scene.h"
 
 namespace Comp

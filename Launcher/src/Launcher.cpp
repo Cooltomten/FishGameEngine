@@ -1,25 +1,7 @@
 #include <FGE/EntryPoint.h>
-#include <FGE/Core/Game.h>
 
-extern FGE::Game* CreateGame();
+#include "LauncherApp.h"
 
-class LauncherApp : public FGE::Application
-{
-	public:
-		LauncherApp(const FGE::WindowProperties& aProperties)
-			:FGE::Application(aProperties)
-		{
-			myGame = CreateGame();
-			myGame->OnStart();
-		}
-		~LauncherApp()
-		{
-			myGame->OnStop();
-			delete myGame;
-		}
-private:
-	FGE::Game* myGame = nullptr;
-};
 
 FGE::Application* FGE::CreateApplication()
 {

@@ -1,4 +1,7 @@
 #pragma once
+
+
+#include <FGE/Event/Event.h>
 #include <string>
 
 namespace Comp
@@ -10,7 +13,7 @@ namespace Comp
 		Component(const std::string& aName);
 		~Component() = default;
 
-		void OnEvent();
+		virtual void OnEvent(const FGE::Event& aEvent);
 
 		inline const std::string& GetName() const { return myName; }
 

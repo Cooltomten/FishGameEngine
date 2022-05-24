@@ -27,7 +27,6 @@ namespace FGE
 
 		std::unordered_map<std::string, size_t> BoneNameToIndex;
 
-		std::unordered_map<std::string, Animation> Animations;
 	};
 	
 	class SubMesh;
@@ -42,7 +41,7 @@ namespace FGE
 
 		void Init(std::vector<std::shared_ptr<SubMesh>> aSubMesh, Skeleton& aSkeleton);
 
-		void Render(const CU::Matrix4x4<float>& aTransform, float aAnimationTime);
+		void Render(const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Animation> aAnimation, float aAnimationTime);
 
 		void SetMaterial(std::shared_ptr<Material> aMaterial, uint32_t aIndex);
 		std::shared_ptr<Material> GetMaterial(uint32_t aIndex);
@@ -52,7 +51,6 @@ namespace FGE
 	private:
 
 		Skeleton mySkeleton;
-
 		std::vector<std::shared_ptr<SubMesh>> mySubMeshes;
 
 		std::unordered_map<uint32_t, std::shared_ptr<Material>> myMaterials;

@@ -1,8 +1,11 @@
 #pragma once
 #include "FGE/Rendering/Camera/Camera.h"
 #include "FGE/Rendering/Buffers/VertexArray.h"
-#include <memory>
+
+#include <CommonUtilities/Math/Vector.hpp>
 #include <CommonUtilities/Math/Matrix4x4.hpp>
+
+#include <memory>
 #include <vector>
 #include <wrl.h>
 
@@ -16,19 +19,21 @@ namespace FGE
 	class Material;
 	struct SubmitCommand
 	{
-		SubmitCommand(std::shared_ptr<VertexArray> aData, CU::Matrix4x4<float> aTransform, std::shared_ptr<Material> aMaterial)
-			: Data(aData), Transform(aTransform) , Material(aMaterial) {}
+		SubmitCommand(std::shared_ptr<VertexArray> aData, CU::Matrix4x4<float> aTransform, std::shared_ptr<Material> aMaterial, std::vector<CU::Matrix4x4<float>> someAnimData)
+			: Data(aData), Transform(aTransform) , Material(aMaterial) , AnimData(someAnimData) {}
 
 		std::shared_ptr<VertexArray> Data;
 		std::shared_ptr<Material> Material;
 		CU::Matrix4x4<float> Transform;
+		std::vector<CU::Matrix4x4<float>> AnimData;
 	};
 	class Renderer
 	{
 	public:
 		static void Init();
 
-		static void Submit(std::shared_ptr<VertexArray> aData , const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Material> aMaterial);
+		static void Submit(std::shared_ptr<VertexArray> aData , const CU::Matrix4x4<float>& aTransform, 
+			std::shared_ptr<Material> aMaterial, std::vector<CU::Matrix4x4<float>> someAnimData = {});
 
 		static void Begin(std::shared_ptr<Camera> aCamera);
 		static void End();
@@ -49,6 +54,7 @@ namespace FGE
 		static struct ObjectBufferData
 		{
 			CU::Matrix4x4<float> World;
+			CU::Matrix4x4<float> BoneData[128];
 		} myObjectBufferData;
 		
 		static struct MaterialBufferData
@@ -56,6 +62,7 @@ namespace FGE
 			CU::Vector3f Albedo;
 			float Padding;
 		} myMaterialBufferData;
+
 		
 		
 		static Microsoft::WRL::ComPtr<ID3D11Buffer> myFrameBuffer;

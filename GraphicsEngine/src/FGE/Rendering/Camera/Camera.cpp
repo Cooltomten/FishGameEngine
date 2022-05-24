@@ -34,10 +34,10 @@ namespace FGE
 	}
 	const CU::Matrix4x4<float>& Camera::GetViewMatrix() const
 	{
-		return myTransform.GetInverseMatrix();
+		return myViewMatrix;
 	}
-	Transform& Camera::GetTransform()
+	void Camera::RecalculateViewMatrix(CU::Matrix4x4<float> aTransform)
 	{
-		return myTransform;
+		myViewMatrix = aTransform.GetFastInverse(aTransform);
 	}
 }
