@@ -55,6 +55,7 @@ namespace FGE
 		{
 			CU::Matrix4x4<float> World;
 			CU::Matrix4x4<float> BoneData[128];
+			alignas(16) bool HasBones;
 		} myObjectBufferData;
 		
 		static struct MaterialBufferData

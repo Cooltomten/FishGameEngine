@@ -42,10 +42,10 @@ namespace FGE
 		std::vector<std::shared_ptr<SubMesh>> subMeshes;
 		ExtractSubMeshes(tgaModel, subMeshes);
 
-		if (!TGA::FBXImporter::LoadSkeleton(aPath, tgaModel))
-		{
-			//Boom!
-		}
+		//if (!TGA::FBXImporter::LoadSkeleton(aPath, tgaModel))
+		//{
+		//	//Boom!
+		//}
 
 		std::shared_ptr<AnimatedMesh> mesh = std::make_shared<AnimatedMesh>();
 

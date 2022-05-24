@@ -1,18 +1,19 @@
 #include "ShaderStructs.hlsli"
 
-VertexToPixel main( VertexInput input) 
+VertexToPixel main(VertexInput input)
 {
 	
     float4 vertexObjectPosition = input.myPosition;
     
-    //if has bones
-    vertexObjectPosition = 0;
+    if (OB_HasBones)
+    {
+        vertexObjectPosition = 0;
     
-    vertexObjectPosition += input.myBoneWeights.x * mul(input.myPosition, OB_BoneData[input.myBoneIDs.x]);
-    vertexObjectPosition += input.myBoneWeights.y * mul(input.myPosition, OB_BoneData[input.myBoneIDs.y]);
-    vertexObjectPosition += input.myBoneWeights.z * mul(input.myPosition, OB_BoneData[input.myBoneIDs.z]);
-    vertexObjectPosition += input.myBoneWeights.w * mul(input.myPosition, OB_BoneData[input.myBoneIDs.w]);
-    //end if has bones
+        vertexObjectPosition += input.myBoneWeights.x * mul(input.myPosition, OB_BoneData[input.myBoneIDs.x]);
+        vertexObjectPosition += input.myBoneWeights.y * mul(input.myPosition, OB_BoneData[input.myBoneIDs.y]);
+        vertexObjectPosition += input.myBoneWeights.z * mul(input.myPosition, OB_BoneData[input.myBoneIDs.z]);
+        vertexObjectPosition += input.myBoneWeights.w * mul(input.myPosition, OB_BoneData[input.myBoneIDs.w]);
+    }
     
     const float4 vertexWorldPosition = mul(OB_ToWorld, vertexObjectPosition);
 

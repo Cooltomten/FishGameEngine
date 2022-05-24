@@ -159,6 +159,7 @@
     <ClInclude Include="src\ComponentSystem\Scene.h" />
     <ClInclude Include="src\ComponentSystem\Transform.h" />
     <ClInclude Include="src\CompSysPch.h" />
+    <ClInclude Include="src\EngineComponents\MeshRendererComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ComponentSystem\Component.cpp" />
@@ -171,6 +172,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\EngineComponents\MeshRendererComponent.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

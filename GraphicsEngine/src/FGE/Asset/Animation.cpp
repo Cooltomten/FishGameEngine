@@ -28,17 +28,17 @@ void FGE::Animation::CalculateTransforms(uint32_t aCurrentFrame, Skeleton& aSkel
 	const auto& bone = aSkeleton.Bones[aIndex];
 	CU::Matrix4x4<float> locTransform = Frames[aCurrentFrame].LocalTransforms[aIndex];
 
+	CU::Matrix4x4<float> boneTransform = aParentTransform * locTransform.Transpose(locTransform);
 	CU::Matrix4x4<float> result;
-	result *= (aParentTransform * locTransform);
+	result *= boneTransform;
+	result *= bone.BindPoseInverse;
+	aTransforms[aIndex] = result;
 	
 	//Dont calculate children with BindPoseInverse
 	for (uint32_t i = 0; i < bone.Children.size(); ++i)
 	{
-		CalculateTransforms(aCurrentFrame, aSkeleton, bone.Children[i], result, aTransforms);
+		CalculateTransforms(aCurrentFrame, aSkeleton, bone.Children[i], boneTransform, aTransforms);
 	}
-	
-	result *= bone.BindPoseInverse;
-	aTransforms[aIndex] = result;
 
 
 }

@@ -13,7 +13,8 @@ namespace Comp
 		Component(const std::string& aName);
 		~Component() = default;
 
-		virtual void OnEvent(const FGE::Event& aEvent);
+		virtual void Initialize(){}
+		virtual void OnEvent(const FGE::Event& aEvent) {}
 
 		inline const std::string& GetName() const { return myName; }
 

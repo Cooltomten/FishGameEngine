@@ -109,7 +109,7 @@ namespace CommonUtilities
 	template<typename T>
 	inline Matrix4x4<T>& Matrix4x4<T>::operator=(const T aArray[16])
 	{
-		memcpy(myElements, aArray, sizeof(aArray));
+		memcpy(myElements, aArray, sizeof(T) * 16);
 		return *this;
 	}
 

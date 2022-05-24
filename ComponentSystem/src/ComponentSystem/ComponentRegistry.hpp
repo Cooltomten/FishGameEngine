@@ -6,7 +6,7 @@
 //https://dxuuu.xyz/cpp-static-registration.html
 
 #define REGISTER_COMPONENT(x)\
-	static bool x ## _entry = ComponentRegistry::Add(x::GetFactoryName(), x::Create)
+	static bool x ## _entry = Comp::ComponentRegistry::Add(x::GetFactoryName(), x::Create)
 
 namespace Comp
 {
@@ -14,7 +14,7 @@ namespace Comp
 	class ComponentRegistry
 	{
 	public:
-		typedef std::function<Component* ()> FactoryFunction;
+		typedef std::function<std::shared_ptr<Component>()> FactoryFunction;
 		typedef std::unordered_map<std::string, FactoryFunction> FactoryMap;
 
 		static bool Add(const std::string& aName, FactoryFunction aFacFunc)
@@ -28,7 +28,7 @@ namespace Comp
 			return true;
 		}
 
-		static Component* Create(const std::string& aName)
+		static std::shared_ptr<Component> Create(const std::string& aName)
 		{
 			auto& map = GetFactoryMap();
 			if (map.find(aName) == map.end())

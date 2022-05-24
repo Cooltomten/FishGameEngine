@@ -34,7 +34,8 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	
 
 	myChestTransform.SetPosition({ 0,0,0 });
-	myGremlinTransform.SetPosition({ 0,0,0 });
+	myChestTransform.SetScale(0.2f,0.2f,0.2f);
+	myGremlinTransform.SetPosition({ 50,0,0 });
 
 
 	myGame->OnStart();
@@ -78,7 +79,7 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 	FGE::Renderer::Begin(myCamera);
 
-	//myChestMesh->Render(myChestTransform.GetMatrix());
+	myChestMesh->Render(myChestTransform.GetMatrix());
 	myGremlinMesh->Render(myGremlinTransform.GetMatrix(),myGremlinWalkAnim, myGremlinTimer);
 
 	FGE::Renderer::Render();

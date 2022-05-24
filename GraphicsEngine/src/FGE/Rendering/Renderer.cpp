@@ -95,8 +95,10 @@ namespace FGE
 			myObjectBufferData.World = command.Transform;
 			ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
 
+			myObjectBufferData.HasBones = false;
 			if (!command.AnimData.empty())
 			{
+				myObjectBufferData.HasBones = true;
 				memcpy_s(&myObjectBufferData.BoneData[0], sizeof(CU::Matrix4x4<float>) * 128, &command.AnimData[0], sizeof(CU::Matrix4x4<float>) * 128);
 			}
 			dx11.Map(myObjectBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);

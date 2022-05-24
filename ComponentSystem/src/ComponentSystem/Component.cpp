@@ -6,6 +6,3 @@ Comp::Component::Component(const std::string& aName)
 {
 }
 
-void Comp::Component::OnEvent(const FGE::Event& aEvent)
-{
-}

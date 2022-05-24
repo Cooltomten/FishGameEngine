@@ -1,6 +1,5 @@
 #pragma once
 #include "FGE/Core/Window.h"
-#include "FGE/Scene/Scene.h"
 #include <memory>
 
 namespace CommonUtilities
