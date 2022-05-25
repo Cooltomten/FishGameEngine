@@ -14,6 +14,7 @@ namespace FGE
 	class Mesh;
 	class AnimatedMesh;
 	class Event;
+	class ImGuiLayer;
 	class Application
 	{
 	public:
@@ -42,6 +43,9 @@ namespace FGE
 		std::shared_ptr<CU::Timer> myTimer;
 
 		static Application* myInstance;
+
+		std::unique_ptr<FGE::ImGuiLayer> myImGuiLayer;
+		
 	};
 	static Application* CreateApplication();
 }

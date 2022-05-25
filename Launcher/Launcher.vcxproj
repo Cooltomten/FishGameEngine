@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -140,7 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -169,6 +169,9 @@
     </ProjectReference>
     <ProjectReference Include="..\GraphicsEngine\GraphicsEngine.vcxproj">
       <Project>{4a14b5d4-9d37-4a37-9d3b-d7b2bac7b312}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ImGui\ImGui.vcxproj">
+      <Project>{a976a80c-5ba8-4e11-a61c-92cc066a64c4}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -99,6 +99,9 @@
     <ClInclude Include="src\FGE\Event\ApplicationEvents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\FGE\ImGui\ImGuiLayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GraphicsEngine.pch.cpp">
@@ -153,6 +156,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\FGE\Asset\Animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\ImGui\ImGuiBuild.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\ImGui\ImGuiLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

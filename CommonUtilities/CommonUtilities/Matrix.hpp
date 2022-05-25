@@ -1,3 +1,3 @@
 #pragma once
-#include "Matrix3x3.hpp"
-#include "Matrix4x4.hpp"
+#include "Math/Matrix3x3.hpp"
+#include "Math/Matrix4x4.hpp"

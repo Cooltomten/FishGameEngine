@@ -75,6 +75,10 @@ namespace FGE
 		ID3D11InputLayout* CreateInputLayout( D3D11_INPUT_ELEMENT_DESC aDesc[], size_t aSize, const char* aData, size_t aDataSize);
 		
 		ComPtr<ID3D11DeviceContext>& GetDeviceContext();
+		ComPtr<ID3D11Device>& GetDevice();
+		ComPtr<IDXGISwapChain>& GetSwapChain();
+		ComPtr<ID3D11RenderTargetView>& GetRenderTargetView();
+		ComPtr<ID3D11DepthStencilView>& GetDepthStencilView();
 
 		void Map(ID3D11Resource* aResource, UINT aSubResource, D3D11_MAP aMapType, UINT aMapFlags, D3D11_MAPPED_SUBRESOURCE* aMappedResource);
 		void Unmap(ID3D11Resource* aResource, UINT aSubResource);

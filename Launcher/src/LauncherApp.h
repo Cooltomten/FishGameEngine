@@ -29,6 +29,7 @@ private:
 	bool OnRenderEvent(FGE::AppRenderEvent& aEvent);
 
 	void CameraController(float aTimeStep);
+
 	
 	std::shared_ptr<FGE::Material> myMaterial;
 	
@@ -47,6 +48,7 @@ private:
 	std::shared_ptr<FGE::AnimatedMesh> myGremlinMesh;
 	Comp::Transform myGremlinTransform;
 	float myGremlinTimer = 0;
+	float myGremlinAlphaBlend = 0;
 	std::shared_ptr<FGE::Animation> myGremlinWalkAnim;
 
 	

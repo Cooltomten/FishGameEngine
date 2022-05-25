@@ -81,7 +81,7 @@ namespace FGE
 			BackBuffer.GetAddressOf()
 		));
 
-		
+
 
 		//Create depth buffer
 		RECT clientRect = { 0,0,0,0 };
@@ -159,7 +159,7 @@ namespace FGE
 		ID3D11VertexShader* shader = nullptr;
 		HRESULT hr;
 		GFX_THROW_INFO(Device->CreateVertexShader(aData, aSize, nullptr, &shader));
-		
+
 		return shader;
 	}
 
@@ -184,6 +184,26 @@ namespace FGE
 		return Context;
 	}
 
+	ComPtr<ID3D11Device>& DX11::GetDevice()
+	{
+		return Device;
+	}
+
+	ComPtr<IDXGISwapChain>& DX11::GetSwapChain()
+	{
+		return SwapChain;
+	}
+
+	ComPtr<ID3D11RenderTargetView>& DX11::GetRenderTargetView()
+	{
+		return BackBuffer;
+	}
+
+	ComPtr<ID3D11DepthStencilView>& DX11::GetDepthStencilView()
+	{
+		return DepthBuffer;
+	}
+
 	void DX11::Map(ID3D11Resource* aResource, UINT aSubResource, D3D11_MAP aMapType, UINT aMapFlags, D3D11_MAPPED_SUBRESOURCE* aMappedResource)
 	{
 		HRESULT hr;
@@ -200,7 +220,7 @@ namespace FGE
 		Context->VSSetConstantBuffers(aStartSlot, aNumBuffers, aBuffers);
 	}
 
-	
+
 
 
 

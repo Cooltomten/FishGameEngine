@@ -131,7 +131,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GraphicsEngine.pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -160,7 +160,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GraphicsEngine.pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -191,6 +191,7 @@
     <ClInclude Include="src\FGE\Asset\SubMesh.h" />
     <ClInclude Include="src\FGE\Event\ApplicationEvents.h" />
     <ClInclude Include="src\FGE\Event\Event.h" />
+    <ClInclude Include="src\FGE\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\Vertex.h" />
     <ClInclude Include="src\FGE\Core\Application.h" />
     <ClInclude Include="src\FGE\Core\DX11.h" />
@@ -221,6 +222,8 @@
     <ClCompile Include="src\FGE\Core\DXErrorHandling\dxerr.cpp" />
     <ClCompile Include="src\FGE\Core\DXErrorHandling\DxgiInfoManager.cpp" />
     <ClCompile Include="src\FabException.cpp" />
+    <ClCompile Include="src\FGE\ImGui\ImGuiBuild.cpp" />
+    <ClCompile Include="src\FGE\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Renderer.cpp" />
@@ -253,6 +256,9 @@
     <None Include="src\FGE\Shaders\ShaderStructs.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ImGui\ImGui.vcxproj">
+      <Project>{a976a80c-5ba8-4e11-a61c-92cc066a64c4}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\TGAFBXImporter\TGAFBXImporter.vcxproj">
       <Project>{ccaa1397-531e-4263-b46b-f97ea01ef3d2}</Project>
     </ProjectReference>

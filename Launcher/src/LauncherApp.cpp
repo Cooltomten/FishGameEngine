@@ -10,6 +10,9 @@
 #include <CommonUtilities/InputManager.h>
 #include <CommonUtilities/UtilityFunctions.hpp>
 
+#include <ImGui/imgui.h>
+
+
 
 LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	:FGE::Application(aProperties)
@@ -58,6 +61,8 @@ void LauncherApp::OnEventSub(FGE::Event& aEvent)
 
 bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 {
+
+
 	myMaterialFadeTimer += aEvent.GetTimeStep();
 	myGremlinTimer += aEvent.GetTimeStep();
 	if(myGremlinTimer >= myGremlinWalkAnim->Duration)
@@ -84,6 +89,17 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 	FGE::Renderer::Render();
 	FGE::Renderer::End();
+
+	ImGui::Begin("Test Animations");
+
+	ImGui::Text("Animation Blend Alpha");
+	ImGui::DragFloat("##Animation Blend Alpha", &myGremlinAlphaBlend, 0.01f,0,1);
+
+	ImGui::End();
+
+
+
+
 
 
 	return false;

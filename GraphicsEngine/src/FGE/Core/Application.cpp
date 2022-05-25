@@ -4,12 +4,11 @@
 #include "FGE/Asset/ResourceCache.h"
 #include "FGE/Asset/Material.h"
 #include "FGE/Asset/AnimatedMesh.h"
-
 #include "FGE/Rendering/Camera/Camera.h"
 #include "FGE/Rendering/Renderer.h"
-
 #include "FGE/Event/Event.h"
 #include "FGE/Event/ApplicationEvents.h"
+#include "FGE/ImGui/ImGuiLayer.h"
 
 #include <iostream>
 
@@ -17,8 +16,11 @@
 #include <CommonUtilities/Timer.h>
 #include <CommonUtilities/UtilityFunctions.hpp>
 
+#include <ImGui/imgui.h>
+
 namespace FGE
 {
+
 	Application* Application::myInstance = nullptr;
 
 	Application::Application(const WindowProperties& aProperties)
@@ -36,6 +38,9 @@ namespace FGE
 			myInputManager = std::make_shared<CU::InputManager>();
 			Renderer::Init();
 			ResourceCache::Initialize();
+
+			myImGuiLayer = std::make_unique<ImGuiLayer>();
+			myImGuiLayer->OnAttach();
 
 		}
 		catch (const FabException& e)
@@ -55,6 +60,7 @@ namespace FGE
 
 	Application::~Application()
 	{
+		myImGuiLayer->OnDetach();
 	}
 
 	void Application::Run()
@@ -63,16 +69,28 @@ namespace FGE
 		while (myRunning)
 		{
 			Window::ProcessMessages();
-			
+
 			myTimer->Update();
 			myInputManager->UpdateInput();
-			
+
+			if (myImGuiLayer)
+			{
+				myImGuiLayer->Begin();
+			}
+
+
 			AppUpdateEvent updateEvent(myTimer->GetDeltaTime());
 			OnEvent(updateEvent);
-			
+
 			myWindow->GetDX11().BeginFrame({ 0.8f,0.4f,0.2f,1 });
 			AppRenderEvent renderEvent;
 			OnEvent(renderEvent);
+
+			if (myImGuiLayer)
+			{
+				myImGuiLayer->End();
+			}
+
 			myWindow->GetDX11().EndFrame();
 
 		}
@@ -85,6 +103,11 @@ namespace FGE
 
 	LRESULT FGE::Application::WndProc(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam)
 	{
+		if (myImGuiLayer)
+		{
+			myImGuiLayer->UpdateEvents(aHwnd, aMessage, aWParam, aLParam);
+		}
+
 		if (myInputManager)
 		{
 			myInputManager->UpdateEvents(aMessage, aWParam, aLParam);
@@ -100,6 +123,6 @@ namespace FGE
 		return 0;
 	}
 
-	
+
 
 }
