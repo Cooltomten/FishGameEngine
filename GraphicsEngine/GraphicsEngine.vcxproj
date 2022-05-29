@@ -181,6 +181,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\DirectXTK\SimpleMath.h" />
     <ClInclude Include="src\FGE\Asset\AnimatedMesh.h" />
     <ClInclude Include="src\FGE\Asset\Animation.h" />
     <ClInclude Include="src\FGE\Asset\Asset.h" />
@@ -210,6 +211,7 @@
     <ClInclude Include="src\FGE\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DirectXTK\SimpleMath.cpp" />
     <ClCompile Include="src\FGE\Asset\AnimatedMesh.cpp" />
     <ClCompile Include="src\FGE\Asset\Animation.cpp" />
     <ClCompile Include="src\FGE\Asset\FBXImporter.cpp" />
@@ -250,6 +252,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />
+    <None Include="src\DirectXTK\SimpleMath.inl" />
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorDescription.inl" />
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorString.inl" />
     <None Include="src\FGE\Core\DXErrorHandling\DXTrace.inl" />

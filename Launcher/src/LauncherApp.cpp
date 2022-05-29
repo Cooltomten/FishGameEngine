@@ -34,6 +34,7 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	myGremlinMesh = FGE::ResourceCache::GetAsset<FGE::AnimatedMesh>("Assets/Animations/Gremlin/gremlin_sk.fbx");
 	myGremlinMesh->SetMaterial(myMaterial, 0);
 	myGremlinWalkAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_walk.fbx");
+	myGremlinRunAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_run.fbx");
 	
 
 	myChestTransform.SetPosition({ 0,0,0 });
@@ -64,18 +65,22 @@ bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 
 
 	myMaterialFadeTimer += aEvent.GetTimeStep();
-	myGremlinTimer += aEvent.GetTimeStep();
-	if(myGremlinTimer >= myGremlinWalkAnim->Duration)
+	myGremlinTimer += aEvent.GetTimeStep() * myAnimationTimeStepMultiplier;
+	float duration = CU::Lerp(myGremlinWalkAnim->GetDuration(), myGremlinRunAnim->GetDuration(), myGremlinAlphaBlend);
+	if(myGremlinTimer >= duration)
 	{
 		myGremlinTimer = 0;
 	}
-	//std::cout << myInputManager->GetMousePosDelta().x << " " << myInputManager->GetMousePosDelta().y << std::endl;
+	if (myGremlinTimer < 0)
+	{
+		myGremlinTimer = duration;
+	}
 
 	CameraController(aEvent.GetTimeStep());
 
-	float sinValue = 0.5 * (float)sin(myMaterialFadeTimer * 3) + 0.5;
-	float cosValue = 0.5 * (float)cos(myMaterialFadeTimer * 3) + 0.5;
-	myMaterial->SetAlbedo({ sinValue * cosValue,cosValue,sinValue * sinValue });
+	//float sinValue = 0.5 * (float)sin(myMaterialFadeTimer * 3) + 0.5;
+	//float cosValue = 0.5 * (float)cos(myMaterialFadeTimer * 3) + 0.5;
+	//myMaterial->SetAlbedo({ sinValue * cosValue,cosValue,sinValue * sinValue });
 	return false;
 }
 
@@ -85,7 +90,7 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 	FGE::Renderer::Begin(myCamera);
 
 	myChestMesh->Render(myChestTransform.GetMatrix());
-	myGremlinMesh->Render(myGremlinTransform.GetMatrix(),myGremlinWalkAnim, myGremlinTimer);
+	myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim,myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
 
 	FGE::Renderer::Render();
 	FGE::Renderer::End();
@@ -93,7 +98,10 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 	ImGui::Begin("Test Animations");
 
 	ImGui::Text("Animation Blend Alpha");
-	ImGui::DragFloat("##Animation Blend Alpha", &myGremlinAlphaBlend, 0.01f,0,1);
+	ImGui::DragFloat("##Animation Blend Alpha", &myGremlinAlphaBlend, 0.01f, 0, 1);
+	
+	ImGui::Text("Animation Time Step Multiplier");
+	ImGui::DragFloat("##Animation Time Step Multiplier", &myAnimationTimeStepMultiplier, 0.01f,0);
 
 	ImGui::End();
 

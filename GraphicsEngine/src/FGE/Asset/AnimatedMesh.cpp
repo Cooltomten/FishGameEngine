@@ -14,12 +14,13 @@ namespace FGE
 		mySkeleton = aSkeleton;
 	}
 
-	void FGE::AnimatedMesh::Render(const CU::Matrix4x4<float>& aTransform,std::shared_ptr<Animation> aAnimation, float aAnimationTime)
+	void FGE::AnimatedMesh::Render(const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Animation> aAnimation,
+		std::shared_ptr<Animation> aAnimationToBlendWith, float aBlendAlpha, float aAnimationTime)
 	{
 		std::vector<CU::Matrix4x4<float>> matrices;
 
-		matrices = aAnimation->Sample(aAnimationTime, mySkeleton);
-		
+		matrices = aAnimation->Sample(aAnimationTime, mySkeleton, aAnimationToBlendWith, aBlendAlpha);
+
 		for (int i = 0; i < mySubMeshes.size(); i++)
 		{
 			Renderer::Submit(mySubMeshes[i]->GetVertexArray(), aTransform, myMaterials[mySubMeshes[i]->GetMaterialIndex()], matrices);

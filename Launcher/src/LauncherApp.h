@@ -49,7 +49,9 @@ private:
 	Comp::Transform myGremlinTransform;
 	float myGremlinTimer = 0;
 	float myGremlinAlphaBlend = 0;
+	float myAnimationTimeStepMultiplier = 1;
 	std::shared_ptr<FGE::Animation> myGremlinWalkAnim;
+	std::shared_ptr<FGE::Animation> myGremlinRunAnim;
 
 	
 

@@ -22,6 +22,7 @@ namespace CommonUtilities
 		Matrix4x4<T>& operator=(const Matrix4x4<T>& aMatrix);
 		Matrix4x4<T>& operator=(const std::initializer_list<T>& aList);
 		Matrix4x4<T>& operator=(const T aArray[16]);
+		Matrix4x4<T>& operator=(const T aArray[4][4]);
 
 		// Static functions for creating rotation matrices.
 		static Matrix4x4<T> CreateRotationAroundX(T aAngleInRadians);
@@ -113,6 +114,16 @@ namespace CommonUtilities
 		return *this;
 	}
 
+	template<typename T>
+	inline Matrix4x4<T>& Matrix4x4<T>::operator=(const T aArray[4][4])
+	{
+		memcpy(&myElements[0],  &aArray[0], sizeof(T) * 4);
+		memcpy(&myElements[4],  &aArray[1], sizeof(T) * 4);
+		memcpy(&myElements[8],  &aArray[2], sizeof(T) * 4);
+		memcpy(&myElements[12], &aArray[3], sizeof(T) * 4);
+		return *this;
+	}
+	
 	template<typename T>
 	inline Matrix4x4<T> Matrix4x4<T>::CreateRotationAroundX(T aAngleInRadians)
 	{

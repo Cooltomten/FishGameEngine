@@ -41,7 +41,8 @@ namespace FGE
 
 		void Init(std::vector<std::shared_ptr<SubMesh>> aSubMesh, Skeleton& aSkeleton);
 
-		void Render(const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Animation> aAnimation, float aAnimationTime);
+		void Render(const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Animation> aAnimation,
+			std::shared_ptr<Animation> aAnimationToBlendWith, float aBlendAlpha, float aAnimationTime);
 
 		void SetMaterial(std::shared_ptr<Material> aMaterial, uint32_t aIndex);
 		std::shared_ptr<Material> GetMaterial(uint32_t aIndex);

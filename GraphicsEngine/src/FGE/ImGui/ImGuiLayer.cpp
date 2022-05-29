@@ -148,15 +148,8 @@ void FGE::ImGuiLayer::Begin()
 
 void FGE::ImGuiLayer::End()
 {
-    auto& dx11 = Application::Get().GetWindow()->GetDX11();
-    auto context = dx11.GetDeviceContext();
-    auto renderTargetView = dx11.GetRenderTargetView();
-	
     // Rendering
     ImGui::Render();
-    const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
-    context->OMSetRenderTargets(1, renderTargetView.GetAddressOf(), NULL);
-    context->ClearRenderTargetView(renderTargetView.Get(), clear_color_with_alpha);
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 }

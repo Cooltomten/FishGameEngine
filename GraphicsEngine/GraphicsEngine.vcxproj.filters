@@ -102,6 +102,9 @@
     <ClInclude Include="src\FGE\ImGui\ImGuiLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\DirectXTK\SimpleMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GraphicsEngine.pch.cpp">
@@ -164,6 +167,9 @@
     <ClCompile Include="src\FGE\ImGui\ImGuiLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\DirectXTK\SimpleMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="..\Temporary\DefaultPS.cso">
@@ -185,6 +191,9 @@
     </None>
     <None Include="cpp.hint" />
     <None Include="src\FGE\Shaders\ShaderStructs.hlsli" />
+    <None Include="src\DirectXTK\SimpleMath.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\FGE\Shaders\DefaultPS.hlsl" />

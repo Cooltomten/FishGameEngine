@@ -8,6 +8,8 @@
 #include "FGE/Rendering/Buffers/Vertex.h"
 
 
+#include "DirectXTK/SimpleMath.h"
+
 #include <TgaFbxImporter/FBXImporter.h>
 
 
@@ -82,17 +84,21 @@ namespace FGE
 
 		animation->Name = tgaAnimation.Name;
 		animation->FrameCount = tgaAnimation.Length;
-		animation->Duration = tgaAnimation.Duration;
 		animation->FramesPerSecond = tgaAnimation.FramesPerSecond;
 
 		for (auto& tgaFrame : tgaAnimation.Frames)
 		{
+			
 			Animation::Frame frame;
 			for (auto& tgaLocTrans : tgaFrame.LocalTransforms)
 			{
-				CU::Matrix4x4<float> localTransform;
-				localTransform = tgaLocTrans.Data;
-				frame.LocalTransforms.push_back(localTransform);
+				DirectX::SimpleMath::Matrix dxtkMatrix(tgaLocTrans.Data);
+
+				Animation::Frame::FrameTransform frameTransform;
+				
+				dxtkMatrix.Decompose(frameTransform.Scale, frameTransform.Rotation, frameTransform.Translation);
+
+				frame.LocalTransforms.emplace_back(frameTransform);
 			}
 			animation->Frames.push_back(frame);
 		}
