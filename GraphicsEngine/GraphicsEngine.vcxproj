@@ -181,6 +181,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\DirectXTK\DDSTextureLoader11.h" />
     <ClInclude Include="src\DirectXTK\SimpleMath.h" />
     <ClInclude Include="src\FGE\Asset\AnimatedMesh.h" />
     <ClInclude Include="src\FGE\Asset\Animation.h" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\FGE\Asset\Mesh.h" />
     <ClInclude Include="src\FGE\Asset\ResourceCache.h" />
     <ClInclude Include="src\FGE\Asset\SubMesh.h" />
+    <ClInclude Include="src\FGE\Asset\Texture.h" />
     <ClInclude Include="src\FGE\Event\ApplicationEvents.h" />
     <ClInclude Include="src\FGE\Event\Event.h" />
     <ClInclude Include="src\FGE\ImGui\ImGuiLayer.h" />
@@ -211,6 +213,7 @@
     <ClInclude Include="src\FGE\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DirectXTK\DDSTextureLoader11.cpp" />
     <ClCompile Include="src\DirectXTK\SimpleMath.cpp" />
     <ClCompile Include="src\FGE\Asset\AnimatedMesh.cpp" />
     <ClCompile Include="src\FGE\Asset\Animation.cpp" />

@@ -17,7 +17,7 @@ namespace FGE
 		Texture() = default;
 		~Texture() = default;
 
-		static AssetType GetStaticType() { return AssetType::AnimatedMesh; }
+		static AssetType GetStaticType() { return AssetType::; }
 		inline AssetType GetAssetType() const override { return GetStaticType(); }
 
 		void SetAsResource();
