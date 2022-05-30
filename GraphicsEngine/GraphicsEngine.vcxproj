@@ -239,18 +239,6 @@
     <ClCompile Include="src\FGE\Core\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\Temporary\DefaultPS.cso">
-      <FileType>Document</FileType>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Bin\$(Configuration);%(DestinationFolders)</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Bin\$(Configuration);%(DestinationFolders)</DestinationFolders>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="..\Temporary\DefaultVS.cso">
-      <FileType>Document</FileType>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Bin\$(Configuration);%(DestinationFolders)</DestinationFolders>
-      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Bin\$(Configuration);%(DestinationFolders)</DestinationFolders>
-    </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="cpp.hint" />
     <None Include="src\DirectXTK\SimpleMath.inl" />
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorDescription.inl" />

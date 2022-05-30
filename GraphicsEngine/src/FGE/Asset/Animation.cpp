@@ -11,81 +11,51 @@ std::vector<CU::Matrix4x4<float>> FGE::Animation::Sample(float aTime, Skeleton& 
 	std::vector<CU::Matrix4x4<float>> result;
 	result.resize(aSkeleton.Bones.size());
 
-	
-	float originalToBlendFPS = (FrameCount - 1) * aAnimationToBlendWith->FramesPerSecond / aAnimationToBlendWith->FrameCount;
-
-	float secondsPerFrame = 1 / CU::Lerp(FramesPerSecond, originalToBlendFPS, aBlendAlpha);
-	float duration = (FrameCount -1) * secondsPerFrame;
-	float frameTime = fmod(aTime , duration) / secondsPerFrame;
-	int frame = static_cast<int>(std::floor(frameTime)) % (FrameCount-1) + 1;
-	uint32_t nextFrame = (frame + 1);
-	if(nextFrame == FrameCount)
+	float secondsPerFrame = 1 / FramesPerSecond;
+	float frameTime = fmod(aTime, GetDuration()) / secondsPerFrame;
+	int currentFrameIndex = static_cast<int>(std::floor(frameTime)) % (FrameCount - 1) + 1;
+	uint32_t nextFrameIndex = (currentFrameIndex + 1);
+	if (nextFrameIndex == FrameCount)
 	{
-		nextFrame = 1;
+		nextFrameIndex = 1;
 	}
 	float delta = frameTime - std::floor(frameTime);
 
-
-	float blendToOriginalFPS = (aAnimationToBlendWith->FrameCount - 1) * FramesPerSecond / FrameCount;
-	
-	float secondsPerFrameBlend = 1 / CU::Lerp(aAnimationToBlendWith->FramesPerSecond, blendToOriginalFPS, 1-aBlendAlpha);
-	float durBlend =  (aAnimationToBlendWith->FrameCount-1) * secondsPerFrameBlend;
-	float frameTimeBlend = fmod(aTime,durBlend) / secondsPerFrameBlend;
-	int frameBlend = static_cast<int>(std::floor(frameTimeBlend)) % (aAnimationToBlendWith->FrameCount - 1) + 1;
-	uint32_t nextFrameBlend = (frameBlend + 1) ;
-	if(nextFrameBlend == aAnimationToBlendWith->FrameCount)
+	float secondsPerFrameBlend = 1 / aAnimationToBlendWith->FramesPerSecond;
+	float frameTimeBlend = fmod(aTime, aAnimationToBlendWith->GetDuration()) / secondsPerFrameBlend;
+	int currentFrameBlendIndex = static_cast<int>(std::floor(frameTimeBlend)) % (aAnimationToBlendWith->FrameCount - 1) + 1;
+	uint32_t nextFrameBlendIndex = (currentFrameBlendIndex + 1);
+	if (nextFrameBlendIndex == aAnimationToBlendWith->FrameCount)
 	{
-		nextFrameBlend = 1;
+		nextFrameBlendIndex = 1;
 	}
 	float deltaBlend = frameTimeBlend - std::floor(frameTimeBlend);
 
-	
-	CalculateTransforms(frame, nextFrame, frameBlend, nextFrameBlend,
-		delta, deltaBlend, aBlendAlpha, aSkeleton,
-		0, CU::Matrix4x4<float>(), aAnimationToBlendWith->Frames, result);
+
+	Frame currentFrame = Frames[currentFrameIndex];
+	Frame nextFrame = Frames[nextFrameIndex];
+
+	Frame currentFrameBlend = aAnimationToBlendWith->Frames[currentFrameBlendIndex];
+	Frame nextFrameBlend = aAnimationToBlendWith->Frames[nextFrameBlendIndex];
+
+
+	currentFrame.BlendWith(nextFrame, delta);
+	currentFrameBlend.BlendWith(nextFrameBlend, deltaBlend);
+
+	currentFrame.BlendWith(currentFrameBlend, aBlendAlpha);
+
+	CalculateTransforms(currentFrame, aSkeleton,
+		0, CU::Matrix4x4<float>(), result);
 	return result;
 }
 
-void FGE::Animation::CalculateTransforms(uint32_t aCurrentFrame, uint32_t aNextFrame, uint32_t aCurrentFrameBlend, uint32_t aNextFrameBlend,
-	float aDelta, float aDeltaBlend, float aBlendAlpha, Skeleton& aSkeleton, uint32_t aIndex, const CU::Matrix4x4<float>& aParentTransform,
-	const std::vector<Frame>& aFramesBlend, std::vector<CU::Matrix4x4<float>>& aTransforms) const
+void FGE::Animation::CalculateTransforms(const Frame& aFrame, Skeleton& aSkeleton, uint32_t aIndex, const CU::Matrix4x4<float>& aParentTransform, std::vector<CU::Matrix4x4<float>>& aTransforms) const
 {
 	const auto& bone = aSkeleton.Bones[aIndex];
 
-	auto translation = Frames[aCurrentFrame].LocalTransforms[aIndex].Translation;
-	auto rotation = Frames[aCurrentFrame].LocalTransforms[aIndex].Rotation;
-	auto scale = Frames[aCurrentFrame].LocalTransforms[aIndex].Scale;
-	{
-		auto nextTranslation = Frames[aNextFrame].LocalTransforms[aIndex].Translation;
-
-		auto nextRotation = Frames[aNextFrame].LocalTransforms[aIndex].Rotation;
-
-		auto nextScale = Frames[aNextFrame].LocalTransforms[aIndex].Scale;
-
-		translation = translation.Lerp(translation, nextTranslation, aDelta);
-		rotation = rotation.Slerp(rotation, nextRotation, aDelta);
-		scale = scale.Lerp(scale, nextScale, aDelta);
-	}
-
-	{
-		auto translationBlend = aFramesBlend[aCurrentFrameBlend].LocalTransforms[aIndex].Translation;
-		auto rotationBlend = aFramesBlend[aCurrentFrameBlend].LocalTransforms[aIndex].Rotation;
-		auto scaleBlend = aFramesBlend[aCurrentFrameBlend].LocalTransforms[aIndex].Scale;
-
-		auto nextTranslationBlend = aFramesBlend[aNextFrameBlend].LocalTransforms[aIndex].Translation;
-		auto nextRotationBlend = aFramesBlend[aNextFrameBlend].LocalTransforms[aIndex].Rotation;
-		auto nextScaleBlend = aFramesBlend[aNextFrameBlend].LocalTransforms[aIndex].Scale;
-
-		translationBlend = translationBlend.Lerp(translationBlend, nextTranslationBlend, aDeltaBlend);
-		rotationBlend = rotationBlend.Slerp(rotationBlend, nextRotationBlend, aDeltaBlend);
-		scaleBlend = scaleBlend.Lerp(scaleBlend, nextScaleBlend, aDeltaBlend);
-
-		translation = translation.Lerp(translation, translationBlend, aBlendAlpha);
-		rotation = rotation.Slerp(rotation, rotationBlend, aBlendAlpha);
-		scale = scale.Lerp(scale, scaleBlend, aBlendAlpha);
-
-	}
-
+	auto translation = aFrame.LocalTransforms[aIndex].Translation;
+	auto rotation = aFrame.LocalTransforms[aIndex].Rotation;
+	auto scale = aFrame.LocalTransforms[aIndex].Scale;
 
 	DirectX::SimpleMath::Matrix dxtkLocalTransform = DirectX::SimpleMath::Matrix::Identity;
 	dxtkLocalTransform *= DirectX::SimpleMath::Matrix::CreateScale(scale);
@@ -104,16 +74,67 @@ void FGE::Animation::CalculateTransforms(uint32_t aCurrentFrame, uint32_t aNextF
 	//Dont calculate children with BindPoseInverse
 	for (uint32_t i = 0; i < bone.Children.size(); ++i)
 	{
-		CalculateTransforms(aCurrentFrame, aNextFrame, aCurrentFrameBlend, aNextFrameBlend,
-			aDelta, aDeltaBlend, aBlendAlpha, aSkeleton, bone.Children[i],
-			boneTransform, aFramesBlend, aTransforms);
+		CalculateTransforms(aFrame, aSkeleton, bone.Children[i],
+			boneTransform, aTransforms);
 	}
 
 
 }
 
-float FGE::Animation::GetDuration() const 
+float FGE::Animation::GetDuration() const
 {
 	float secondsPerFrame = 1 / FramesPerSecond;
-	return (FrameCount-1) * secondsPerFrame;
+	return (FrameCount - 1) * secondsPerFrame;
+}
+
+std::vector<CU::Matrix4x4<float>> FGE::BlendSpace::Sample(float aBlendAlpha, const Skeleton& aSkeleton, int aFrame) const
+{
+
+	std::vector<CU::Matrix4x4<float>> result;
+	result.resize(aSkeleton.Bones.size());
+	int firstAnimIndex = -1;
+	for (int i = Values.size() - 2; i >= 0; i--)
+	{
+		if (aBlendAlpha >= Values[i])
+		{
+			firstAnimIndex = i;
+			break;
+		}
+	}
+
+	float delta = aBlendAlpha - Values[firstAnimIndex];
+	//map delta to [0,1] range where 1 is the nex anim
+	float deltaNormalized = delta / (Values[firstAnimIndex + 1] - Values[firstAnimIndex]);
+
+	//if (deltaNormalized < 0.5)
+	//{
+	//	result = Animations[firstAnimIndex]->Frames;
+	//}
+	//else
+	//{
+	//	result = Animations[firstAnimIndex + 1]->Frames;
+	//}
+
+
+	return result;
+}
+
+void FGE::Animation::Frame::BlendWith(const Frame& aFrameToBlendWith, float aBlendAlpha)
+{
+	for (int i = 0; i < LocalTransforms.size(); ++i)
+	{
+		auto translationBlend = aFrameToBlendWith.LocalTransforms[i].Translation;
+		auto rotationBlend = aFrameToBlendWith.LocalTransforms[i].Rotation;
+		auto scaleBlend = aFrameToBlendWith.LocalTransforms[i].Scale;
+
+		auto& translation = LocalTransforms[i].Translation;
+		auto& rotation = LocalTransforms[i].Rotation;
+		auto& scale = LocalTransforms[i].Scale;
+		
+
+		translation = translation.Lerp(translation, translationBlend, aBlendAlpha);
+		rotation = rotation.Slerp(rotation, rotationBlend, aBlendAlpha);
+		scale = scale.Lerp(scale, scaleBlend, aBlendAlpha);
+		
+	}
 }

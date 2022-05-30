@@ -172,14 +172,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\Temporary\DefaultPS.cso">
-      <Filter>Temporary</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="..\Temporary\DefaultVS.cso">
-      <Filter>Temporary</Filter>
-    </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorDescription.inl">
       <Filter>Header Files</Filter>
     </None>
