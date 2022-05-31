@@ -2,8 +2,10 @@
 #include "AnimatedMesh.h"
 
 #include "FGE/Asset/SubMesh.h"
+#include "FGE/Asset/Material.h"
 
 #include "FGE/Rendering/Renderer.h"
+
 
 namespace FGE
 {
@@ -12,6 +14,11 @@ namespace FGE
 	{
 		mySubMeshes = aSubMesh;
 		mySkeleton = aSkeleton;
+
+		for (int i = 0; i < mySubMeshes.size(); i++)
+		{
+			myMaterials[mySubMeshes[i]->GetMaterialIndex()] = Material::Default;
+		}
 	}
 
 	void FGE::AnimatedMesh::Render(const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Animation> aAnimation,

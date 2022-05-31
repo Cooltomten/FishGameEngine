@@ -24,21 +24,32 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	myCameraTransform.SetPosition(0, 0, -100);
 	myCamera->RecalculateViewMatrix(myCameraTransform.GetMatrix());
 
+	myCubeMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Cube");
+	
+	
 	myChestMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Assets/Meshes/SM_Particle_Chest.fbx");
 
-	myMaterial = std::make_shared<FGE::Material>();
+	myChestMaterial = std::make_shared<FGE::Material>();
+	myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_C.dds"));
+	myChestMesh->SetMaterial(myChestMaterial, 0);
 
-	myMaterial->SetAlbedo({ 0,0,0.5 });
-	myChestMesh->SetMaterial(myMaterial, 0);
-
+	
 	myGremlinMesh = FGE::ResourceCache::GetAsset<FGE::AnimatedMesh>("Assets/Animations/Gremlin/gremlin_sk.fbx");
-	myGremlinMesh->SetMaterial(myMaterial, 0);
+
+	myGremlinMaterial = std::make_shared<FGE::Material>();
+	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_gremlin_C.dds"));
+	myGremlinMesh->SetMaterial(myGremlinMaterial, 0);
+
 	myGremlinWalkAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_walk.fbx");
 	myGremlinRunAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_run.fbx");
 	
 
+	myCubeTransform.SetPosition(-50,0,0);
+	myCubeTransform.SetScale(0.2f, 0.2f, 0.2f);
+
 	myChestTransform.SetPosition({ 0,0,0 });
 	myChestTransform.SetScale(0.2f,0.2f,0.2f);
+	
 	myGremlinTransform.SetPosition({ 50,0,0 });
 
 
@@ -89,6 +100,7 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 	FGE::Renderer::Begin(myCamera);
 
+	myCubeMesh->Render(myCubeTransform.GetMatrix());
 	myChestMesh->Render(myChestTransform.GetMatrix());
 	myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim,myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
 

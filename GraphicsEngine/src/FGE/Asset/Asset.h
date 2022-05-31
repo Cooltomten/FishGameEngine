@@ -8,7 +8,8 @@ namespace FGE
 	{
 		Mesh,
 		AnimatedMesh,
-		Animation
+		Animation,
+		Texture
 	};
 
 	class Asset

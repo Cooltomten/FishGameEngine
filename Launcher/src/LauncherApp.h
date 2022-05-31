@@ -31,8 +31,6 @@ private:
 	void CameraController(float aTimeStep);
 
 	
-	std::shared_ptr<FGE::Material> myMaterial;
-	
 
 	FGE::Game* myGame = nullptr;
 
@@ -42,8 +40,12 @@ private:
 	std::shared_ptr<FGE::Camera> myCamera;
 	Comp::Transform myCameraTransform;
 
+	std::shared_ptr<FGE::Mesh> myCubeMesh;
+	Comp::Transform myCubeTransform;
+
 	std::shared_ptr<FGE::Mesh> myChestMesh;
 	Comp::Transform myChestTransform;
+	std::shared_ptr<FGE::Material> myChestMaterial;
 
 	std::shared_ptr<FGE::AnimatedMesh> myGremlinMesh;
 	Comp::Transform myGremlinTransform;
@@ -52,6 +54,7 @@ private:
 	float myAnimationTimeStepMultiplier = 1;
 	std::shared_ptr<FGE::Animation> myGremlinWalkAnim;
 	std::shared_ptr<FGE::Animation> myGremlinRunAnim;
+	std::shared_ptr<FGE::Material> myGremlinMaterial;
 
 	
 

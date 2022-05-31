@@ -13,18 +13,20 @@ namespace FGE
 {
 	class Texture : public Asset
 	{
-		public:
+	private:
+		friend class TextureImporter;
+	public:
 		Texture() = default;
-		~Texture() = default;
+		~Texture();
 
-		static AssetType GetStaticType() { return AssetType::; }
+		static AssetType GetStaticType() { return AssetType::Texture; }
 		inline AssetType GetAssetType() const override { return GetStaticType(); }
 
-		void SetAsResource();
+		void SetAsResource(uint32_t aSlot);
 
 	private:
 		ComPtr<struct ID3D11ShaderResourceView> mySRV;
 		ComPtr<struct ID3D11Resource> myTexture;
-		
+
 	};
 }

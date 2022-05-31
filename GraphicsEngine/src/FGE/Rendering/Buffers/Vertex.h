@@ -33,6 +33,12 @@ namespace FGE
 			Position = aPosition;
 			VertexColors[0] = aVertexColor;
 		}
+		Vertex(CU::Vector4f aPosition, CU::Vector4f aVertexColor, CU::Vector2f aUV)
+		{
+			Position = aPosition;
+			VertexColors[0] = aVertexColor;
+			UVs[0] = aUV;
+		}
 
 		CU::Vector4f Position = { 0,0,0,1 };
 		CU::Vector4f VertexColors[4] =

@@ -12,12 +12,18 @@ namespace FGE
 	void Mesh::Init(std::vector<std::shared_ptr<SubMesh>> aSubMesh)
 	{
 		mySubMeshes = aSubMesh;
+		
+		for (int i = 0; i < mySubMeshes.size(); i++)
+		{
+			myMaterials[mySubMeshes[i]->GetMaterialIndex()] = Material::Default;
+		}
 	}
 
 	void Mesh::Render(const CU::Matrix4x4<float>& aTransform)
 	{
 		for (int i = 0; i < mySubMeshes.size(); i++)
 		{
+			
 			Renderer::Submit(mySubMeshes[i]->GetVertexArray(), aTransform, myMaterials[mySubMeshes[i]->GetMaterialIndex()]);
 		}
 	}

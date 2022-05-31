@@ -1,7 +1,10 @@
 #pragma once
 #include "FGE/Asset/Mesh.h"
+#include "FGE/Asset/Texture.h"
 #include "FGE/Rendering/Buffers/Vertex.h"
+
 #include "FGE/Asset/FBXImporter.h"
+#include "FGE/Asset/Importers/TextureImporter.h"
 
 #include "GraphicsEngine.pch.h"
 
@@ -28,6 +31,7 @@ namespace FGE
 		static std::unordered_map<std::string, std::shared_ptr<Asset>> myAssets;
 
 		static std::unique_ptr<FBXImporter> myFBXImporter;
+		static std::unique_ptr<TextureImporter> myTextureImporter;
 	};
 
 	template<class T>
@@ -52,13 +56,16 @@ namespace FGE
 		switch (T::GetStaticType())
 		{
 		case AssetType::Mesh:
-			asset = myFBXImporter->ImportMesh(aPath.string());
+			asset = std::reinterpret_pointer_cast<Asset>(myFBXImporter->ImportMesh(aPath.string()));
 			break;
 		case AssetType::AnimatedMesh:
-			asset = myFBXImporter->ImportAnimatedMesh(aPath.string());
+			asset = std::reinterpret_pointer_cast<Asset>(myFBXImporter->ImportAnimatedMesh(aPath.string()));
 			break;
 		case AssetType::Animation:
-			asset = myFBXImporter->ImportAnimation(aPath.string());
+			asset = std::reinterpret_pointer_cast<Asset>(myFBXImporter->ImportAnimation(aPath.string()));
+			break;
+		case AssetType::Texture:
+			asset = std::reinterpret_pointer_cast<Asset>(myTextureImporter->ImportTexture(aPath));
 			break;
 		}
 

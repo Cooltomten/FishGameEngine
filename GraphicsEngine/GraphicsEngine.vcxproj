@@ -187,6 +187,7 @@
     <ClInclude Include="src\FGE\Asset\Animation.h" />
     <ClInclude Include="src\FGE\Asset\Asset.h" />
     <ClInclude Include="src\FGE\Asset\FBXImporter.h" />
+    <ClInclude Include="src\FGE\Asset\Importers\TextureImporter.h" />
     <ClInclude Include="src\FGE\Asset\Material.h" />
     <ClInclude Include="src\FGE\Asset\Mesh.h" />
     <ClInclude Include="src\FGE\Asset\ResourceCache.h" />
@@ -218,10 +219,12 @@
     <ClCompile Include="src\FGE\Asset\AnimatedMesh.cpp" />
     <ClCompile Include="src\FGE\Asset\Animation.cpp" />
     <ClCompile Include="src\FGE\Asset\FBXImporter.cpp" />
+    <ClCompile Include="src\FGE\Asset\Importers\TextureImporter.cpp" />
     <ClCompile Include="src\FGE\Asset\Material.cpp" />
     <ClCompile Include="src\FGE\Asset\Mesh.cpp" />
     <ClCompile Include="src\FGE\Asset\ResourceCache.cpp" />
     <ClCompile Include="src\FGE\Asset\SubMesh.cpp" />
+    <ClCompile Include="src\FGE\Asset\Texture.cpp" />
     <ClCompile Include="src\FGE\Core\Application.cpp" />
     <ClCompile Include="src\FGE\Core\DX11.cpp" />
     <ClCompile Include="src\FGE\Core\DXErrorHandling\dxerr.cpp" />

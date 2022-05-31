@@ -105,14 +105,7 @@ namespace FGE
 			memcpy(bufferData.pData, &myObjectBufferData, sizeof(ObjectBufferData));
 			dx11.Unmap(myObjectBuffer.Get(), 0);
 
-			//map Material buffer
-			myMaterialBufferData.Albedo = command.Material->GetAlbedo();
-			ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
-
-			dx11.Map(myMaterialBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &bufferData);
-			memcpy(bufferData.pData, &myMaterialBufferData, sizeof(MaterialBufferData));
-			dx11.Unmap(myMaterialBuffer.Get(), 0);
-
+			command.Material->SetAsResource(myMaterialBuffer);
 
 			command.Data->Bind();
 

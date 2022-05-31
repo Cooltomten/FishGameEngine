@@ -56,3 +56,7 @@ struct PixelOutput
     float4 myColor : SV_TARGET;
 };
 
+SamplerState defaultSampler : register(s0);
+
+Texture2D albedoTexture : register(t0);
+
