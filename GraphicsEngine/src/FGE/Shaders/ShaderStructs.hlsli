@@ -11,6 +11,10 @@ struct VertexInput
     float2 myUV3 : TEXCOORD2;
     float2 myUV4 : TEXCOORD3;
     
+    float3 myTangent : TANGENT;
+    float3 myBinormal : BINORMAL;
+    float3 myNormal : NORMAL;
+    
     uint4 myBoneIDs : BONEIDS;
     float4 myBoneWeights : BONEWEIGHTS;
     
@@ -48,6 +52,10 @@ struct VertexToPixel
     float4 myVxColor2 : COLOR1;
     float4 myVxColor3 : COLOR2;
     float4 myVxColor4 : COLOR3;
+    
+    float3 myTangent : TANGENT;
+    float3 myBinormal : BINORMAL;
+    float3 myNormal : NORMAL;
 };
 
 
@@ -59,4 +67,4 @@ struct PixelOutput
 SamplerState defaultSampler : register(s0);
 
 Texture2D albedoTexture : register(t0);
-
+Texture2D normalTexture : register(t1);

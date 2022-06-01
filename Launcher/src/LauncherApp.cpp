@@ -31,6 +31,7 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 
 	myChestMaterial = std::make_shared<FGE::Material>();
 	myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_C.dds"));
+	myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_N.dds"));
 	myChestMesh->SetMaterial(myChestMaterial, 0);
 
 	
@@ -38,6 +39,7 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 
 	myGremlinMaterial = std::make_shared<FGE::Material>();
 	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_gremlin_C.dds"));
+	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Gremlin_N.dds"));
 	myGremlinMesh->SetMaterial(myGremlinMaterial, 0);
 
 	myGremlinWalkAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_walk.fbx");

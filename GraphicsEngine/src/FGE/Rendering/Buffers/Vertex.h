@@ -39,6 +39,15 @@ namespace FGE
 			VertexColors[0] = aVertexColor;
 			UVs[0] = aUV;
 		}
+		Vertex(CU::Vector4f aPosition, CU::Vector4f aVertexColor, CU::Vector2f aUV, CU::Vector3f aNormal,  CU::Vector3f aTangent, CU::Vector3f aBinormal)
+		{
+			Position = aPosition;
+			VertexColors[0] = aVertexColor;
+			UVs[0] = aUV;
+			Normal = aNormal;
+			Binormal = aBinormal;
+			Tangent = aTangent;
+		}
 
 		CU::Vector4f Position = { 0,0,0,1 };
 		CU::Vector4f VertexColors[4] =

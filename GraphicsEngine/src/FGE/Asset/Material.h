@@ -21,7 +21,7 @@ namespace FGE
 		enum
 		{
 			Albedo,
-			//Normal,
+			Normal,
 			COUNT
 		};
 	}
@@ -34,7 +34,7 @@ namespace FGE
 		struct MaterialData
 		{
 			alignas(16)CU::Vector3f Albedo;
-			//alignas(16)CU::Vector3f Normal;
+			alignas(16)CU::Vector3f Normal;
 
 		};
 	public:
