@@ -83,6 +83,7 @@ namespace FGE
 		void Map(ID3D11Resource* aResource, UINT aSubResource, D3D11_MAP aMapType, UINT aMapFlags, D3D11_MAPPED_SUBRESOURCE* aMappedResource);
 		void Unmap(ID3D11Resource* aResource, UINT aSubResource);
 		void VSSetConstantBuffers(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aBuffers);
+		void PSSetConstantBuffers(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aBuffers);
 
 	private:
 		ComPtr<ID3D11Device> Device;

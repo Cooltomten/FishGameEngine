@@ -220,6 +220,11 @@ namespace FGE
 		Context->VSSetConstantBuffers(aStartSlot, aNumBuffers, aBuffers);
 	}
 
+	void DX11::PSSetConstantBuffers(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aBuffers)
+	{
+		Context->PSSetConstantBuffers(aStartSlot, aNumBuffers, aBuffers);
+	}
+
 
 
 

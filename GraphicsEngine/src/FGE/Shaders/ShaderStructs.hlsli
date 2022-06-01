@@ -39,6 +39,13 @@ cbuffer MaterialBuffer: register(b2)
     float padding;
 }
 
+cbuffer LightBuffer : register(b3)
+{
+    float3 LB_Color;
+    flot LB_Intensity;
+    float3 LB_Direction;
+}
+
 struct VertexToPixel
 {
 	float4 myPosition : SV_POSITION;
@@ -68,3 +75,5 @@ SamplerState defaultSampler : register(s0);
 
 Texture2D albedoTexture : register(t0);
 Texture2D normalTexture : register(t1);
+
+Texture2D directionalLightTexture : register(t10);
