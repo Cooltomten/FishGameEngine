@@ -205,6 +205,8 @@
     <ClInclude Include="src\FGE\Rendering\Buffers\ConstantBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexArray.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexBuffer.h" />
+    <ClInclude Include="src\FGE\Rendering\Lights\DirectionalLight.h" />
+    <ClInclude Include="src\FGE\Rendering\Lights\EnvironmentLight.h" />
     <ClInclude Include="src\FGE\Rendering\Lights\Light.h" />
     <ClInclude Include="src\FGE\Rendering\Renderer.h" />
     <ClInclude Include="src\FGE\EntryPoint.h" />
@@ -235,6 +237,9 @@
     <ClCompile Include="src\FGE\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexBuffer.cpp" />
+    <ClCompile Include="src\FGE\Rendering\Lights\DirectionalLight.cpp" />
+    <ClCompile Include="src\FGE\Rendering\Lights\EnvironmentLight.cpp" />
+    <ClCompile Include="src\FGE\Rendering\Lights\Light.cpp" />
     <ClCompile Include="src\FGE\Rendering\Renderer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Camera\Camera.cpp" />
     <ClCompile Include="src\GraphicsEngine.pch.cpp">

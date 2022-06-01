@@ -5,6 +5,6 @@ namespace FGE
 {
 	class DirectionalLight : public Light
 	{
-		void SetAsResource();
+		void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) override;
 	};
 }
