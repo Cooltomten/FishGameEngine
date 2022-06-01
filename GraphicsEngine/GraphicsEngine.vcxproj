@@ -205,6 +205,7 @@
     <ClInclude Include="src\FGE\Rendering\Buffers\ConstantBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexArray.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexBuffer.h" />
+    <ClInclude Include="src\FGE\Rendering\Lights\Light.h" />
     <ClInclude Include="src\FGE\Rendering\Renderer.h" />
     <ClInclude Include="src\FGE\EntryPoint.h" />
     <ClInclude Include="src\FabException.h" />
