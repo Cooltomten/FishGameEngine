@@ -24,6 +24,7 @@ cbuffer FrameBuffer: register(b0)
 {
     float4x4 FB_ToView;
     float4x4 FB_ToProjection;
+    unsigned int FB_RenderMode;
 }
 
 cbuffer ObjectBuffer: register(b1)
@@ -42,7 +43,7 @@ cbuffer MaterialBuffer: register(b2)
 cbuffer LightBuffer : register(b3)
 {
     float3 LB_Color;
-    flot LB_Intensity;
+    float LB_Intensity;
     float3 LB_Direction;
 }
 
@@ -76,4 +77,4 @@ SamplerState defaultSampler : register(s0);
 Texture2D albedoTexture : register(t0);
 Texture2D normalTexture : register(t1);
 
-Texture2D directionalLightTexture : register(t10);
+TextureCube environmentTexture : register(t10);

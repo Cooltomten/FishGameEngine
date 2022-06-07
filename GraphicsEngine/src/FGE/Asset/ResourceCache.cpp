@@ -199,16 +199,16 @@ namespace FGE
 			else if (i < 20)
 			{
 				mdlVertices[i].Normal = { 1, 0, 0 };//normal
-				mdlVertices[i].Tangent = { 1, 0, 0 };//tangent
+				mdlVertices[i].Tangent = {0, -1, 0 };//tangent
 			}
 			//negative x
 			else if (i < 24)
 			{
 				mdlVertices[i].Normal = { -1, 0, 0 };//normal
-				mdlVertices[i].Tangent = { 1, 0, 0 };//tangent
+				mdlVertices[i].Tangent = { 0, 1, 0 };//tangent
 			}
 
-			mdlVertices[i].Binormal = mdlVertices[i].Normal.Cross(mdlVertices[i].Tangent);
+			mdlVertices[i].Binormal = mdlVertices[i].Tangent.Cross(mdlVertices[i].Normal);
 		}
 		std::vector<unsigned int> mdlIndices =
 		{

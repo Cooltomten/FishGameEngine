@@ -23,7 +23,7 @@ namespace FGE
 
 	public:
 		Light() = default;
-		~Light() = default;
+		virtual ~Light() = default;
 		void Init(const CU::Vector3f& aColor, float aIntensity);
 
 		virtual void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) = 0;

@@ -14,6 +14,8 @@ namespace FGE
 	class AnimatedMesh;
 	class Animation;
 	class Material;
+	class DirectionalLight;
+	class EnvironmentLight;
 }
 
 class LauncherApp : public FGE::Application
@@ -55,6 +57,13 @@ private:
 	std::shared_ptr<FGE::Animation> myGremlinWalkAnim;
 	std::shared_ptr<FGE::Animation> myGremlinRunAnim;
 	std::shared_ptr<FGE::Material> myGremlinMaterial;
+
+	std::shared_ptr<FGE::DirectionalLight> myDirectionalLight;
+	Comp::Transform myDirectionalLightTransform;
+
+	std::shared_ptr<FGE::EnvironmentLight> myEnvironmentLight;
+
+	std::vector<std::string> myRenderModesStrings;
 
 	
 

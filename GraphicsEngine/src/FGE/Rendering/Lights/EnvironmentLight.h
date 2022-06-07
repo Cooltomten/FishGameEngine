@@ -8,6 +8,7 @@ namespace FGE
 	class EnvironmentLight : public Light
 	{
 	public:
+		~EnvironmentLight() override = default;
 		void SetCubeMapTexture(std::shared_ptr<Texture> aTexture);
 		virtual void SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer) override;
 

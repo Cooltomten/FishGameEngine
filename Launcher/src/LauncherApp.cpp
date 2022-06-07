@@ -1,5 +1,7 @@
 #include "LauncherApp.h"
 #include <FGE/Rendering/Renderer.h>
+#include <FGE/Rendering/Lights/DirectionalLight.h>
+#include <FGE/Rendering/Lights/EnvironmentLight.h>
 
 #include <FGE/Asset/ResourceCache.h>
 #include <FGE/Asset/Mesh.h>
@@ -10,6 +12,7 @@
 #include <CommonUtilities/InputManager.h>
 #include <CommonUtilities/UtilityFunctions.hpp>
 
+
 #include <ImGui/imgui.h>
 
 
@@ -17,6 +20,44 @@
 LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	:FGE::Application(aProperties)
 {
+	//Default,
+	//UV1,
+	//UV2,
+	//UV3,
+	//UV4,
+	//VertexColors1,
+	//VertexColors2,
+	//VertexColors3,
+	//VertexColors4,
+	//VertexNormal,
+	//PixelNormal,
+	//AlbedoMap,
+	//NormalMap,
+	//DiffuseLight,
+	//AmbientLight,
+	// 		DiffuseNoAlbedo,
+	//AmbientNoAlbedo
+	//COUNT
+
+	myRenderModesStrings.emplace_back("Default");
+	myRenderModesStrings.emplace_back("UV 1");
+	myRenderModesStrings.emplace_back("UV 2");
+	myRenderModesStrings.emplace_back("UV 3");
+	myRenderModesStrings.emplace_back("UV 4");
+	myRenderModesStrings.emplace_back("Vertex Colors 1");
+	myRenderModesStrings.emplace_back("Vertex Colors 2");
+	myRenderModesStrings.emplace_back("Vertex Colors 3");
+	myRenderModesStrings.emplace_back("Vertex Colors 4");
+	myRenderModesStrings.emplace_back("Vertex Normal");
+	myRenderModesStrings.emplace_back("Pixel Normal");
+	myRenderModesStrings.emplace_back("Albedo Map");
+	myRenderModesStrings.emplace_back("Normal Map");
+	myRenderModesStrings.emplace_back("Diffuse");
+	myRenderModesStrings.emplace_back("Ambient");
+	myRenderModesStrings.emplace_back("Diffuse No Albedo");
+	myRenderModesStrings.emplace_back("Ambient No Albedo");
+
+
 	myGame = CreateGame();
 
 	myCamera = std::make_shared<FGE::Camera>();
@@ -24,9 +65,18 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	myCameraTransform.SetPosition(0, 0, -100);
 	myCamera->RecalculateViewMatrix(myCameraTransform.GetMatrix());
 
+	myDirectionalLight = std::make_shared<FGE::DirectionalLight>();
+	myDirectionalLight->Init({ 1,1,1 }, 1);
+
+	myEnvironmentLight = std::make_shared<FGE::EnvironmentLight>();
+	myEnvironmentLight->SetCubeMapTexture(FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/CubeMaps/skansen_cubemap.dds"));
+
+	FGE::Renderer::SetDirectionalLight(myDirectionalLight);
+	FGE::Renderer::SetEnvironmentLight(myEnvironmentLight);
+
 	myCubeMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Cube");
-	
-	
+
+
 	myChestMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Assets/Meshes/SM_Particle_Chest.fbx");
 
 	myChestMaterial = std::make_shared<FGE::Material>();
@@ -34,7 +84,7 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_N.dds"));
 	myChestMesh->SetMaterial(myChestMaterial, 0);
 
-	
+
 	myGremlinMesh = FGE::ResourceCache::GetAsset<FGE::AnimatedMesh>("Assets/Animations/Gremlin/gremlin_sk.fbx");
 
 	myGremlinMaterial = std::make_shared<FGE::Material>();
@@ -44,20 +94,20 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 
 	myGremlinWalkAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_walk.fbx");
 	myGremlinRunAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_run.fbx");
-	
 
-	myCubeTransform.SetPosition(-50,0,0);
+
+	myCubeTransform.SetPosition(-50, 0, 0);
 	myCubeTransform.SetScale(0.2f, 0.2f, 0.2f);
 
 	myChestTransform.SetPosition({ 0,0,0 });
-	myChestTransform.SetScale(0.2f,0.2f,0.2f);
-	
+	myChestTransform.SetScale(0.2f, 0.2f, 0.2f);
+
 	myGremlinTransform.SetPosition({ 50,0,0 });
 
+	myDirectionalLightTransform.SetRotation(0, 0, 0);
+	myDirectionalLight->SetDirection(myDirectionalLightTransform.GetForward());
 
 	myGame->OnStart();
-
-
 }
 
 LauncherApp::~LauncherApp()
@@ -80,7 +130,7 @@ bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 	myMaterialFadeTimer += aEvent.GetTimeStep();
 	myGremlinTimer += aEvent.GetTimeStep() * myAnimationTimeStepMultiplier;
 	float duration = CU::Lerp(myGremlinWalkAnim->GetDuration(), myGremlinRunAnim->GetDuration(), myGremlinAlphaBlend);
-	if(myGremlinTimer >= duration)
+	if (myGremlinTimer >= duration)
 	{
 		myGremlinTimer = 0;
 	}
@@ -90,6 +140,11 @@ bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 	}
 
 	CameraController(aEvent.GetTimeStep());
+
+
+	myChestTransform.SetRotation(myChestTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
+	myGremlinTransform.SetRotation(myGremlinTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
+	myCubeTransform.SetRotation(myCubeTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 
 	//float sinValue = 0.5 * (float)sin(myMaterialFadeTimer * 3) + 0.5;
 	//float cosValue = 0.5 * (float)cos(myMaterialFadeTimer * 3) + 0.5;
@@ -104,18 +159,32 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 	myCubeMesh->Render(myCubeTransform.GetMatrix());
 	myChestMesh->Render(myChestTransform.GetMatrix());
-	myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim,myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
+	myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim, myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
 
 	FGE::Renderer::Render();
 	FGE::Renderer::End();
 
-	ImGui::Begin("Test Animations");
+	ImGui::Begin("Stuff n things");
 
 	ImGui::Text("Animation Blend Alpha");
 	ImGui::DragFloat("##Animation Blend Alpha", &myGremlinAlphaBlend, 0.01f, 0, 1);
-	
+
 	ImGui::Text("Animation Time Step Multiplier");
-	ImGui::DragFloat("##Animation Time Step Multiplier", &myAnimationTimeStepMultiplier, 0.01f,0);
+	ImGui::DragFloat("##Animation Time Step Multiplier", &myAnimationTimeStepMultiplier, 0.01f, 0);
+
+
+
+	if (ImGui::BeginCombo("RenderMode", myRenderModesStrings[static_cast<uint32_t>(FGE::Renderer::GetRenderMode())].c_str()))
+	{
+		for (int i = 0; i < myRenderModesStrings.size(); ++i)
+		{
+			if (ImGui::Selectable(myRenderModesStrings[i].c_str()))
+			{
+				FGE::Renderer::SetRenderMode(static_cast<FGE::RenderMode>(i));
+			}
+		}
+		ImGui::EndCombo();
+	}
 
 	ImGui::End();
 

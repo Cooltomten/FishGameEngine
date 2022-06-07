@@ -3,4 +3,7 @@
 
 void FGE::Light::Init(const CU::Vector3f& aColor, float aIntensity)
 {
+	myLightBufferData.Color = aColor;
+	myLightBufferData.Intensity= aIntensity;
+
 }
