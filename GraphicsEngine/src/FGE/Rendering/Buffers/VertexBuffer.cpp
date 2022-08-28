@@ -4,7 +4,7 @@
 
 namespace FGE
 {
-	VertexBuffer::VertexBuffer(UINT aByteWidth, UINT aUsage, UINT aStride ,const void* aData)
+	VertexBuffer::VertexBuffer(UINT aByteWidth, UINT aUsage, UINT aStride, const void* aData, UINT someCPUAccessFlags)
 	{
 		myByteWidth = aByteWidth;
 		myUsage = aUsage;
@@ -14,7 +14,7 @@ namespace FGE
 		vertexBufferDesc.ByteWidth = aByteWidth;
 		vertexBufferDesc.Usage = static_cast<D3D11_USAGE>(aUsage);
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDesc.CPUAccessFlags = 0;
+		vertexBufferDesc.CPUAccessFlags = someCPUAccessFlags;
 		vertexBufferDesc.MiscFlags = 0;
 		vertexBufferDesc.StructureByteStride = 0;
 

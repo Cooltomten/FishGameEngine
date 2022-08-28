@@ -3,47 +3,27 @@
 #include "ComponentSystem/Component.h"
 
 #include "FGE/Event/Event.h"
+#include "ComponentSystem/Entity.h"
 
 namespace Comp
 {
 	void Scene::OnEvent(const FGE::Event& aEvent)
 	{
-		for (auto& type : myComponentStorage)
-		{
-			auto& vector = type.second;
 
-			for (size_t i = 0; i < vector.size(); i++)
+			for (size_t i = 0; i < myEntities.size(); i++)
 			{
-				vector[i]->OnEvent(aEvent);
+				myEntities[i]->OnEvent(aEvent);
 			}
-		}
 	}
 	void Scene::OnRuntimeStart()
 	{
-		for (auto& type : myComponentStorage)
+		for (size_t i = 0; i < myEntities.size(); i++)
 		{
-			auto& vector = type.second;
-			
-			for (size_t i = 0; i < vector.size(); i++)
-			{
-				vector[i]->Initialize();
-			}
+			myEntities[i]->Initialize();
 		}
 	}
-	void Scene::RegisterComponent(const std::string& aName, std::shared_ptr<Component> aComponent)
+	void Scene::AddEntity(std::shared_ptr<Entity> aEntity)
 	{
-		myComponentStorage[aName].emplace_back( aComponent);
-	}
-	void Scene::UnregisterComponent(std::shared_ptr<Component> aComponent)
-	{
-		for (auto& component : myComponentStorage)
-		{
-			auto it = std::find(component.second.begin(), component.second.end(), aComponent);
-			if (it != component.second.end())
-			{
-				component.second.erase(it);
-				break;
-			}
-		}
+		myEntities.push_back(aEntity);
 	}
 }

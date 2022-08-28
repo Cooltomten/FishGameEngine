@@ -9,6 +9,8 @@
 #include <FGE/Asset/Animation.h>
 #include <FGE/Asset/Material.h>
 
+#include <FGE/Particles/ParticleEmitter.h>
+
 #include <CommonUtilities/InputManager.h>
 #include <CommonUtilities/UtilityFunctions.hpp>
 
@@ -62,7 +64,7 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 
 	myCamera = std::make_shared<FGE::Camera>();
 	myCamera->SetPerspectiveProjection(90, { 1280,720 }, 0.1f, 100000.0f);
-	myCameraTransform.SetPosition(0, 0, -100);
+	myCameraTransform.SetPosition(0, 0, 0);
 	myCamera->RecalculateViewMatrix(myCameraTransform.GetMatrix());
 
 	myDirectionalLight = std::make_shared<FGE::DirectionalLight>();
@@ -107,6 +109,10 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	myDirectionalLightTransform.SetRotation(0, 0, 0);
 	myDirectionalLight->SetDirection(myDirectionalLightTransform.GetForward());
 
+	myParticles = std::make_shared < FGE::ParticleEmitter>();
+	myParticles->Init(FGE::ResourceCache::GetAsset<FGE::EmitterSettingsData>("Assets/Emitters/TestEmitter.emitter"));
+	myParticleTransform.SetPosition(0,0,0);
+
 	myGame->OnStart();
 }
 
@@ -140,6 +146,7 @@ bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 	}
 
 	CameraController(aEvent.GetTimeStep());
+	myParticles->Update(aEvent.GetTimeStep());
 
 
 	myChestTransform.SetRotation(myChestTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
@@ -157,9 +164,11 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 	FGE::Renderer::Begin(myCamera);
 
-	myCubeMesh->Render(myCubeTransform.GetMatrix());
-	myChestMesh->Render(myChestTransform.GetMatrix());
-	myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim, myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
+	//myCubeMesh->Render(myCubeTransform.GetMatrix());
+	//myChestMesh->Render(myChestTransform.GetMatrix());
+	//myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim,
+	//	myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
+	myParticles->Render(myParticleTransform.GetMatrix());
 
 	FGE::Renderer::Render();
 	FGE::Renderer::End();

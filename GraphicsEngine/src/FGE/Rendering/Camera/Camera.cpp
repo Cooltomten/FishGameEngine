@@ -2,6 +2,8 @@
 #include "Camera.h"
 #include <cassert>
 
+#include "DirectXTK/SimpleMath.h"
+
 namespace FGE
 {
 	void FGE::Camera::SetPerspectiveProjection(float aHorizontalFoV, CU::Vector2<unsigned int> aResolution, float aNearPlane, float aFarPlane)
@@ -26,6 +28,7 @@ namespace FGE
 		myProjectionMatrix(3, 4) = 1.0f / Q;
 		myProjectionMatrix(4, 3) = -Q * myNearPlane;
 		myProjectionMatrix(4, 4) = 0.f;
+
 		return;
 	}
 	const CU::Matrix4x4<float>& Camera::GetProjectionMatrix() const

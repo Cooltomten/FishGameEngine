@@ -20,12 +20,11 @@ namespace Comp
 
 		void OnRuntimeStart();
 
+		void AddEntity(std::shared_ptr<Entity> aEntity);
+
 	private:
-		void RegisterComponent(const std::string& aName, std::shared_ptr<Component> aComponent);
-		void UnregisterComponent(std::shared_ptr<Component> aComponent);
 
 		friend class Entity;
-
-		std::unordered_map<std::string, std::vector<std::shared_ptr<Component>>> myComponentStorage;
+		std::vector<std::shared_ptr<Entity>> myEntities;
 	};
 }

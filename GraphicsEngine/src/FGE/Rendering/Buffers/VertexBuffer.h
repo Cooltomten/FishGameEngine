@@ -36,6 +36,8 @@ namespace FGE
 
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
+
+		inline ComPtr<ID3D11Buffer> GetBuffer() { return myBuffer; }
 	protected:
 		ComPtr<ID3D11Buffer> myBuffer;
 		UINT myUsage;
@@ -45,7 +47,7 @@ namespace FGE
 	class VertexBuffer : public Buffer
 	{
 	public:
-		VertexBuffer(UINT aByteWidth, UINT aUsage, UINT aStride, const void* aData);
+		VertexBuffer(UINT aByteWidth, UINT aUsage, UINT aStride, const void* aData ,UINT someCPUAccessFlags = 0);
 
 		// Inherited via Buffer
 		virtual void Bind() override;

@@ -30,7 +30,7 @@ namespace FGE
 
 		for (int i = 0; i < mySubMeshes.size(); i++)
 		{
-			Renderer::Submit(mySubMeshes[i]->GetVertexArray(), aTransform, myMaterials[mySubMeshes[i]->GetMaterialIndex()], matrices);
+			Renderer::SubmitModel(mySubMeshes[i]->GetVertexArray(), aTransform, myMaterials[mySubMeshes[i]->GetMaterialIndex()], matrices);
 		}
 	}
 

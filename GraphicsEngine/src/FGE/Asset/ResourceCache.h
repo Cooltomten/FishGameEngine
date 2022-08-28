@@ -3,8 +3,9 @@
 #include "FGE/Asset/Texture.h"
 #include "FGE/Rendering/Buffers/Vertex.h"
 
-#include "FGE/Asset/FBXImporter.h"
+#include "FGE/Asset/Importers/FBXImporter.h"
 #include "FGE/Asset/Importers/TextureImporter.h"
+#include "FGE/Asset/Importers/EmitterSettingsImporter.h"
 
 #include "GraphicsEngine.pch.h"
 
@@ -32,6 +33,8 @@ namespace FGE
 
 		static std::unique_ptr<FBXImporter> myFBXImporter;
 		static std::unique_ptr<TextureImporter> myTextureImporter;
+		static std::unique_ptr<EmitterSettingsImporter> myParticleEmitterImporter;
+		//static std::unique_ptr<ShaderImporter> myShaderImporter;
 	};
 
 	template<class T>
@@ -66,6 +69,12 @@ namespace FGE
 			break;
 		case AssetType::Texture:
 			asset = std::reinterpret_pointer_cast<Asset>(myTextureImporter->ImportTexture(aPath));
+			break;
+		case AssetType::PixelShader:
+			//asset = std::reinterpret_pointer_cast<Asset>(myShaderImporter->ImportPixelShader(aPath));
+			break;
+		case AssetType::EmitterSettingsData:
+			asset = std::reinterpret_pointer_cast<Asset>(myParticleEmitterImporter->ImportEmitterSettings(aPath));
 			break;
 		}
 

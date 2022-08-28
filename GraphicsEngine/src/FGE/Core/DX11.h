@@ -4,6 +4,7 @@
 #include <vector>
 #include <wrl.h>
 #include <array>
+#include <d3d11.h>
 //for ComPtrs
 using namespace Microsoft::WRL;
 
@@ -14,6 +15,7 @@ struct ID3D11SamplerState;
 struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
 struct ID3D11Buffer;
+struct ID3D11Texture2D;
 
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
@@ -24,6 +26,7 @@ struct D3D11_INPUT_ELEMENT_DESC;
 struct D3D11_BUFFER_DESC;
 struct D3D11_MAPPED_SUBRESOURCE;
 struct D3D11_SUBRESOURCE_DATA;
+struct D3D11_VIEWPORT;
 
 enum D3D11_MAP;
 
@@ -71,9 +74,10 @@ namespace FGE
 		ID3D11Buffer* CreateBuffer(const D3D11_BUFFER_DESC* aDesc, const D3D11_SUBRESOURCE_DATA* aData);
 
 		ID3D11VertexShader* CreateVertexShader(const char* aData, size_t aSize);
+		ID3D11GeometryShader* CreateGeometryShader(const char* aData, size_t aSize);
 		ID3D11PixelShader* CreatePixelShader(const char* aData, size_t aSize);
-		ID3D11InputLayout* CreateInputLayout( D3D11_INPUT_ELEMENT_DESC aDesc[], size_t aSize, const char* aData, size_t aDataSize);
-		
+		ID3D11InputLayout* CreateInputLayout(D3D11_INPUT_ELEMENT_DESC aDesc[], size_t aSize, const char* aData, size_t aDataSize);
+
 		ComPtr<ID3D11DeviceContext>& GetDeviceContext();
 		ComPtr<ID3D11Device>& GetDevice();
 		ComPtr<IDXGISwapChain>& GetSwapChain();
@@ -85,6 +89,10 @@ namespace FGE
 		void VSSetConstantBuffers(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aBuffers);
 		void PSSetConstantBuffers(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aBuffers);
 
+		inline DxgiInfoManager& GetInfoManager() { return myInfoManager; }
+		void SetRenderTarget();
+
+
 	private:
 		ComPtr<ID3D11Device> Device;
 		ComPtr<ID3D11DeviceContext> Context;
@@ -95,6 +103,8 @@ namespace FGE
 
 		ComPtr<ID3D11RenderTargetView> BackBuffer;
 		ComPtr<ID3D11DepthStencilView> DepthBuffer;
+
+		D3D11_VIEWPORT myViewport;
 #ifndef NDEBUG
 		DxgiInfoManager myInfoManager;
 #endif

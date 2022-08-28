@@ -14,14 +14,18 @@ namespace Comp
 	class Rigidbody;
 	class Component;
 	class Scene;
+	class Event;
 	class Entity
 	{
 	public:
-		Entity(Scene* aParentScene, std::string aName, uint32_t aID = 0, std::string aTag = "Untagged");
+		Entity(std::string aName, uint32_t aID = 0, std::string aTag = "Untagged");
 		~Entity();
 
 		bool GetIsActive();
+		void Initialize();
 		void SetActive(bool aActiveFlag);
+		void OnEvent(const FGE::Event& aEvent);
+
 
 		const std::string& GetName() const;
 		const std::string& GetTag() const;
@@ -88,7 +92,7 @@ namespace Comp
 			return false;
 		}
 
-		myParentScene->UnregisterComponent(it.second);
+		
 
 		auto comp = it.second;
 		myComponentMap.erase(it);

@@ -16,6 +16,7 @@ namespace FGE
 	class Material;
 	class DirectionalLight;
 	class EnvironmentLight;
+	class ParticleEmitter;
 }
 
 class LauncherApp : public FGE::Application
@@ -64,6 +65,10 @@ private:
 	std::shared_ptr<FGE::EnvironmentLight> myEnvironmentLight;
 
 	std::vector<std::string> myRenderModesStrings;
+
+	std::shared_ptr<FGE::ParticleEmitter> myParticles;
+	Comp::Transform myParticleTransform;
+
 
 	
 

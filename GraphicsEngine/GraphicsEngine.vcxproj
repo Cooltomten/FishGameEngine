@@ -131,7 +131,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GraphicsEngine.pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;$(SolutionDir)/Vendor/include/nlohmann</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -145,8 +145,7 @@
     <Lib>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,7 +159,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GraphicsEngine.pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;$(SolutionDir)/Vendor/include/nlohmann</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -176,8 +175,7 @@
     <Lib>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <AdditionalDependencies>
-      </AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -186,7 +184,9 @@
     <ClInclude Include="src\FGE\Asset\AnimatedMesh.h" />
     <ClInclude Include="src\FGE\Asset\Animation.h" />
     <ClInclude Include="src\FGE\Asset\Asset.h" />
-    <ClInclude Include="src\FGE\Asset\FBXImporter.h" />
+    <ClInclude Include="src\FGE\Asset\Importers\FBXImporter.h" />
+    <ClInclude Include="src\FGE\Asset\Importers\EmitterSettingsImporter.h" />
+    <ClInclude Include="src\FGE\Asset\Importers\ShaderImporter.h" />
     <ClInclude Include="src\FGE\Asset\Importers\TextureImporter.h" />
     <ClInclude Include="src\FGE\Asset\Material.h" />
     <ClInclude Include="src\FGE\Asset\Mesh.h" />
@@ -196,6 +196,10 @@
     <ClInclude Include="src\FGE\Event\ApplicationEvents.h" />
     <ClInclude Include="src\FGE\Event\Event.h" />
     <ClInclude Include="src\FGE\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\FGE\Asset\EmitterSettingsData.h" />
+    <ClInclude Include="src\FGE\Particles\ParticleEmitter.h" />
+    <ClInclude Include="src\FGE\Particles\ParticleVertex.h" />
+    <ClInclude Include="src\FGE\Rendering\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\Vertex.h" />
     <ClInclude Include="src\FGE\Core\Application.h" />
     <ClInclude Include="src\FGE\Core\DX11.h" />
@@ -213,6 +217,7 @@
     <ClInclude Include="src\FabException.h" />
     <ClInclude Include="src\FabWin.h" />
     <ClInclude Include="src\FGE\Rendering\Camera\Camera.h" />
+    <ClInclude Include="src\FGE\Rendering\RenderTexture.h" />
     <ClInclude Include="src\GraphicsEngine.pch.h" />
     <ClInclude Include="src\FGE\Core\Window.h" />
   </ItemGroup>
@@ -221,7 +226,9 @@
     <ClCompile Include="src\DirectXTK\SimpleMath.cpp" />
     <ClCompile Include="src\FGE\Asset\AnimatedMesh.cpp" />
     <ClCompile Include="src\FGE\Asset\Animation.cpp" />
-    <ClCompile Include="src\FGE\Asset\FBXImporter.cpp" />
+    <ClCompile Include="src\FGE\Asset\Importers\FBXImporter.cpp" />
+    <ClCompile Include="src\FGE\Asset\Importers\EmitterSettingsImporter.cpp" />
+    <ClCompile Include="src\FGE\Asset\Importers\ShaderImporter.cpp" />
     <ClCompile Include="src\FGE\Asset\Importers\TextureImporter.cpp" />
     <ClCompile Include="src\FGE\Asset\Material.cpp" />
     <ClCompile Include="src\FGE\Asset\Mesh.cpp" />
@@ -235,6 +242,7 @@
     <ClCompile Include="src\FabException.cpp" />
     <ClCompile Include="src\FGE\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\FGE\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\FGE\Particles\ParticleEmitter.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Lights\DirectionalLight.cpp" />
@@ -242,6 +250,7 @@
     <ClCompile Include="src\FGE\Rendering\Lights\Light.cpp" />
     <ClCompile Include="src\FGE\Rendering\Renderer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Camera\Camera.cpp" />
+    <ClCompile Include="src\FGE\Rendering\RenderTexture.cpp" />
     <ClCompile Include="src\GraphicsEngine.pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -276,6 +285,34 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="src\FGE\Shaders\DefaultVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="src\FGE\Shaders\ParticleGS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="src\FGE\Shaders\ParticlePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="src\FGE\Shaders\ParticleVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

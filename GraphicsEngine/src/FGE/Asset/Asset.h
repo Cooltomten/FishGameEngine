@@ -9,7 +9,10 @@ namespace FGE
 		Mesh,
 		AnimatedMesh,
 		Animation,
-		Texture
+		Texture,
+		PixelShader,
+		VertexShader,
+		EmitterSettingsData
 	};
 
 	class Asset

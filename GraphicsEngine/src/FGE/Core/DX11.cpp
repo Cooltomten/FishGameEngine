@@ -54,8 +54,7 @@ namespace FGE
 
 		//for checking results of d3d functions
 		HRESULT hr;
-
-
+		
 		GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
 			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
@@ -104,17 +103,16 @@ namespace FGE
 			DepthBuffer.GetAddressOf()
 		));
 
-		Context->OMSetRenderTargets(1, BackBuffer.GetAddressOf(), DepthBuffer.Get());
+		SetRenderTarget();
 
 
-		D3D11_VIEWPORT viewport = {};
-		viewport.TopLeftX = 0;
-		viewport.TopLeftY = 0;
-		viewport.Width = static_cast<float>(clientRect.right - clientRect.left);
-		viewport.Height = static_cast<float>(clientRect.bottom - clientRect.top);
-		viewport.MinDepth = 0.0f;
-		viewport.MaxDepth = 1.0f;
-		Context->RSSetViewports(1, &viewport);
+				myViewport.TopLeftX = 0;
+		myViewport.TopLeftY = 0;
+		myViewport.Width = static_cast<float>(clientRect.right - clientRect.left);
+		myViewport.Height = static_cast<float>(clientRect.bottom - clientRect.top);
+		myViewport.MinDepth = 0.0f;
+		myViewport.MaxDepth = 1.0f;
+		Context->RSSetViewports(1, &myViewport);
 		return true;
 	}
 
@@ -142,7 +140,6 @@ namespace FGE
 				throw GFX_EXCEPT(hr);
 			}
 		}
-		SwapChain->Present(1u, 0u);
 	}
 
 	ID3D11Buffer* DX11::CreateBuffer(const D3D11_BUFFER_DESC* aDesc, const D3D11_SUBRESOURCE_DATA* aData)
@@ -160,6 +157,15 @@ namespace FGE
 		HRESULT hr;
 		GFX_THROW_INFO(Device->CreateVertexShader(aData, aSize, nullptr, &shader));
 
+		return shader;
+	}
+
+	ID3D11GeometryShader* DX11::CreateGeometryShader(const char* aData, size_t aSize)
+	{
+		ID3D11GeometryShader* shader = nullptr;
+		HRESULT hr;
+		GFX_THROW_INFO(Device->CreateGeometryShader(aData, aSize, nullptr, &shader));
+		
 		return shader;
 	}
 
@@ -223,6 +229,12 @@ namespace FGE
 	void DX11::PSSetConstantBuffers(UINT aStartSlot, UINT aNumBuffers, ID3D11Buffer* const* aBuffers)
 	{
 		Context->PSSetConstantBuffers(aStartSlot, aNumBuffers, aBuffers);
+	}
+
+	void DX11::SetRenderTarget()
+	{
+		Context->OMSetRenderTargets(1, BackBuffer.GetAddressOf(), DepthBuffer.Get());
+		Context->RSSetViewports(1, &myViewport);
 	}
 
 

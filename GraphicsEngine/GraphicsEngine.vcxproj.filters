@@ -78,9 +78,6 @@
     <ClInclude Include="src\FGE\Asset\SubMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\FGE\Asset\FBXImporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\FGE\Asset\Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -121,6 +118,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\FGE\Rendering\Lights\EnvironmentLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Rendering\Buffers\FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Rendering\RenderTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Asset\Importers\FBXImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Asset\Importers\ShaderImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Asset\EmitterSettingsData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Particles\ParticleEmitter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Particles\ParticleVertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FGE\Asset\Importers\EmitterSettingsImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -164,9 +185,6 @@
     <ClCompile Include="src\FGE\Rendering\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FGE\Asset\FBXImporter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\FGE\Asset\SubMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -206,6 +224,21 @@
     <ClCompile Include="src\FGE\Rendering\Lights\EnvironmentLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\FGE\Rendering\RenderTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\Asset\Importers\FBXImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\Asset\Importers\ShaderImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\Particles\ParticleEmitter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FGE\Asset\Importers\EmitterSettingsImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorDescription.inl">
@@ -226,5 +259,8 @@
   <ItemGroup>
     <FxCompile Include="src\FGE\Shaders\DefaultPS.hlsl" />
     <FxCompile Include="src\FGE\Shaders\DefaultVS.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\ParticleVS.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\ParticlePS.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\ParticleGS.hlsl" />
   </ItemGroup>
 </Project>

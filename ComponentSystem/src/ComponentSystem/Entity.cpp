@@ -4,12 +4,13 @@
 
 namespace Comp
 {
-	Entity::Entity(Scene* aParentScene, std::string aName, uint32_t aID, std::string aTag)
+	Entity::Entity(std::string aName, uint32_t aID, std::string aTag)
 	{
+		myParentScene = nullptr;
+		myParent = nullptr;
 		myName = aName;
 		myTag = aTag;
 		myID = aID;
-		myParentScene = aParentScene;
 	}
 
 	Entity::~Entity()
@@ -21,9 +22,25 @@ namespace Comp
 		return myIsActiveFlag;
 	}
 
+	void Entity::Initialize()
+	{
+		for (int i = 0; i < myComponents.size(); i++)
+		{
+			myComponents[i]->Initialize();
+		}
+	}
+
 	void Entity::SetActive(bool aActiveFlag)
 	{
 		myIsActiveFlag = aActiveFlag;
+	}
+
+	void Entity::OnEvent(const FGE::Event& aEvent)
+	{
+		for (int i = 0; i < myComponents.size(); i++)
+		{
+			myComponents[i]->OnEvent(aEvent);
+		}
 	}
 
 	const std::string& Entity::GetName() const
@@ -45,11 +62,6 @@ namespace Comp
 		{
 			aComponent->myEntity = this;
 
-			if (myParentScene)
-			{
-				myParentScene->RegisterComponent(name, aComponent);
-			}
-
 			myComponents.push_back(aComponent);
 			myComponentMap[name] = aComponent;
 
@@ -65,10 +77,6 @@ namespace Comp
 		auto it = myComponentMap.find(name);
 		if (it != myComponentMap.end())
 		{
-			if (myParentScene)
-			{
-				myParentScene->UnregisterComponent(aComponent);
-			}
 
 			for (auto vecIt = myComponents.begin(); vecIt != myComponents.end(); ++vecIt)
 			{

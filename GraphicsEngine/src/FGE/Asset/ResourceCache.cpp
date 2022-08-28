@@ -13,7 +13,8 @@ namespace FGE
 	std::unordered_map<std::string, std::shared_ptr<Asset>> ResourceCache::myAssets;
 	std::unique_ptr<FBXImporter> ResourceCache::myFBXImporter;
 	std::unique_ptr<TextureImporter> ResourceCache::myTextureImporter;
-
+	std::unique_ptr<EmitterSettingsImporter> ResourceCache::myParticleEmitterImporter;
+	
 
 	void ResourceCache::Initialize()
 	{
