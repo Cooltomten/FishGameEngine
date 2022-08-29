@@ -34,6 +34,10 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	//VertexNormal,
 	//PixelNormal,
 	//AlbedoMap,
+	//AmbientOcclusion,
+	//Roughness,
+	//Metalness,
+	//Emissiveness,
 	//NormalMap,
 	//DiffuseLight,
 	//AmbientLight,
@@ -53,6 +57,10 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 	myRenderModesStrings.emplace_back("Vertex Normal");
 	myRenderModesStrings.emplace_back("Pixel Normal");
 	myRenderModesStrings.emplace_back("Albedo Map");
+	myRenderModesStrings.emplace_back("Ambient Occlusion");
+	myRenderModesStrings.emplace_back("Roughness");
+	myRenderModesStrings.emplace_back("Metalness");
+	myRenderModesStrings.emplace_back("Emissiveness");
 	myRenderModesStrings.emplace_back("Normal Map");
 	myRenderModesStrings.emplace_back("Diffuse");
 	myRenderModesStrings.emplace_back("Ambient");
@@ -64,7 +72,7 @@ LauncherApp::LauncherApp(const FGE::WindowProperties& aProperties)
 
 	myCamera = std::make_shared<FGE::Camera>();
 	myCamera->SetPerspectiveProjection(90, { 1280,720 }, 0.1f, 100000.0f);
-	myCameraTransform.SetPosition(0, 0, 0);
+	myCameraTransform.SetPosition(0, 0, -100);
 	myCamera->RecalculateViewMatrix(myCameraTransform.GetMatrix());
 
 	myDirectionalLight = std::make_shared<FGE::DirectionalLight>();
@@ -150,6 +158,7 @@ bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 
 
 	myChestTransform.SetRotation(myChestTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
+	myParticleTransform.SetRotation(myChestTransform.GetRotation() + CU::Vector3f(0,-3.1415f/2, 0));
 	myGremlinTransform.SetRotation(myGremlinTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 	myCubeTransform.SetRotation(myCubeTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 
@@ -164,10 +173,10 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 	FGE::Renderer::Begin(myCamera);
 
-	//myCubeMesh->Render(myCubeTransform.GetMatrix());
-	//myChestMesh->Render(myChestTransform.GetMatrix());
-	//myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim,
-	//	myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
+	myCubeMesh->Render(myCubeTransform.GetMatrix());
+	myChestMesh->Render(myChestTransform.GetMatrix());
+	myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim,
+		myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
 	myParticles->Render(myParticleTransform.GetMatrix());
 
 	FGE::Renderer::Render();

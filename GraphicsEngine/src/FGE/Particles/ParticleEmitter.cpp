@@ -26,8 +26,7 @@ namespace FGE
 
 		myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
 
-		const size_t maxNumberOfParticles = static_cast<size_t>(ceilf(myEmitterSettings->ParticlesPerSecond * myEmitterSettings->LifeTime));
-
+		const size_t maxNumberOfParticles = static_cast<size_t>(ceilf(myEmitterSettings->ParticlesPerSecond * myEmitterSettings->LifeTime)) * 1.1f;
 		myParticles.resize(maxNumberOfParticles);
 
 		auto& dx11 = Application::Get().GetWindow()->GetDX11();
@@ -112,6 +111,7 @@ namespace FGE
 					continue;
 				}
 			}
+			particle.Velocity.y -= 9.81f * aTimeStep;
 			particle.Position += CU::Vector4f(particle.Velocity.x, particle.Velocity.y, particle.Velocity.z) * aTimeStep;
 
 		}

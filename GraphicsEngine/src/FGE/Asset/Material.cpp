@@ -41,6 +41,10 @@ void FGE::Material::SetAsResource(ComPtr<ID3D11Resource> aMaterialBuffer)
 	{
 		myTextures[MaterialTextureChannel::Normal]->SetAsResource(1);
 	}
+	if (myTextures[MaterialTextureChannel::Material])
+	{
+		myTextures[MaterialTextureChannel::Material]->SetAsResource(2);
+	}
 	
 }
 

@@ -35,6 +35,11 @@ namespace FGE
 
 	RenderMode Renderer::myRenderMode = RenderMode::Default;
 
+	std::array < Microsoft::WRL::ComPtr<ID3D11BlendState>, static_cast<unsigned int>(BlendState::COUNT) > Renderer::myBlendStates;
+	std::array < Microsoft::WRL::ComPtr<ID3D11DepthStencilState>, static_cast<unsigned int>(DepthStencilState::COUNT) > Renderer::myDepthStencilStates;
+	
+
+
 
 	static std::string myVsData;
 	void Renderer::Init()
@@ -72,6 +77,71 @@ namespace FGE
 
 		bufferDescription.ByteWidth = sizeof(Light::LightBufferData);
 		myLightBuffer = dx11.CreateBuffer(&bufferDescription, nullptr);
+	
+		HRESULT hr;
+		//alpha blend
+		D3D11_BLEND_DESC alphaBlendDesc;
+		alphaBlendDesc.AlphaToCoverageEnable = 0;
+		alphaBlendDesc.IndependentBlendEnable = 0;
+		alphaBlendDesc.RenderTarget[0].BlendEnable = true;
+		alphaBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		alphaBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		alphaBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		alphaBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+		alphaBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+		alphaBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		alphaBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		
+		hr = dx11.GetDevice()->CreateBlendState(&alphaBlendDesc, myBlendStates[static_cast<unsigned>(BlendState::Alpha)].GetAddressOf());
+		if (FAILED(hr))
+		{
+			throw;
+		}
+		//additive
+		D3D11_BLEND_DESC additiveBlendDesc;
+		additiveBlendDesc.AlphaToCoverageEnable = 0;
+		additiveBlendDesc.IndependentBlendEnable = 0;
+		additiveBlendDesc.RenderTarget[0].BlendEnable = true;
+		additiveBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		additiveBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+		additiveBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		additiveBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+		additiveBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
+		additiveBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		additiveBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+
+		hr = dx11.GetDevice()->CreateBlendState(&additiveBlendDesc, myBlendStates[static_cast<unsigned>(BlendState::Additive)].GetAddressOf());
+		
+		if (FAILED(hr))
+		{
+			throw;
+		}
+
+		//default
+		 myBlendStates[static_cast<unsigned>(BlendState::None)] = nullptr;
+
+		 //Depth stencil states
+		 D3D11_DEPTH_STENCIL_DESC readOnlyDepthDesc = {};
+		 readOnlyDepthDesc.DepthEnable = true;
+		 readOnlyDepthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		 readOnlyDepthDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		 readOnlyDepthDesc.StencilEnable = false;
+
+		 hr = dx11.GetDevice()->CreateDepthStencilState(&readOnlyDepthDesc, myDepthStencilStates[static_cast<unsigned>(DepthStencilState::ReadOnly)].GetAddressOf());
+		
+		 if (FAILED(hr))
+		 {
+			 throw;
+		 }
+		
+		 myDepthStencilStates[static_cast<unsigned>(DepthStencilState::ReadOnly)] = nullptr;
+		
+		
+
+		
+
+		
 	}
 	void FGE::Renderer::SubmitModel(std::shared_ptr<VertexArray> aData, const CU::Matrix4x4<float>& aTransform,
 		std::shared_ptr<Material> aMaterial, std::vector<CU::Matrix4x4<float>> someAnimData)
@@ -155,6 +225,8 @@ namespace FGE
 		//end render models
 
 		//render Particles
+		SetBlendState(BlendState::Alpha);
+		SetDepthStencilState(DepthStencilState::ReadOnly);
 		for (auto& command : myParticleCommands)
 		{
 			//map Object buffer
@@ -175,9 +247,14 @@ namespace FGE
 			context->Draw(command.Vertices.size(), 0);
 		}
 
+		SetBlendState(BlendState::None);
+		SetDepthStencilState(DepthStencilState::ReadWrite);
+		//end render particles
+		
 		context->VSSetShader(0, nullptr, 0);
 		context->GSSetShader(0, nullptr, 0);
 		context->PSSetShader(0, nullptr, 0);
+		
 
 
 	}
@@ -196,5 +273,17 @@ namespace FGE
 	const RenderMode& Renderer::GetRenderMode()
 	{
 		return myRenderMode;
+	}
+	void Renderer::SetBlendState(BlendState aBlendState)
+	{
+		//dx11
+		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		dx11.GetDeviceContext()->OMSetBlendState(myBlendStates[static_cast<uint32_t>(aBlendState)].Get(), nullptr, 0xffffffff);
+	}
+	void Renderer::SetDepthStencilState(DepthStencilState aDepthStencilState)
+	{
+		//dx11
+		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		dx11.GetDeviceContext()->OMSetDepthStencilState(myDepthStencilStates[static_cast<uint32_t>(aDepthStencilState)].Get(), 0);
 	}
 }

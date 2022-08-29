@@ -22,6 +22,7 @@ namespace FGE
 		{
 			Albedo,
 			Normal,
+			Material,
 			COUNT
 		};
 	}

@@ -5,8 +5,6 @@ PixelOutput main(VertexToPixel input)
     
     
     
-    float3 albedo = albedoTexture.Sample(defaultSampler, input.myUV).rgb;
-    output.myColor.a = 1.0f;
 
     const float3x3 TBN = float3x3
     (
@@ -15,14 +13,18 @@ PixelOutput main(VertexToPixel input)
         normalize(input.myNormal)
     );
     
-    float3 normalMap = normalTexture.Sample(defaultSampler, input.myUV).agr;
-    normalMap.z = 0;
-    
-    normalMap = 2.0f * normalMap - 1.0f;
-    
-    normalMap.z = sqrt(1 - saturate(normalMap.x + normalMap.x + normalMap.y + normalMap.y));
-    
-    normalMap = normalize(normalMap);
+    float3 albedo = albedoTexture.Sample(defaultSampler, input.myUV).agb;
+    output.myColor.a = 1.0f;
+    float3 normalMap = normalTexture.Sample(defaultSampler, input.myUV).agb;
+	float4 material = materialTexture.Sample(defaultSampler, input.myUV);
+	//collect the material properties
+    const float ambientOcclusion = normalMap.b;
+    const float metalness = material.r;
+	const float roughness = material.g;
+	const float emissive = material.b;
+	const float emissiveStr = material.a;
+
+
     const float3 pixelNormal = normalize(mul(normalMap, TBN));
     
     //light calculations
@@ -52,6 +54,10 @@ PixelOutput main(VertexToPixel input)
 	//VertexNormal,
 	//PixelNormal,
 	//AlbedoMap,
+    //AmbientOcclusion,
+    //Roughness,
+    //Metalness,
+    //Emissiveness,
 	//NormalMap,
 	//DiffuseLight,
 	//AmbientLight,
@@ -115,23 +121,39 @@ PixelOutput main(VertexToPixel input)
             output.myColor.rgb = albedo;
             output.myColor.a = 1.0f;
             break;
-        case 12: //NormalMap 
+		case 12: //AmbientOcclusion
+			output.myColor.rgb = float3(ambientOcclusion, ambientOcclusion, ambientOcclusion);
+			output.myColor.a = 1.0f;
+			break;
+		case 13: //Roughness
+			output.myColor.rgb = float3(roughness, roughness, roughness);
+			output.myColor.a = 1.0f;
+			break;
+		case 14: //Metalness
+			output.myColor.rgb = float3(metalness, metalness, metalness);
+			output.myColor.a = 1.0f;
+			break;
+		case 15: //Emissiveness
+			output.myColor.rgb = float3(emissive, emissive, emissive);
+			output.myColor.a = 1.0f;
+			break;
+        case 16: //NormalMap 
             output.myColor.rg = normalTexture.Sample(defaultSampler, input.myUV).ag;
             output.myColor.b = 1.0f;
             output.myColor.a = 1.0f;
             break;
-        case 13: //DiffuseLight
+        case 17: //DiffuseLight
             output.myColor.rgb = diffuse;
             output.myColor.a = 1.0f;
             break;
-        case 14: //AmbientLight
+        case 18: //AmbientLight
             output.myColor.rgb = ambient;
             output.myColor.a = 1.0f;
             break;
-        case 15: //DiffuseNoAlbedo
+        case 19: //DiffuseNoAlbedo
             output.myColor.rgb = diffuse / albedo;
             break;
-        case 16: //AmbientNoAlbedo
+        case 20: //AmbientNoAlbedo
             output.myColor.rgb = environment;
             break;
         
