@@ -38,6 +38,7 @@ VertexToPixel main(VertexInput input)
     
     
     result.myPosition = vertexProjectionPosition;
+    result.myVxPosition = vertexWorldPosition;
     
     result.myVxColor = input.myVxColor;
     result.myVxColor2 = input.myVxColor2;

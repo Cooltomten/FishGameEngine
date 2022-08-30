@@ -1,6 +1,7 @@
 #pragma once
 #include "FGE/Rendering/Camera/Camera.h"
 #include "FGE/Rendering/Buffers/VertexArray.h"
+#include "FGE/Rendering/Buffers/GBuffer.h"
 
 #include "FGE/Particles/ParticleVertex.h"
 
@@ -115,11 +116,16 @@ namespace FGE
 
 
 	private:
+		static void GenerateGBuffer();
+		static void RenderGBuffer();
+		static void RenderParticles();
+
 		static struct FrameBufferData
 		{
 			CU::Matrix4x4<float> View;
 			CU::Matrix4x4<float> Projection;
-			alignas(16)uint32_t RenderMode;
+			CU::Vector3f CameraTranslation;
+			uint32_t RenderMode;
 		}myFrameBufferData;
 
 		static struct ObjectBufferData
@@ -151,11 +157,19 @@ namespace FGE
 
 		static Microsoft::WRL::ComPtr<ID3D11VertexShader> myVertexShader;
 		static Microsoft::WRL::ComPtr<ID3D11PixelShader> myPixelShader;
+		
+		static Microsoft::WRL::ComPtr<ID3D11PixelShader> myGBufferPixelShader;
+		
+		static Microsoft::WRL::ComPtr<ID3D11VertexShader> myFullscreenShader;
+		static Microsoft::WRL::ComPtr<ID3D11PixelShader> myEnvironmentShader;		
 
 		static std::string myVsData;
 
 		static RenderMode myRenderMode;
 		static std::array < Microsoft::WRL::ComPtr<ID3D11BlendState>, static_cast<unsigned int>(BlendState::COUNT) > myBlendStates;
 		static std::array < Microsoft::WRL::ComPtr<ID3D11DepthStencilState>, static_cast<unsigned int>(DepthStencilState::COUNT) > myDepthStencilStates;
+
+		static GBuffer myGBuffer;
+		
 	};
 }

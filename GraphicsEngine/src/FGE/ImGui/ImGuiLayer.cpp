@@ -151,7 +151,8 @@ void FGE::ImGuiLayer::End()
     // Rendering
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	ImGui::UpdatePlatformWindows();
+
+
 
 }
 

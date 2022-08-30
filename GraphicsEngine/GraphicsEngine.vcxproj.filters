@@ -144,6 +144,9 @@
     <ClInclude Include="src\FGE\Asset\Importers\EmitterSettingsImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\FGE\Rendering\Buffers\GBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GraphicsEngine.pch.cpp">
@@ -239,6 +242,9 @@
     <ClCompile Include="src\FGE\Asset\Importers\EmitterSettingsImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\FGE\Rendering\Buffers\GBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorDescription.inl">
@@ -251,10 +257,12 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="cpp.hint" />
-    <None Include="src\FGE\Shaders\ShaderStructs.hlsli" />
+    <None Include="src\FGE\Shaders\Shaderstructs.hlsli" />
     <None Include="src\DirectXTK\SimpleMath.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="src\FGE\Shaders\PBRFunctions.hlsli" />
+    <None Include="src\FGE\Shaders\Common.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\FGE\Shaders\DefaultPS.hlsl" />
@@ -262,5 +270,8 @@
     <FxCompile Include="src\FGE\Shaders\ParticleVS.hlsl" />
     <FxCompile Include="src\FGE\Shaders\ParticlePS.hlsl" />
     <FxCompile Include="src\FGE\Shaders\ParticleGS.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\GBufferPS.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\FullcreenShader.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\EnvironmentShader.hlsl" />
   </ItemGroup>
 </Project>

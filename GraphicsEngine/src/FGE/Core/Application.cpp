@@ -79,6 +79,7 @@ namespace FGE
 			}
 
 
+
 			AppUpdateEvent updateEvent(myTimer->GetDeltaTime());
 			OnEvent(updateEvent);
 
@@ -91,7 +92,17 @@ namespace FGE
 				myImGuiLayer->End();
 			}
 
+
+
 			myWindow->GetDX11().EndFrame();
+
+			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			{
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+			}
+			myWindow->GetDX11().SetRenderTarget();
+
 
 		}
 	}

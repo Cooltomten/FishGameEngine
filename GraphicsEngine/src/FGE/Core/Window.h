@@ -85,6 +85,8 @@ namespace FGE
 		static std::optional<int> ProcessMessages();
 		DX11& GetDX11();
 		HWND GetHandle();
+		float GetWidth();
+		float GetHeight();
 		
 		void SetWndFunctionToCall(callback_function_wndProc aFunction);
 

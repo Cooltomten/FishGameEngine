@@ -119,6 +119,7 @@ namespace FGE
 	void DX11::BeginFrame(std::array<float, 4> aClearColor)
 	{
 		//clear the back buffer
+		myClearColor = aClearColor;
 		Context->ClearRenderTargetView(BackBuffer.Get(), &aClearColor[0]);
 		Context->ClearDepthStencilView(DepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}

@@ -5,6 +5,7 @@
 
 #include "FGE/Core/Application.h"
 #include "FGE/Core/DX11.h"
+#include "FGE/Asset/ResourceCache.h"
 
 std::shared_ptr<FGE::Material> FGE::Material::Default;
 
@@ -19,6 +20,9 @@ FGE::Material::~Material()
 
 void FGE::Material::Init()
 {
+	myTextures[MaterialTextureChannel::Albedo] = FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Default_C.dds");
+	myTextures[MaterialTextureChannel::Normal] = FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Default_N.dds");
+	myTextures[MaterialTextureChannel::Material] = FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Default_M.dds");
 }
 
 void FGE::Material::SetAsResource(ComPtr<ID3D11Resource> aMaterialBuffer)

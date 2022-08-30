@@ -132,3 +132,13 @@ ComPtr<ID3D11ShaderResourceView> FGE::RenderTexture::GetShaderResourceView()
 {
 	return myShaderResourceView;
 }
+
+ComPtr<ID3D11RenderTargetView> FGE::RenderTexture::GetRenderTargetView()
+{
+	return myRenderTargetView;
+}
+
+ComPtr<ID3D11DepthStencilView> FGE::RenderTexture::GetDepthStencilView()
+{
+	return myDepthStencilView;
+}

@@ -200,6 +200,7 @@
     <ClInclude Include="src\FGE\Particles\ParticleEmitter.h" />
     <ClInclude Include="src\FGE\Particles\ParticleVertex.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\FrameBuffer.h" />
+    <ClInclude Include="src\FGE\Rendering\Buffers\GBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\Vertex.h" />
     <ClInclude Include="src\FGE\Core\Application.h" />
     <ClInclude Include="src\FGE\Core\DX11.h" />
@@ -243,6 +244,7 @@
     <ClCompile Include="src\FGE\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\FGE\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\FGE\Particles\ParticleEmitter.cpp" />
+    <ClCompile Include="src\FGE\Rendering\Buffers\GBuffer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexArray.cpp" />
     <ClCompile Include="src\FGE\Rendering\Buffers\VertexBuffer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Lights\DirectionalLight.cpp" />
@@ -265,7 +267,9 @@
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorDescription.inl" />
     <None Include="src\FGE\Core\DXErrorHandling\DXGetErrorString.inl" />
     <None Include="src\FGE\Core\DXErrorHandling\DXTrace.inl" />
-    <None Include="src\FGE\Shaders\ShaderStructs.hlsli" />
+    <None Include="src\FGE\Shaders\Common.hlsli" />
+    <None Include="src\FGE\Shaders\PBRFunctions.hlsli" />
+    <None Include="src\FGE\Shaders\Shaderstructs.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImGui\ImGui.vcxproj">
@@ -291,6 +295,25 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="src\FGE\Shaders\EnvironmentShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="src\FGE\Shaders\FullcreenShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="src\FGE\Shaders\GBufferPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)AssetData\Assets\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
     <FxCompile Include="src\FGE\Shaders\ParticleGS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>

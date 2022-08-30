@@ -45,6 +45,7 @@ private:
 
 	std::shared_ptr<FGE::Mesh> myCubeMesh;
 	Comp::Transform myCubeTransform;
+	std::shared_ptr<FGE::Material> myCubeMaterial;
 
 	std::shared_ptr<FGE::Mesh> myChestMesh;
 	Comp::Transform myChestTransform;

@@ -135,6 +135,16 @@ namespace FGE
 		return myHWnd;
 	}
 
+	float Window::GetWidth()
+	{
+		return myWidth;
+	}
+
+	float Window::GetHeight()
+	{
+		return myHeight;
+	}
+
 	std::shared_ptr<Window> Window::Create(const WindowProperties& aProperties)
 	{
 		std::shared_ptr<Window> window;

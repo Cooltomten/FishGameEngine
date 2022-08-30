@@ -26,6 +26,8 @@ namespace FGE
 		void SetRenderTarget(ComPtr<ID3D11DeviceContext> aDeviceContext);
 		void ClearRenderTarget(ComPtr<ID3D11DeviceContext> aDeviceContext, float aR, float aG, float aB, float aA);
 		ComPtr<ID3D11ShaderResourceView> GetShaderResourceView();
+		ComPtr<ID3D11RenderTargetView> GetRenderTargetView();
+		ComPtr<ID3D11DepthStencilView> GetDepthStencilView();
 
 	private:
 		ComPtr<ID3D11Texture2D> myTexture;

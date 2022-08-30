@@ -91,9 +91,11 @@ namespace FGE
 
 		inline DxgiInfoManager& GetInfoManager() { return myInfoManager; }
 		void SetRenderTarget();
+		std::array<float, 4> GetClearColor() const { return myClearColor; }
 
 
 	private:
+		std::array<float, 4> myClearColor;
 		ComPtr<ID3D11Device> Device;
 		ComPtr<ID3D11DeviceContext> Context;
 		ComPtr<IDXGISwapChain> SwapChain;
