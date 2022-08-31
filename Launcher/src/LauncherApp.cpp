@@ -148,8 +148,6 @@ void LauncherApp::OnEventSub(FGE::Event& aEvent)
 bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 {
 
-
-	myMaterialFadeTimer += aEvent.GetTimeStep();
 	myGremlinTimer += aEvent.GetTimeStep() * myAnimationTimeStepMultiplier;
 	float duration = CU::Lerp(myGremlinWalkAnim->GetDuration(), myGremlinRunAnim->GetDuration(), myGremlinAlphaBlend);
 	if (myGremlinTimer >= duration)
@@ -167,12 +165,9 @@ bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 
 	myChestTransform.SetRotation(myChestTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 	myParticleTransform.SetRotation(myChestTransform.GetRotation() + CU::Vector3f(0,-3.1415f/2, 0));
-	//myGremlinTransform.SetRotation(myGremlinTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
+	myGremlinTransform.SetRotation(myGremlinTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 	myCubeTransform.SetRotation(myCubeTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 
-	//float sinValue = 0.5 * (float)sin(myMaterialFadeTimer * 3) + 0.5;
-	//float cosValue = 0.5 * (float)cos(myMaterialFadeTimer * 3) + 0.5;
-	//myMaterial->SetAlbedo({ sinValue * cosValue,cosValue,sinValue * sinValue });
 	return false;
 }
 
@@ -211,14 +206,8 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 		}
 		ImGui::EndCombo();
 	}
-
 	ImGui::End();
-
-
-
-
-
-
+	
 	return false;
 }
 
