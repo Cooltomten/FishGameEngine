@@ -77,7 +77,7 @@ namespace FGE
 		GFX_THROW_INFO(Device->CreateRenderTargetView(
 			pBackBuffer.Get(),
 			nullptr,
-			BackBuffer.GetAddressOf()
+			myRenderTargetData.RenderTargetView.GetAddressOf()
 		));
 
 
@@ -100,19 +100,19 @@ namespace FGE
 		GFX_THROW_INFO(Device->CreateDepthStencilView(
 			depthBufferTexture.Get(),
 			nullptr,
-			DepthBuffer.GetAddressOf()
+			myRenderTargetData.DepthStencilView.GetAddressOf()
 		));
 
 		SetRenderTarget();
 
 
-				myViewport.TopLeftX = 0;
-		myViewport.TopLeftY = 0;
-		myViewport.Width = static_cast<float>(clientRect.right - clientRect.left);
-		myViewport.Height = static_cast<float>(clientRect.bottom - clientRect.top);
-		myViewport.MinDepth = 0.0f;
-		myViewport.MaxDepth = 1.0f;
-		Context->RSSetViewports(1, &myViewport);
+				myRenderTargetData.Viewport.TopLeftX = 0;
+		myRenderTargetData.Viewport.TopLeftY = 0;
+		myRenderTargetData.Viewport.Width = static_cast<float>(clientRect.right - clientRect.left);
+		myRenderTargetData.Viewport.Height = static_cast<float>(clientRect.bottom - clientRect.top);
+		myRenderTargetData.Viewport.MinDepth = 0.0f;
+		myRenderTargetData.Viewport.MaxDepth = 1.0f;
+		Context->RSSetViewports(1, &myRenderTargetData.Viewport);
 		return true;
 	}
 
@@ -120,8 +120,8 @@ namespace FGE
 	{
 		//clear the back buffer
 		myClearColor = aClearColor;
-		Context->ClearRenderTargetView(BackBuffer.Get(), &aClearColor[0]);
-		Context->ClearDepthStencilView(DepthBuffer.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		Context->ClearRenderTargetView(myRenderTargetData.RenderTargetView.Get(), &aClearColor[0]);
+		Context->ClearDepthStencilView(myRenderTargetData.DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 
 	void DX11::EndFrame()
@@ -203,12 +203,12 @@ namespace FGE
 
 	ComPtr<ID3D11RenderTargetView>& DX11::GetRenderTargetView()
 	{
-		return BackBuffer;
+		return myRenderTargetData.RenderTargetView;
 	}
 
 	ComPtr<ID3D11DepthStencilView>& DX11::GetDepthStencilView()
 	{
-		return DepthBuffer;
+		return myRenderTargetData.DepthStencilView;
 	}
 
 	void DX11::Map(ID3D11Resource* aResource, UINT aSubResource, D3D11_MAP aMapType, UINT aMapFlags, D3D11_MAPPED_SUBRESOURCE* aMappedResource)
@@ -234,8 +234,8 @@ namespace FGE
 
 	void DX11::SetRenderTarget()
 	{
-		Context->OMSetRenderTargets(1, BackBuffer.GetAddressOf(), DepthBuffer.Get());
-		Context->RSSetViewports(1, &myViewport);
+		Context->OMSetRenderTargets(1, myRenderTargetData.RenderTargetView.GetAddressOf(), myRenderTargetData.DepthStencilView.Get());
+		Context->RSSetViewports(1, &myRenderTargetData.Viewport);
 	}
 
 

@@ -31,7 +31,7 @@ namespace FGE
 		Buffer()
 			: myBuffer(nullptr)
 		{
-
+			myUsage = 0;
 		}
 
 		virtual void Bind() = 0;

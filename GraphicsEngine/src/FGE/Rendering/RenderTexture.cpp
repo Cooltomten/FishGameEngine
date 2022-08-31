@@ -19,8 +19,8 @@ bool FGE::RenderTexture::Initialize(ComPtr<ID3D11Device> aDevice, int aTextureWi
 
 	myShaderResourceView.Reset();
 	myTexture.Reset();
-	myRenderTargetView.Reset();
-	myDepthStencilView.Reset();
+	myRenderTargetData.RenderTargetView.Reset();
+	myRenderTargetData.DepthStencilView.Reset();
 	
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT hr;
@@ -68,7 +68,7 @@ bool FGE::RenderTexture::Initialize(ComPtr<ID3D11Device> aDevice, int aTextureWi
 	hr = aDevice->CreateDepthStencilView(
 		depthBufferTexture.Get(),
 		nullptr,
-		myDepthStencilView.GetAddressOf()
+		myRenderTargetData.DepthStencilView.GetAddressOf()
 	);
 	if (FAILED(hr))
 	{
@@ -80,7 +80,7 @@ bool FGE::RenderTexture::Initialize(ComPtr<ID3D11Device> aDevice, int aTextureWi
 	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-	hr = aDevice->CreateRenderTargetView(myTexture.Get(), &renderTargetViewDesc, myRenderTargetView.GetAddressOf());
+	hr = aDevice->CreateRenderTargetView(myTexture.Get(), &renderTargetViewDesc, myRenderTargetData.RenderTargetView.GetAddressOf());
 	if (FAILED(hr))
 	{
 		return false;
@@ -96,12 +96,12 @@ bool FGE::RenderTexture::Initialize(ComPtr<ID3D11Device> aDevice, int aTextureWi
 	{
 		return false;
 	}
-	myViewport.TopLeftX = 0;
-	myViewport.TopLeftY = 0;
-	myViewport.Width = static_cast<float>(aTextureWidth);
-	myViewport.Height = static_cast<float>(aTextureWidth);
-	myViewport.MinDepth = 0.0f;
-	myViewport.MaxDepth = 1.0f;
+	myRenderTargetData.Viewport.TopLeftX = 0;
+	myRenderTargetData.Viewport.TopLeftY = 0;
+	myRenderTargetData.Viewport.Width = static_cast<float>(aTextureWidth);
+	myRenderTargetData.Viewport.Height = static_cast<float>(aTextureHeight);
+	myRenderTargetData.Viewport.MinDepth = 0.0f;
+	myRenderTargetData.Viewport.MaxDepth = 1.0f;
 
 	return true;
 }
@@ -113,8 +113,8 @@ void FGE::RenderTexture::Shutdown()
 
 void FGE::RenderTexture::SetRenderTarget(ComPtr<ID3D11DeviceContext> aDeviceContext)
 {
-	aDeviceContext->OMSetRenderTargets(1, myRenderTargetView.GetAddressOf(), myDepthStencilView.Get());
-	aDeviceContext->RSSetViewports(1, &myViewport);
+	aDeviceContext->OMSetRenderTargets(1, myRenderTargetData.RenderTargetView.GetAddressOf(), myRenderTargetData.DepthStencilView.Get());
+	aDeviceContext->RSSetViewports(1, &myRenderTargetData.Viewport);
 }
 
 void FGE::RenderTexture::ClearRenderTarget(ComPtr<ID3D11DeviceContext> aDeviceContext, float aR, float aG, float aB, float aA)
@@ -124,8 +124,8 @@ void FGE::RenderTexture::ClearRenderTarget(ComPtr<ID3D11DeviceContext> aDeviceCo
 	color[1] = aG;
 	color[2] = aB;
 	color[3] = aA;
-	aDeviceContext->ClearRenderTargetView(myRenderTargetView.Get(), color);
-	aDeviceContext->ClearDepthStencilView(myDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	aDeviceContext->ClearRenderTargetView(myRenderTargetData.RenderTargetView.Get(), color);
+	aDeviceContext->ClearDepthStencilView(myRenderTargetData.DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 ComPtr<ID3D11ShaderResourceView> FGE::RenderTexture::GetShaderResourceView()
@@ -135,10 +135,10 @@ ComPtr<ID3D11ShaderResourceView> FGE::RenderTexture::GetShaderResourceView()
 
 ComPtr<ID3D11RenderTargetView> FGE::RenderTexture::GetRenderTargetView()
 {
-	return myRenderTargetView;
+	return myRenderTargetData.RenderTargetView;
 }
 
 ComPtr<ID3D11DepthStencilView> FGE::RenderTexture::GetDepthStencilView()
 {
-	return myDepthStencilView;
+	return myRenderTargetData.DepthStencilView;
 }

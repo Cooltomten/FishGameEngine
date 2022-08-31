@@ -37,15 +37,6 @@ void Viewport::Render()
 			myWindowWidth = ImGui::GetContentRegionAvail().x;
 			myWindowHeight = ImGui::GetContentRegionAvail().y;
 
-			if ((myWindowWidth * 9.f / 16.f) < myWindowHeight)
-			{
-				myWindowHeight = myWindowWidth * 9.f / 16.f;
-			}
-			else
-			{
-				myWindowWidth = myWindowHeight * 16.f / 9.f;
-			}
-
 
 			mySceneCamera->Resize(myWindowWidth, myWindowHeight);
 			myRenderTexture->Initialize(FGE::Application::Get().GetWindow()->GetDX11().GetDevice(), myWindowWidth, myWindowHeight);

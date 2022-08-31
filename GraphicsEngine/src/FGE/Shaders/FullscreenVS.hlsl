@@ -13,7 +13,7 @@ DefferedVertexToPixel main(DefferedVertexInput input)
     
     const float2 uv[3] =
     {
-        float2(0.0, 0.0),
+        float2(0.0, 1.0),
         float2(0.0, -1.0),
         float2(2.0, 1.0)
     };

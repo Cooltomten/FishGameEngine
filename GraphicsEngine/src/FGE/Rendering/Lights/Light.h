@@ -16,9 +16,9 @@ namespace FGE
 	public:
 		struct LightBufferData
 		{
-			CU::Vector3f Color;
-			float Intensity;
-			alignas(16)CU::Vector3f Direction;
+			CU::Vector3f Color = CU::Vector3f(1.0f, 1.0f, 1.0f);
+			float Intensity = 1;
+			alignas(16)CU::Vector3f Direction = CU::Vector3f(0.0f, 0.0f, 0.0f);
 		};
 
 	public:

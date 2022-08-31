@@ -26,7 +26,7 @@ namespace FGE
 
 		myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
 
-		const size_t maxNumberOfParticles = static_cast<size_t>(ceilf(myEmitterSettings->ParticlesPerSecond * myEmitterSettings->LifeTime)) * 1.1f;
+		const size_t maxNumberOfParticles = static_cast<size_t>(static_cast<size_t>(ceilf(myEmitterSettings->ParticlesPerSecond * myEmitterSettings->LifeTime))) * 1.1f;
 		myParticles.resize(maxNumberOfParticles);
 
 		auto& dx11 = Application::Get().GetWindow()->GetDX11();
@@ -35,7 +35,7 @@ namespace FGE
 
 		D3D11_BUFFER_DESC bufferDesc;
 		bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-		bufferDesc.ByteWidth = sizeof(ParticleVertex) * maxNumberOfParticles;
+		bufferDesc.ByteWidth = static_cast<UINT>(sizeof(ParticleVertex) * maxNumberOfParticles);
 		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		bufferDesc.MiscFlags = 0;

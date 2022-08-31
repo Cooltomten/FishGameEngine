@@ -147,6 +147,9 @@
     <ClInclude Include="src\FGE\Rendering\Buffers\GBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\FGE\Rendering\RenderTargetData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GraphicsEngine.pch.cpp">
@@ -271,7 +274,7 @@
     <FxCompile Include="src\FGE\Shaders\ParticlePS.hlsl" />
     <FxCompile Include="src\FGE\Shaders\ParticleGS.hlsl" />
     <FxCompile Include="src\FGE\Shaders\GBufferPS.hlsl" />
-    <FxCompile Include="src\FGE\Shaders\FullcreenShader.hlsl" />
-    <FxCompile Include="src\FGE\Shaders\EnvironmentShader.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\FullscreenVS.hlsl" />
+    <FxCompile Include="src\FGE\Shaders\EnvironmentPS.hlsl" />
   </ItemGroup>
 </Project>

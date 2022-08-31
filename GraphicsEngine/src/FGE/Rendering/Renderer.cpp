@@ -44,6 +44,8 @@ namespace FGE
 
 	GBuffer Renderer::myGBuffer;
 
+	const RenderTargetData* Renderer::myCurrentRenderTargetData;
+
 
 
 
@@ -53,6 +55,7 @@ namespace FGE
 	{
 		myGBuffer.Init();
 		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		myCurrentRenderTargetData = &dx11.GetRenderTargetData();
 		//Create shaders
 		std::ifstream vsFile;
 		vsFile.open("Assets/Shaders/DefaultVS.cso", std::ios::binary);
@@ -75,6 +78,22 @@ namespace FGE
 		gbufferPsFile.close();
 		ID3D11PixelShader* gbufferPixelShader = dx11.CreatePixelShader(gbufferPsData.data(), gbufferPsData.size());
 		myGBufferPixelShader = gbufferPixelShader;
+
+		//Environment shader
+		std::ifstream environmentPsFile;
+		environmentPsFile.open("Assets/Shaders/EnvironmentPS.cso", std::ios::binary);
+		std::string environmentPsData = { std::istreambuf_iterator<char>(environmentPsFile), std::istreambuf_iterator<char>() };
+		environmentPsFile.close();
+		ID3D11PixelShader* environmentPixelShader = dx11.CreatePixelShader(environmentPsData.data(), environmentPsData.size());
+		myEnvironmentShader = environmentPixelShader;
+
+		//Fullscreen shader
+		std::ifstream fullscreenVsFile;
+		fullscreenVsFile.open("Assets/Shaders/FullscreenVS.cso", std::ios::binary);
+		std::string fullscreenVsData = { std::istreambuf_iterator<char>(fullscreenVsFile), std::istreambuf_iterator<char>() };
+		fullscreenVsFile.close();
+		ID3D11VertexShader* fullscreenPixelShader = dx11.CreateVertexShader(fullscreenVsData.data(), fullscreenVsData.size());
+		myFullscreenShader = fullscreenPixelShader;
 
 		//end shaders
 
@@ -152,7 +171,7 @@ namespace FGE
 			throw;
 		}
 
-		myDepthStencilStates[static_cast<unsigned>(DepthStencilState::ReadOnly)] = nullptr;
+		myDepthStencilStates[static_cast<unsigned>(DepthStencilState::ReadWrite)] = nullptr;
 
 
 
@@ -190,17 +209,20 @@ namespace FGE
 		auto& dx11 = Application::Get().GetWindow()->GetDX11();
 		auto& context = dx11.GetDeviceContext();
 
+
+		const RenderTargetData& prevRenderTarget = *myCurrentRenderTargetData;
 		//generate GBuffer
+		
 		myGBuffer.SetAsTarget(dx11.GetDepthStencilView().Get());
 		context->VSSetShader(myVertexShader.Get(), nullptr, 0);
 		context->PSSetShader(myGBufferPixelShader.Get(), nullptr, 0);
+		SetDepthStencilState(DepthStencilState::ReadWrite);
 
 		for (auto& command : myModelCommands)
 		{
 			myObjectBufferData.World = command.Transform;
 			myObjectBufferData.HasBones = false;
 
-			//map Object buffer
 			ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
 			if (!command.AnimData.empty())
 			{
@@ -225,7 +247,8 @@ namespace FGE
 			context->DrawIndexed(command.Data->GetIndexBuffer().GetCount(), 0, 0);
 
 		}
-		dx11.SetRenderTarget();
+		SetRenderTarget(prevRenderTarget);
+
 
 		context->VSSetShader(0, nullptr, 0);
 		context->PSSetShader(0, nullptr, 0);
@@ -255,6 +278,9 @@ namespace FGE
 
 		context->VSSetShader(myFullscreenShader.Get(), nullptr, 0);
 		context->PSSetShader(myEnvironmentShader.Get(), nullptr, 0);
+
+		myGBuffer.SetAsResource(0);
+		SetDepthStencilState(DepthStencilState::ReadOnly);
 
 		context->Draw(3, 0);
 
@@ -313,7 +339,7 @@ namespace FGE
 
 		GenerateGBuffer();
 
-		//RenderGBuffer();
+		RenderGBuffer();
 
 		RenderParticles();
 
@@ -345,6 +371,16 @@ namespace FGE
 		//dx11
 		auto& dx11 = Application::Get().GetWindow()->GetDX11();
 		dx11.GetDeviceContext()->OMSetDepthStencilState(myDepthStencilStates[static_cast<uint32_t>(aDepthStencilState)].Get(), 0);
+	}
+
+	void Renderer::SetRenderTarget(const RenderTargetData& someRenderTargetData)
+	{
+		myCurrentRenderTargetData = &someRenderTargetData;
+		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& context = dx11.GetDeviceContext();
+
+		context->OMSetRenderTargets(1, someRenderTargetData.RenderTargetView.GetAddressOf(), someRenderTargetData.DepthStencilView.Get());
+		context->RSSetViewports(1, &someRenderTargetData.Viewport);
 	}
 
 }

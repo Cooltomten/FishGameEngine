@@ -20,7 +20,7 @@ namespace FGE
 	struct WindowProperties
 	{
 		WindowProperties(const std::string& aTitle = "DX11", uint32_t aWidth = 1280, uint32_t aHeight = 720, bool aEnableVSync = true, WindowMode aWindowMode = WindowMode::Windowed)
-			: Title(aTitle), Width(aWidth), Height(aHeight), IsVSync(aEnableVSync), WindowMode(aWindowMode)
+			: Title(aTitle), Width(aWidth), Height(aHeight), IsVSync(aEnableVSync), WindowMode(aWindowMode), X(0), Y(0)
 		{}
 		
 		std::string Title;

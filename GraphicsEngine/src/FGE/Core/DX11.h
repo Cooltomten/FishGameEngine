@@ -1,6 +1,7 @@
 #pragma once
 #include "FabException.h"
 #include "FGE/Core/DXErrorHandling/DxgiInfoManager.h"
+#include "FGE/Rendering/RenderTargetData.h"
 #include <vector>
 #include <wrl.h>
 #include <array>
@@ -93,6 +94,8 @@ namespace FGE
 		void SetRenderTarget();
 		std::array<float, 4> GetClearColor() const { return myClearColor; }
 
+		inline const RenderTargetData& GetRenderTargetData() const { return myRenderTargetData; }
+
 
 	private:
 		std::array<float, 4> myClearColor;
@@ -103,10 +106,13 @@ namespace FGE
 		ComPtr<ID3D11SamplerState> SamplerStateDefault;
 		ComPtr<ID3D11SamplerState> SamplerStateWrap;
 
-		ComPtr<ID3D11RenderTargetView> BackBuffer;
-		ComPtr<ID3D11DepthStencilView> DepthBuffer;
+		//ComPtr<ID3D11RenderTargetView> BackBuffer;
+		//ComPtr<ID3D11DepthStencilView> DepthBuffer;
 
-		D3D11_VIEWPORT myViewport;
+		//D3D11_VIEWPORT myViewport;
+		
+		RenderTargetData myRenderTargetData;
+
 #ifndef NDEBUG
 		DxgiInfoManager myInfoManager;
 #endif

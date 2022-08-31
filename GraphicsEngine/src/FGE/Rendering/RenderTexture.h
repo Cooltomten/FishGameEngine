@@ -1,5 +1,6 @@
 #pragma once
 
+#include "FGE/Rendering/RenderTargetData.h"
 //for comptr
 #include <wrl.h>
 #include <d3d11.h>
@@ -28,12 +29,11 @@ namespace FGE
 		ComPtr<ID3D11ShaderResourceView> GetShaderResourceView();
 		ComPtr<ID3D11RenderTargetView> GetRenderTargetView();
 		ComPtr<ID3D11DepthStencilView> GetDepthStencilView();
+		inline const RenderTargetData& GetRenderTargetData() { return myRenderTargetData; }
 
 	private:
 		ComPtr<ID3D11Texture2D> myTexture;
-		ComPtr<ID3D11DepthStencilView> myDepthStencilView;
-		ComPtr<ID3D11RenderTargetView> myRenderTargetView;
 		ComPtr<ID3D11ShaderResourceView> myShaderResourceView;	
-		D3D11_VIEWPORT myViewport;
+		RenderTargetData myRenderTargetData;
 	};
 }

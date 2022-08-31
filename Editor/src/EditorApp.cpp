@@ -203,15 +203,14 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 
 			//Set render target
-			myViewportWindows[i]->GetRenderTexture()->SetRenderTarget(dx11.GetDeviceContext());
-			myViewportWindows[i]->GetRenderTexture()->ClearRenderTarget(dx11.GetDeviceContext(), 0, 0, 0.2, 1);
+			FGE::Renderer::SetRenderTarget(myViewportWindows[i]->GetRenderTexture()->GetRenderTargetData());
+			myViewportWindows[i]->GetRenderTexture()->ClearRenderTarget(dx11.GetDeviceContext(), 0, 0, 0.5, 1);
 			FGE::Renderer::Render();
 			FGE::Renderer::End();
 		}
 	}
 
-			dx11.SetRenderTarget();
-
+	dx11.SetRenderTarget();
 
 
 

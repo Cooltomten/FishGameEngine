@@ -1,5 +1,5 @@
 #include "ShaderStructs.hlsli"
-GBufferOutput main(VertexToPixel input) : SV_TARGET
+GBufferOutput main(VertexToPixel input)
 {
 	GBufferOutput output;
 	
@@ -30,12 +30,15 @@ GBufferOutput main(VertexToPixel input) : SV_TARGET
         normalize(input.myNormal)
     );
     
-    float3 pixelNormal = normalMap * 0.75f; // why *0.75f?
+    float3 pixelNormal = normalMap; 
     pixelNormal.z = 0;
     pixelNormal = 2.0f * pixelNormal - 1.0f;
     pixelNormal.z = sqrt(1 - saturate(pixelNormal.x + pixelNormal.x + pixelNormal.y + pixelNormal.y));
     pixelNormal = normalize(pixelNormal);
     pixelNormal = normalize(mul(pixelNormal, TBN));
+    
+
+    
     
     //fill output
     output.Albedo = albedo;

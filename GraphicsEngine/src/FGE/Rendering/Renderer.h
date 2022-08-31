@@ -4,6 +4,8 @@
 #include "FGE/Rendering/Buffers/GBuffer.h"
 
 #include "FGE/Particles/ParticleVertex.h"
+#include "FGE/Rendering/RenderTargetData.h"
+
 
 #include <CommonUtilities/Math/Vector.hpp>
 #include <CommonUtilities/Math/Matrix4x4.hpp>
@@ -114,6 +116,8 @@ namespace FGE
 		static void SetBlendState(BlendState aBlendState);
 		static void SetDepthStencilState(DepthStencilState aDepthStencilState);
 
+		static void SetRenderTarget(const RenderTargetData& someRenderTargetData);
+
 
 	private:
 		static void GenerateGBuffer();
@@ -171,5 +175,7 @@ namespace FGE
 
 		static GBuffer myGBuffer;
 		
+		static const RenderTargetData* myCurrentRenderTargetData;
+
 	};
 }

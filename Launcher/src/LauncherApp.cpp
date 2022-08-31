@@ -167,7 +167,7 @@ bool LauncherApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 
 	myChestTransform.SetRotation(myChestTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 	myParticleTransform.SetRotation(myChestTransform.GetRotation() + CU::Vector3f(0,-3.1415f/2, 0));
-	myGremlinTransform.SetRotation(myGremlinTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
+	//myGremlinTransform.SetRotation(myGremlinTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 	myCubeTransform.SetRotation(myCubeTransform.GetRotation() + CU::Vector3f(0, aEvent.GetTimeStep() * 1, 0));
 
 	//float sinValue = 0.5 * (float)sin(myMaterialFadeTimer * 3) + 0.5;
