@@ -53,6 +53,21 @@ namespace Comp
 		return myTag;
 	}
 
+	const uint32_t& Entity::GetID() const
+	{
+		return myID;
+	}
+
+	std::shared_ptr<Entity> Entity::GetParent() 
+	{
+		return myParent;
+	}
+
+	std::vector<std::shared_ptr<Entity>>& Entity::GetChildren()
+	{
+		return myChildren;
+	}
+
 	bool Entity::AddComponent(std::shared_ptr<Component> aComponent)
 	{
 		std::string name = aComponent->GetName();

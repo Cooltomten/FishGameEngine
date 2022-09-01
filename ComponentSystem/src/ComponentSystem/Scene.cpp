@@ -25,6 +25,12 @@ namespace Comp
 	}
 	void Scene::AddEntity(std::shared_ptr<Entity> aEntity)
 	{
+		aEntity->myParentScene = this;
 		myEntities.push_back(aEntity);
+	}
+	
+	 std::vector<std::shared_ptr<Entity>>& Scene::GetEntities()
+	{
+		return myEntities;
 	}
 }

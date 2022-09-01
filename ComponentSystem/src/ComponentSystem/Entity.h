@@ -1,20 +1,24 @@
 #pragma once
 
 #include "ComponentSystem/Transform.h"
-#include "ComponentSystem/Scene.h"
 
 #include <cassert>
 #include <unordered_map>
 #include <string>
 #include <vector>
 #include <memory>
+
+namespace FGE
+{
+	class Event;
+}
+
 namespace Comp
 {
 	class RenderBuffer;
 	class Rigidbody;
 	class Component;
 	class Scene;
-	class Event;
 	class Entity
 	{
 	public:
@@ -29,6 +33,9 @@ namespace Comp
 
 		const std::string& GetName() const;
 		const std::string& GetTag() const;
+		const uint32_t& GetID() const;
+		std::shared_ptr<Entity> GetParent() ;
+		std::vector<std::shared_ptr<Entity>>& GetChildren();
 
 		template<class T> T* GetComponent();
 		template<class T, typename... TArgs> T* GetOrCreateComponent(TArgs&&... aArgs);
@@ -41,10 +48,13 @@ namespace Comp
 		Transform& GetTransform();
 
 	private:
+		friend class Scene;
 		std::vector<std::shared_ptr<Component>> myComponents;
 		std::unordered_map<std::string, std::shared_ptr<Component>> myComponentMap;
-		Entity* myParent;
-		std::vector<Entity*> myChildren;
+		
+		std::shared_ptr<Entity> myParent;
+		std::vector<std::shared_ptr<Entity>> myChildren;
+		
 		Scene* myParentScene;
 
 		Transform myTransform;

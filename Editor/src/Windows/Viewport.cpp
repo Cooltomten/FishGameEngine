@@ -35,12 +35,20 @@ void Viewport::Render()
 
 void Viewport::UpdateImGui()
 {
-	if (ImGui::Begin((std::string("Viewport#") + std::to_string(myId)).c_str(), &myOpenFlag))
+	if (ImGui::Begin((std::string("Viewport##") + std::to_string(myId)).c_str(), &myOpenFlag))
 	{
 		if (ImGui::GetContentRegionAvail().x != myWindowWidth || ImGui::GetContentRegionAvail().y != myWindowHeight)
 		{
 			myWindowWidth = ImGui::GetContentRegionAvail().x;
 			myWindowHeight = ImGui::GetContentRegionAvail().y;
+			if(myWindowHeight <= 0)
+			{
+				myWindowHeight = 1;
+			}
+			if (myWindowWidth <= 0)
+			{
+				myWindowWidth = 1;
+			}
 
 
 			mySceneCamera->Resize(myWindowWidth, myWindowHeight);

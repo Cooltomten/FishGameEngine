@@ -19,6 +19,8 @@
 #include <CommonUtilities/InputManager.h>
 #include <CommonUtilities/UtilityFunctions.hpp>
 
+#include <ComponentSystem/SceneManager.h>
+#include <ComponentSystem/Scene.h>
 #include <ComponentSystem/Entity.h>
 
 #include <SceneCamera.h>
@@ -82,16 +84,25 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 
 	myCubeMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Cube");
 
-	myScene = std::make_shared<Comp::Scene>();
 	//Add entities
+	Comp::SceneManager::Initialize();
+	Comp::SceneManager::Get().NewScene();
+	auto scene = Comp::SceneManager::GetCurrentScene();
 
-	std::shared_ptr<Comp::Entity> entity = std::make_shared<Comp::Entity>();
+	std::shared_ptr<Comp::Entity> entity = std::make_shared<Comp::Entity>("One", 1);
 	std::shared_ptr<Engine::MeshRenderer> meshRenderer = std::make_shared<Engine::MeshRenderer>();
 	entity->AddComponent(meshRenderer);
+	Comp::SceneManager::GetCurrentScene()->AddEntity(entity);
 	
-	myScene->AddEntity(entity);
+	
+	//another entity 
+	entity = std::make_shared<Comp::Entity>("Two", 2);
+	meshRenderer = std::make_shared<Engine::MeshRenderer>();
+	entity->AddComponent(meshRenderer);
+	Comp::SceneManager::GetCurrentScene()->AddEntity(entity);
 
-	myScene->OnRuntimeStart();
+
+	Comp::SceneManager::GetCurrentScene()->OnRuntimeStart();
 
 	//myChestMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Assets/Meshes/SM_Particle_Chest.fbx");
 
@@ -125,8 +136,7 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	myDirectionalLightTransform.SetRotation(0, 0, 0);
 	myDirectionalLight->SetDirection(myDirectionalLightTransform.GetForward());
 	myGame->OnStart();
-
-	myCurrentScene = std::make_shared<Comp::Scene>();
+	
 
 	//Create a viewport by default
 	myViewportWindows.push_back(std::make_shared<Viewport>());
@@ -134,8 +144,7 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	myWindows.back()->SetOpen(true);
 
 	//Create a HierarchyWindow by default
-	myWindows.push_back(std::make_shared<HierarchyWindow>());
-	myWindows.push_back(myWindows.back());
+	myWindows.push_back(std::make_shared<HierarchyWindow>(mySelectedEntities));
 	myWindows.back()->SetOpen(true);
 
 
@@ -152,7 +161,7 @@ void EditorApp::OnEventSub(FGE::Event& aEvent)
 	FGE::EventDispatcher dispatcher(aEvent);
 	dispatcher.Dispatch<FGE::AppUpdateEvent>(BIND_EVENT_FN(EditorApp::OnUpdateEvent));
 	dispatcher.Dispatch<FGE::AppRenderEvent>(BIND_EVENT_FN(EditorApp::OnRenderEvent));
-	myScene->OnEvent(aEvent);
+	Comp::SceneManager::GetCurrentScene()->OnEvent(aEvent);
 }
 
 bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
@@ -199,6 +208,28 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 					myWindows.back()->SetOpen(true);
 				}
 			}
+
+			if (ImGui::MenuItem("Hierarchy"))
+			{
+				bool shouldCreate = true;
+				for (auto& window : myWindows)
+				{
+					if (!window->IsOpen())
+					{
+						window->SetOpen(true);
+						shouldCreate = false;
+						break;
+					}
+
+				}
+
+				if (shouldCreate)
+				{
+					myWindows.push_back(std::make_shared<HierarchyWindow>(mySelectedEntities));
+					myWindows.back()->SetOpen(true);
+				}
+			}
+
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();

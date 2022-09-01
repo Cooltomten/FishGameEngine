@@ -6,7 +6,6 @@
 #include <FGE/Rendering/RenderTexture.h>
 
 #include <ComponentSystem/Transform.h>
-#include <ComponentSystem/Scene.h>
 
 
 extern FGE::Game* CreateGame();
@@ -20,6 +19,11 @@ namespace FGE
 	class DirectionalLight;
 	class EnvironmentLight;
 	class ParticleEmitter;
+}
+
+namespace Comp
+{
+	class Entity;
 }
 
 class EditorWindow;
@@ -47,9 +51,6 @@ private:
 
 	std::shared_ptr<FGE::Mesh> myCubeMesh;
 	Comp::Transform myCubeTransform;
-	
-	std::shared_ptr<Comp::Scene> myScene;
-
 	//std::shared_ptr<FGE::Mesh> myChestMesh;
 	//Comp::Transform myChestTransform;
 	//std::shared_ptr<FGE::Material> myChestMaterial;
@@ -71,12 +72,11 @@ private:
 	std::vector<std::string> myRenderModesStrings;
 
 	std::shared_ptr<FGE::RenderTexture> myRenderTexture;
-
-	std::shared_ptr<Comp::Scene> myCurrentScene;
 	std::shared_ptr<SceneCamera> myCamera;
 
 	std::shared_ptr<FGE::ParticleEmitter> myParticles;
 
-
+	std::vector<std::shared_ptr<Comp::Entity>> mySelectedEntities;
+	
 
 };

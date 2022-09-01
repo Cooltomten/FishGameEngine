@@ -21,6 +21,8 @@ namespace Comp
 		void OnRuntimeStart();
 
 		void AddEntity(std::shared_ptr<Entity> aEntity);
+		
+		std::vector<std::shared_ptr<Entity>>& GetEntities();
 
 	private:
 
