@@ -1,13 +1,13 @@
 #include "GraphicsEngine.pch.h"
 #include "GBuffer.h"
-#include "FGE/Core/Application.h"
+
+#include "FGE/Core/Window.h"
+#include "FGE/Core/DX11.h"
+
 
 void FGE::GBuffer::Init()
 {
-	for (uint32_t i = 0; i < GB_COUNT; ++i)
-	{
-		myTextures[i].Initialize(FGE::Application::Get().GetWindow()->GetDX11().GetDevice(), Application::Get().GetWindow()->GetWidth(), Application::Get().GetWindow()->GetHeight());
-	}
+	Resize(FGE::Window::Get().GetWidth(), FGE::Window::Get().GetHeight());
 }
 
 void FGE::GBuffer::SetAsResource(uint32_t aStartSlot)
@@ -18,7 +18,7 @@ void FGE::GBuffer::SetAsResource(uint32_t aStartSlot)
 		srvs[i] = myTextures[i].GetShaderResourceView().Get();
 	}
 
-	FGE::Application::Get().GetWindow()->GetDX11().GetDeviceContext()->PSSetShaderResources(aStartSlot, GBuffer::GB_COUNT, &srvs[0]);
+	FGE::Window::Get().GetDX11().GetDeviceContext()->PSSetShaderResources(aStartSlot, GBuffer::GB_COUNT, &srvs[0]);
 }
 
 void FGE::GBuffer::SetAsTarget(ID3D11DepthStencilView* aDSV)
@@ -30,18 +30,26 @@ void FGE::GBuffer::SetAsTarget(ID3D11DepthStencilView* aDSV)
 		rtvs[i] = myTextures[i].GetRenderTargetView().Get();
 	}
 	
-	FGE::Application::Get().GetWindow()->GetDX11().GetDeviceContext()->OMSetRenderTargets(GBuffer::GB_COUNT, &rtvs[0], aDSV);
+	FGE::Window::Get().GetDX11().GetDeviceContext()->OMSetRenderTargets(GBuffer::GB_COUNT, &rtvs[0], aDSV);
 	
 }
 
 void FGE::GBuffer::Clear()
 {
-	auto& dx11 = FGE::Application::Get().GetWindow()->GetDX11();
+	auto& dx11 = FGE::Window::Get().GetDX11();
 
 	auto clearColor = dx11.GetClearColor();
 	
 	for (uint32_t i = 0; i < GBuffer::GB_COUNT; i++)
 	{
 		myTextures[i].ClearRenderTarget(dx11.GetDeviceContext(), clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+	}
+}
+
+void FGE::GBuffer::Resize(int aWidth, int aHeight)
+{
+	for (uint32_t i = 0; i < GB_COUNT; ++i)
+	{
+		myTextures[i].Initialize(FGE::Window::Get().GetDX11().GetDevice(), aWidth, aHeight);
 	}
 }

@@ -10,6 +10,7 @@ public:
 
 	virtual void Update(float aTimeStep) = 0;
 	virtual void Render() = 0;
+	virtual void UpdateImGui() = 0;
 	
 	inline bool IsOpen() { return myOpenFlag; }
 	inline void SetOpen(bool aFlag) { myOpenFlag = aFlag; }

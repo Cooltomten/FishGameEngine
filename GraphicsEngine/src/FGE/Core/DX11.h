@@ -68,6 +68,7 @@ namespace FGE
 		DX11();
 		~DX11();
 
+
 		bool Initialize(HWND aWindowHandle);
 
 		void BeginFrame(std::array<float, 4> aClearColor = { 0.0f, 0.0f, 0.0f, 0.0f });
@@ -96,8 +97,13 @@ namespace FGE
 
 		inline const RenderTargetData& GetRenderTargetData() const { return myRenderTargetData; }
 
+		void Resize(float aWidth, float aHeight);
 
 	private:
+		void CreateDepthBuffer(float aWidth, float aHeight);
+		void CreateViewport(float aWidth, float aHeight);
+		
+
 		std::array<float, 4> myClearColor;
 		ComPtr<ID3D11Device> Device;
 		ComPtr<ID3D11DeviceContext> Context;

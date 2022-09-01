@@ -1,7 +1,7 @@
 #include "SceneCamera.h"
 #include <CommonUtilities/UtilityFunctions.hpp>
 #include <FGE/Rendering/Camera/Camera.h>
-#include <FGE/Core/Application.h>
+#include <Engine/Core/Application.h>
 
 SceneCamera::SceneCamera()
 {

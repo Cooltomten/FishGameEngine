@@ -1,8 +1,12 @@
 #include "GraphicsEngine.pch.h"
 #include "ParticleEmitter.h"
-#include "FGE/Core/Application.h"
+
+#include "FGE/Core/Window.h"
+#include "FGE/Core/DX11.h"
+
 #include "FGE/Asset/ResourceCache.h"
 #include "FGE/Asset/Texture.h"
+
 #include "FGE/Rendering/Renderer.h"
 
 namespace FGE
@@ -29,7 +33,7 @@ namespace FGE
 		const size_t maxNumberOfParticles = static_cast<size_t>(static_cast<size_t>(ceilf(myEmitterSettings->ParticlesPerSecond * myEmitterSettings->LifeTime))) * 1.1f;
 		myParticles.resize(maxNumberOfParticles);
 
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 
 		myStride = sizeof(ParticleVertex);
 
@@ -119,7 +123,7 @@ namespace FGE
 
 	void ParticleEmitter::SetAsResource() const
 	{
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		auto& context = dx11.GetDeviceContext();
 
 		D3D11_MAPPED_SUBRESOURCE bufferData;

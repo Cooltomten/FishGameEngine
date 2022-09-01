@@ -20,7 +20,7 @@ namespace FGE
 		void SetAsResource(uint32_t aStartSlot);
 		void SetAsTarget(ID3D11DepthStencilView* aDSV);
 		void Clear();
-
+		void Resize(int aWidth, int aHeight);
 	private:
 		std::array<RenderTexture, GB_COUNT > myTextures;
 	};

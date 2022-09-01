@@ -21,6 +21,8 @@ namespace FGE
 
 	DX11::DX11()
 	{
+
+
 	}
 
 	DX11::~DX11()
@@ -54,7 +56,7 @@ namespace FGE
 
 		//for checking results of d3d functions
 		HRESULT hr;
-		
+
 		GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
 			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
@@ -81,37 +83,14 @@ namespace FGE
 		));
 
 
-
-		//Create depth buffer
 		RECT clientRect = { 0,0,0,0 };
 		GetClientRect(aWindowHandle, &clientRect);
 
-		ComPtr<ID3D11Texture2D> depthBufferTexture;
-		D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
-		depthBufferDesc.Width = clientRect.right - clientRect.left;
-		depthBufferDesc.Height = clientRect.bottom - clientRect.top;
-		depthBufferDesc.ArraySize = 1;
-		depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		depthBufferDesc.SampleDesc.Count = 1;
-		depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-
-		GFX_THROW_INFO(Device->CreateTexture2D(&depthBufferDesc, nullptr, depthBufferTexture.GetAddressOf()));
-
-		GFX_THROW_INFO(Device->CreateDepthStencilView(
-			depthBufferTexture.Get(),
-			nullptr,
-			myRenderTargetData.DepthStencilView.GetAddressOf()
-		));
-
+		float width = clientRect.right - clientRect.left;
+		float height = clientRect.bottom - clientRect.top;
+		CreateDepthBuffer(width, height);
 		SetRenderTarget();
-
-
-				myRenderTargetData.Viewport.TopLeftX = 0;
-		myRenderTargetData.Viewport.TopLeftY = 0;
-		myRenderTargetData.Viewport.Width = static_cast<float>(clientRect.right - clientRect.left);
-		myRenderTargetData.Viewport.Height = static_cast<float>(clientRect.bottom - clientRect.top);
-		myRenderTargetData.Viewport.MinDepth = 0.0f;
-		myRenderTargetData.Viewport.MaxDepth = 1.0f;
+		CreateViewport(width, height);
 		Context->RSSetViewports(1, &myRenderTargetData.Viewport);
 		return true;
 	}
@@ -166,7 +145,7 @@ namespace FGE
 		ID3D11GeometryShader* shader = nullptr;
 		HRESULT hr;
 		GFX_THROW_INFO(Device->CreateGeometryShader(aData, aSize, nullptr, &shader));
-		
+
 		return shader;
 	}
 
@@ -236,6 +215,66 @@ namespace FGE
 	{
 		Context->OMSetRenderTargets(1, myRenderTargetData.RenderTargetView.GetAddressOf(), myRenderTargetData.DepthStencilView.Get());
 		Context->RSSetViewports(1, &myRenderTargetData.Viewport);
+	}
+
+	void DX11::Resize(float aWidth, float aHeight)
+	{
+
+		myRenderTargetData.RenderTargetView.Reset();
+		myRenderTargetData.DepthStencilView.Reset();
+
+		SwapChain->ResizeBuffers(1, static_cast<UINT>(aWidth), static_cast<UINT>(aHeight), DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+
+		HRESULT hr;
+
+
+		ComPtr<ID3D11Texture2D> pBackBuffer = nullptr;
+		GFX_THROW_INFO(SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(pBackBuffer.GetAddressOf())));
+		D3D11_TEXTURE2D_DESC backBufferDesc = { 0 };
+		GFX_THROW_INFO(Device->CreateRenderTargetView(
+			pBackBuffer.Get(),
+			nullptr,
+			myRenderTargetData.RenderTargetView.GetAddressOf()
+		));
+		CreateDepthBuffer(aWidth, aHeight);
+		Context->OMSetRenderTargets(1, myRenderTargetData.RenderTargetView.GetAddressOf(), myRenderTargetData.DepthStencilView.Get());
+		CreateViewport(aWidth, aHeight);
+		Context->RSSetViewports(1, &myRenderTargetData.Viewport);
+
+
+	}
+
+	void DX11::CreateDepthBuffer(float aWidth, float aHeight)
+	{
+		ComPtr<ID3D11Texture2D> depthBufferTexture;
+		D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
+		depthBufferDesc.Width = aWidth;
+		depthBufferDesc.Height = aHeight;
+		depthBufferDesc.ArraySize = 1;
+		depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthBufferDesc.SampleDesc.Count = 1;
+		depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+		HRESULT hr;
+		GFX_THROW_INFO(Device->CreateTexture2D(&depthBufferDesc, nullptr, depthBufferTexture.GetAddressOf()));
+
+		GFX_THROW_INFO(Device->CreateDepthStencilView(
+			depthBufferTexture.Get(),
+			nullptr,
+			myRenderTargetData.DepthStencilView.GetAddressOf()
+		));
+	}
+
+	void DX11::CreateViewport(float aWidth, float aHeight)
+	{
+
+		myRenderTargetData.Viewport.TopLeftX = 0;
+		myRenderTargetData.Viewport.TopLeftY = 0;
+		myRenderTargetData.Viewport.Width = aWidth;
+		myRenderTargetData.Viewport.Height = aHeight;
+		myRenderTargetData.Viewport.MinDepth = 0.0f;
+		myRenderTargetData.Viewport.MaxDepth = 1.0f;
+
 	}
 
 

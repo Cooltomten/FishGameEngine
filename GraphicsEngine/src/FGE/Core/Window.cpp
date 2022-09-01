@@ -1,5 +1,6 @@
 #include "GraphicsEngine.pch.h"
 #include "Window.h"
+#include "FGE/Rendering/Renderer.h"
 #include <sstream>
 #include <string>
 #include <filesystem>
@@ -7,6 +8,7 @@
 namespace FGE
 {
 	Window::WindowClass Window::WindowClass::wndClass;
+	Window* Window::myInstance = nullptr;
 
 	LPCWSTR Window::WindowClass::GetName() noexcept
 	{
@@ -45,12 +47,24 @@ namespace FGE
 
 	Window::Window(WindowProperties aPropeties)
 	{
+		if (myInstance == nullptr)
+		{
+			myInstance = this;
+		}
+		else
+		{
+			throw std::exception("Can only have one instance of Window,it is a singleton class");
+		}
+
 		myWidth = aPropeties.Width;
 		myHeight = aPropeties.Height;
+		myWindowPositionX = aPropeties.X;
+		myWindowPositionY = aPropeties.Y;
+		
 		RECT wr;
-		wr.left = aPropeties.X;
+		wr.left = myWindowPositionX;
 		wr.right = myWidth + wr.left;
-		wr.top = aPropeties.Y;
+		wr.top = myWindowPositionX;
 		wr.bottom = myHeight + wr.top;
 
 		if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
@@ -64,8 +78,8 @@ namespace FGE
 			WindowClass::GetName(),
 			title.generic_wstring().c_str(),
 			WS_OVERLAPPEDWINDOW | WS_POPUP | WS_VISIBLE,
-			aPropeties.X,
-			aPropeties.Y,
+			myWindowPositionX,
+			myWindowPositionY,
 			wr.right - wr.left,
 			wr.bottom - wr.top,
 			nullptr,
@@ -143,6 +157,25 @@ namespace FGE
 	float Window::GetHeight()
 	{
 		return myHeight;
+	}
+
+	void Window::Resize(int aWidth, int aHeight)
+	{
+		myWidth = aWidth;
+		myHeight = aHeight;
+		RECT wr;
+		if(GetWindowRect(myHWnd, &wr))
+		wr.right = myWidth + wr.left;
+		wr.bottom = myHeight + wr.top;
+
+		if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
+		{
+			throw FWND_LAST_EXCEPT();
+		}
+
+		SetWindowPos(myHWnd, 0, wr.left, wr.right, wr.right - wr.left, wr.bottom - wr.top, SWP_NOMOVE);
+		
+		myDX11->Resize(aWidth, aHeight);
 	}
 
 	std::shared_ptr<Window> Window::Create(const WindowProperties& aProperties)

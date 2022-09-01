@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FGE/Core/Application.h"
+#include "Engine/Core/Application.h"
 
 extern FGE::Application* FGE::CreateApplication();
 

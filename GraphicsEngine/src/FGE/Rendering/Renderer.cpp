@@ -1,7 +1,9 @@
 #include "GraphicsEngine.pch.h"
 #include "Renderer.h"
 
-#include "FGE/Core/Application.h"
+#include "FGE/Core/Window.h"
+#include "FGE/Core/DX11.h"
+
 #include "FGE/Asset/Material.h"
 #include "FGE/Rendering/Buffers/VertexBuffer.h"
 #include "FGE/Rendering/Lights/DirectionalLight.h"
@@ -54,7 +56,7 @@ namespace FGE
 	void Renderer::Init()
 	{
 		myGBuffer.Init();
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		myCurrentRenderTargetData = &dx11.GetRenderTargetData();
 		//Create shaders
 		std::ifstream vsFile;
@@ -206,14 +208,14 @@ namespace FGE
 	void Renderer::GenerateGBuffer()
 	{
 		D3D11_MAPPED_SUBRESOURCE bufferData;
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		auto& context = dx11.GetDeviceContext();
 
 
 		const RenderTargetData& prevRenderTarget = *myCurrentRenderTargetData;
 		//generate GBuffer
 		
-		myGBuffer.SetAsTarget(dx11.GetDepthStencilView().Get());
+		myGBuffer.SetAsTarget(myCurrentRenderTargetData->DepthStencilView.Get());
 		context->VSSetShader(myVertexShader.Get(), nullptr, 0);
 		context->PSSetShader(myGBufferPixelShader.Get(), nullptr, 0);
 		SetDepthStencilState(DepthStencilState::ReadWrite);
@@ -255,7 +257,7 @@ namespace FGE
 	}
 	void Renderer::RenderGBuffer()
 	{
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		auto& context = dx11.GetDeviceContext();
 
 		//render Gbuffer
@@ -287,7 +289,7 @@ namespace FGE
 	}
 	void Renderer::RenderParticles()
 	{
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		auto& context = dx11.GetDeviceContext();
 		
 		D3D11_MAPPED_SUBRESOURCE bufferData;
@@ -324,7 +326,7 @@ namespace FGE
 
 	void Renderer::Render()
 	{
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		auto& context = dx11.GetDeviceContext();
 		
 		D3D11_MAPPED_SUBRESOURCE bufferData;
@@ -336,6 +338,7 @@ namespace FGE
 		context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 		context->GSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 		context->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
+		myGBuffer.Resize(myCurrentRenderTargetData->Viewport.Width, myCurrentRenderTargetData->Viewport.Height);
 
 		GenerateGBuffer();
 
@@ -363,24 +366,30 @@ namespace FGE
 	void Renderer::SetBlendState(BlendState aBlendState)
 	{
 		//dx11
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		dx11.GetDeviceContext()->OMSetBlendState(myBlendStates[static_cast<uint32_t>(aBlendState)].Get(), nullptr, 0xffffffff);
 	}
 	void Renderer::SetDepthStencilState(DepthStencilState aDepthStencilState)
 	{
 		//dx11
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		dx11.GetDeviceContext()->OMSetDepthStencilState(myDepthStencilStates[static_cast<uint32_t>(aDepthStencilState)].Get(), 0);
 	}
 
 	void Renderer::SetRenderTarget(const RenderTargetData& someRenderTargetData)
 	{
 		myCurrentRenderTargetData = &someRenderTargetData;
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		auto& context = dx11.GetDeviceContext();
 
 		context->OMSetRenderTargets(1, someRenderTargetData.RenderTargetView.GetAddressOf(), someRenderTargetData.DepthStencilView.Get());
 		context->RSSetViewports(1, &someRenderTargetData.Viewport);
 	}
+
+	void Renderer::ResizeGBuffer(int aWidth, int aHeight)
+	{
+		myGBuffer.Resize(aWidth, aHeight);
+	}
+	
 
 }

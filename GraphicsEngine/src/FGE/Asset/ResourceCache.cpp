@@ -1,6 +1,5 @@
 #include "GraphicsEngine.pch.h"
 #include "ResourceCache.h"
-#include "FGE/Core/Application.h"
 
 #include "FGE/Rendering/Buffers/VertexBuffer.h"
 #include "FGE/Rendering/Buffers/VertexArray.h"
@@ -21,6 +20,7 @@ namespace FGE
 		Material::Default = std::make_shared<Material>();
 		Material::Default->SetTexture(MaterialTextureChannel::Albedo, GetAsset<Texture>("Assets/Textures/T_Default_C.dds"));
 		Material::Default->SetTexture(MaterialTextureChannel::Normal, GetAsset<Texture>("Assets/Textures/T_Default_N.dds"));
+		Material::Default->SetTexture(MaterialTextureChannel::Material, GetAsset<Texture>("Assets/Textures/T_Default_M.dds"));
 		SaveAsset(CreateUnitCube());
 
 	}

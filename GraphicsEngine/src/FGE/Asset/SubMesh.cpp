@@ -1,15 +1,16 @@
 #include "GraphicsEngine.pch.h"
 #include "SubMesh.h"
-#include "FGE/Core/Application.h"
 #include "FGE/Rendering/Renderer.h"
 #include "FGE/Rendering/Buffers/VertexBuffer.h"
 
+#include "FGE/Core/Window.h"
+#include "FGE/Core/DX11.h"
 namespace FGE
 {
 	SubMesh::SubMesh(const std::vector<Vertex>& aVertices, const std::vector<unsigned int>& aIndices)
 	{
 		//Create vertex buffer
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		std::shared_ptr<VertexBuffer> vertexBuffer = std::make_shared<VertexBuffer>(static_cast<UINT>(static_cast<UINT>(sizeof(Vertex)) * aVertices.size()), D3D11_USAGE_IMMUTABLE, sizeof(Vertex), aVertices.data());
 
 		//Create index buffer

@@ -1,11 +1,13 @@
 #include "GraphicsEngine.pch.h"
 #include "DirectionalLight.h"
-#include "FGE/Core/Application.h"
+#include "FGE/Core/Window.h"
+#include "FGE/Core/DX11.h"
+
 namespace FGE
 {
 	void DirectionalLight::SetAsResource(ComPtr<ID3D11Buffer> aLightBuffer)
 	{
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		
 
 		

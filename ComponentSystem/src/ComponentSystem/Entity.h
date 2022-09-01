@@ -18,13 +18,13 @@ namespace Comp
 	class Entity
 	{
 	public:
-		Entity(std::string aName, uint32_t aID = 0, std::string aTag = "Untagged");
+		Entity(std::string aName = "New Entity", uint32_t aID = 0, std::string aTag = "Untagged");
 		~Entity();
 
 		bool GetIsActive();
 		void Initialize();
 		void SetActive(bool aActiveFlag);
-		void OnEvent(const FGE::Event& aEvent);
+		void OnEvent( FGE::Event& aEvent);
 
 
 		const std::string& GetName() const;
@@ -37,6 +37,8 @@ namespace Comp
 
 		bool AddComponent(std::shared_ptr<Component> aComponent);
 		void RemoveComponent(std::shared_ptr<Component> aComponent);
+
+		Transform& GetTransform();
 
 	private:
 		std::vector<std::shared_ptr<Component>> myComponents;

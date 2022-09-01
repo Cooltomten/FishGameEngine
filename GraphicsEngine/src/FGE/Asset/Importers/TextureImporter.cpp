@@ -2,7 +2,8 @@
 #include "TextureImporter.h"
 
 #include "FGE/Asset/Texture.h"
-#include "FGE/Core/Application.h"
+
+#include "FGE/Core/Window.h"
 #include "FGE/Core/DX11.h"
 
 #include "DirectXTK/DDSTextureLoader11.h"
@@ -15,7 +16,7 @@ namespace FGE
 	{
 		std::shared_ptr<Texture> texture = std::make_shared<Texture>();
 		
-		HRESULT hr = DirectX::CreateDDSTextureFromFile(Application::Get().GetWindow()->GetDX11().GetDevice().Get(),
+		HRESULT hr = DirectX::CreateDDSTextureFromFile(Window::Get().GetDX11().GetDevice().Get(),
 			filePath.wstring().c_str(), texture->myTexture.GetAddressOf(), texture->mySRV.GetAddressOf());
 
 		if (FAILED(hr))

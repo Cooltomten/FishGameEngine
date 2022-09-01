@@ -1,5 +1,5 @@
 #include "Viewport.h"
-#include "FGE/Core/Application.h"
+#include "Engine/Core/Application.h"
 
 #include "SceneCamera.h"
 
@@ -30,6 +30,11 @@ void Viewport::Update(float aTimeStep)
 
 void Viewport::Render()
 {
+
+}
+
+void Viewport::UpdateImGui()
+{
 	if (ImGui::Begin((std::string("Viewport#") + std::to_string(myId)).c_str(), &myOpenFlag))
 	{
 		if (ImGui::GetContentRegionAvail().x != myWindowWidth || ImGui::GetContentRegionAvail().y != myWindowHeight)
@@ -46,9 +51,6 @@ void Viewport::Render()
 		auto drawList = ImGui::GetWindowDrawList();
 
 		ImGui::Image((void*)myRenderTexture->GetShaderResourceView().Get(), { (float)myWindowWidth, (float)myWindowHeight });
-		//drawList->AddImage((void*)myRenderTexture->GetShaderResourceView().Get(), ImGui::GetWindowPos(),
-		//	ImVec2(ImGui::GetWindowPos().x + myWindowWidth, ImGui::GetWindowPos().y + myWindowWidth));
 	}
 	ImGui::End();
-
 }

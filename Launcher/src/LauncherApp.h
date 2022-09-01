@@ -1,7 +1,7 @@
 #pragma once
-#include <FGE/Core/Game.h>
-#include <FGE/Core/Application.h>
-#include <FGE/Event/ApplicationEvents.h>
+#include <Engine/Core/Game.h>
+#include <Engine/Core/Application.h>
+#include <Engine/Event/ApplicationEvents.h>
 #include <FGE/Rendering/Camera/Camera.h>
 
 #include <ComponentSystem/Transform.h>

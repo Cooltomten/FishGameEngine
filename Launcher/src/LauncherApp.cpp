@@ -206,6 +206,19 @@ bool LauncherApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 		}
 		ImGui::EndCombo();
 	}
+
+
+	if (ImGui::Button("BANG"))
+	{
+		FGE::Window::Get().Resize(1920, 1080);
+	}
+	//pow 1280x720
+	if (ImGui::Button("POW"))
+	{
+		FGE::Window::Get().Resize(1280, 720);
+	}
+
+
 	ImGui::End();
 	
 	return false;

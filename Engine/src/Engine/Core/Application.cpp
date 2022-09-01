@@ -1,14 +1,16 @@
-#include "GraphicsEngine.pch.h"
+
 #include "Application.h"
 
-#include "FGE/Asset/ResourceCache.h"
-#include "FGE/Asset/Material.h"
-#include "FGE/Asset/AnimatedMesh.h"
-#include "FGE/Rendering/Camera/Camera.h"
-#include "FGE/Rendering/Renderer.h"
-#include "FGE/Event/Event.h"
-#include "FGE/Event/ApplicationEvents.h"
-#include "FGE/ImGui/ImGuiLayer.h"
+#include "Engine/Event/ApplicationEvents.h"
+#include "Engine/Event/Event.h"
+
+#include <FGE/ImGui/ImGuiLayer.h>
+#include <FGE/Asset/ResourceCache.h>
+#include <FGE/Asset/Material.h>
+#include <FGE/Asset/AnimatedMesh.h>
+
+#include <FGE/Rendering/Camera/Camera.h>
+#include <FGE/Rendering/Renderer.h>
 
 #include <iostream>
 
@@ -94,14 +96,14 @@ namespace FGE
 
 
 
-			myWindow->GetDX11().EndFrame();
+			FGE::Window::Get().GetDX11().EndFrame();
 
 			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 			{
 				ImGui::UpdatePlatformWindows();
 				ImGui::RenderPlatformWindowsDefault();
 			}
-			myWindow->GetDX11().SetRenderTarget();
+			FGE::Window::Get().GetDX11().SetRenderTarget();
 
 
 		}
@@ -128,6 +130,9 @@ namespace FGE
 		{
 		case WM_CLOSE:
 			myRunning = false;
+			break;
+		case WM_SIZE:
+			myWindow->Resize(LOWORD(aLParam), HIWORD(aLParam));
 			break;
 		}
 

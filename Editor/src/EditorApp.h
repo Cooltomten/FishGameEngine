@@ -1,7 +1,7 @@
 #pragma once
-#include <FGE/Core/Game.h>
-#include <FGE/Core/Application.h>
-#include <FGE/Event/ApplicationEvents.h>
+#include <Engine/Core/Game.h>
+#include <Engine/Core/Application.h>
+#include <Engine/Event/ApplicationEvents.h>
 #include <FGE/Rendering/Camera/Camera.h>
 #include <FGE/Rendering/RenderTexture.h>
 
@@ -47,10 +47,12 @@ private:
 
 	std::shared_ptr<FGE::Mesh> myCubeMesh;
 	Comp::Transform myCubeTransform;
+	
+	std::shared_ptr<Comp::Scene> myScene;
 
-	std::shared_ptr<FGE::Mesh> myChestMesh;
-	Comp::Transform myChestTransform;
-	std::shared_ptr<FGE::Material> myChestMaterial;
+	//std::shared_ptr<FGE::Mesh> myChestMesh;
+	//Comp::Transform myChestTransform;
+	//std::shared_ptr<FGE::Material> myChestMaterial;
 
 	std::shared_ptr<FGE::AnimatedMesh> myGremlinMesh;
 	Comp::Transform myGremlinTransform;

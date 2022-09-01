@@ -2,6 +2,7 @@
 
 #include "Windows/EditorWindow.h"
 #include "Windows/Viewport.h"
+#include "Windows/HierarchyWindow.h"
 
 #include <FGE/Rendering/Renderer.h>
 #include <FGE/Rendering/Lights/DirectionalLight.h>
@@ -12,6 +13,8 @@
 #include <FGE/Asset/AnimatedMesh.h>
 #include <FGE/Asset/Animation.h>
 #include <FGE/Asset/Material.h>
+
+#include <Engine/Components/MeshRenderer.h>
 
 #include <CommonUtilities/InputManager.h>
 #include <CommonUtilities/UtilityFunctions.hpp>
@@ -79,13 +82,24 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 
 	myCubeMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Cube");
 
+	myScene = std::make_shared<Comp::Scene>();
+	//Add entities
 
-	myChestMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Assets/Meshes/SM_Particle_Chest.fbx");
+	std::shared_ptr<Comp::Entity> entity = std::make_shared<Comp::Entity>();
+	std::shared_ptr<Engine::MeshRenderer> meshRenderer = std::make_shared<Engine::MeshRenderer>();
+	entity->AddComponent(meshRenderer);
+	
+	myScene->AddEntity(entity);
 
-	myChestMaterial = std::make_shared<FGE::Material>();
-	myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_C.dds"));
-	myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_N.dds"));
-	myChestMesh->SetMaterial(myChestMaterial, 0);
+	myScene->OnRuntimeStart();
+
+	//myChestMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Assets/Meshes/SM_Particle_Chest.fbx");
+
+	//myChestMaterial = std::make_shared<FGE::Material>();
+	//myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_C.dds"));
+	//myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_N.dds"));
+	//myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Material, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_M.dds"));
+	//myChestMesh->SetMaterial(myChestMaterial, 0);
 
 
 	myGremlinMesh = FGE::ResourceCache::GetAsset<FGE::AnimatedMesh>("Assets/Animations/Gremlin/gremlin_sk.fbx");
@@ -93,6 +107,7 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	myGremlinMaterial = std::make_shared<FGE::Material>();
 	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_gremlin_C.dds"));
 	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Gremlin_N.dds"));
+	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Material, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Gremlin_M.dds"));
 	myGremlinMesh->SetMaterial(myGremlinMaterial, 0);
 
 	myGremlinWalkAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_walk.fbx");
@@ -102,8 +117,8 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	myCubeTransform.SetPosition(-50, 0, 0);
 	myCubeTransform.SetScale(0.2f, 0.2f, 0.2f);
 
-	myChestTransform.SetPosition({ 0,0,0 });
-	myChestTransform.SetScale(0.2f, 0.2f, 0.2f);
+	//myChestTransform.SetPosition({ 0,0,0 });
+	//myChestTransform.SetScale(0.2f, 0.2f, 0.2f);
 
 	myGremlinTransform.SetPosition({ 50,0,0 });
 
@@ -112,6 +127,18 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	myGame->OnStart();
 
 	myCurrentScene = std::make_shared<Comp::Scene>();
+
+	//Create a viewport by default
+	myViewportWindows.push_back(std::make_shared<Viewport>());
+	myWindows.push_back(myViewportWindows.back());
+	myWindows.back()->SetOpen(true);
+
+	//Create a HierarchyWindow by default
+	myWindows.push_back(std::make_shared<HierarchyWindow>());
+	myWindows.push_back(myWindows.back());
+	myWindows.back()->SetOpen(true);
+
+
 }
 
 EditorApp::~EditorApp()
@@ -125,6 +152,7 @@ void EditorApp::OnEventSub(FGE::Event& aEvent)
 	FGE::EventDispatcher dispatcher(aEvent);
 	dispatcher.Dispatch<FGE::AppUpdateEvent>(BIND_EVENT_FN(EditorApp::OnUpdateEvent));
 	dispatcher.Dispatch<FGE::AppRenderEvent>(BIND_EVENT_FN(EditorApp::OnRenderEvent));
+	myScene->OnEvent(aEvent);
 }
 
 bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
@@ -190,15 +218,24 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 {
 	auto& dx11 = Application::Get().GetWindow()->GetDX11();
 
+	for (int i = 0; i < myWindows.size(); i++)
+	{
+		if (myWindows[i]->IsOpen())
+		{
+			myWindows[i]->UpdateImGui();
+		}
+	}
+
 	for (int i = 0; i < myViewportWindows.size(); i++)
 	{
+
 		if (myViewportWindows[i]->IsOpen())
 		{
 
 			FGE::Renderer::Begin(myViewportWindows[i]->GetSceneCamera()->GetCamera());
 
 			myCubeMesh->Render(myCubeTransform.GetMatrix());
-			myChestMesh->Render(myChestTransform.GetMatrix());
+			//myChestMesh->Render(myChestTransform.GetMatrix());
 			myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim, myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
 
 
@@ -211,33 +248,20 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 	}
 
 	dx11.SetRenderTarget();
+	
+	//ImGui::Begin("Stuff n things");
 
+	//if (ImGui::Button("BANG"))
+	//{
+	//	FGE::Window::Get().Resize(1920, 1080);
+	//}
+	////pow 1280x720
+	//if (ImGui::Button("POW"))
+	//{
+	//	FGE::Window::Get().Resize(1280, 720);
+	//}
 
-
-
-	ImGui::Begin("Stuff n things");
-
-	ImGui::Text("Animation Blend Alpha");
-	ImGui::DragFloat("##Animation Blend Alpha", &myGremlinAlphaBlend, 0.01f, 0, 1);
-
-	ImGui::Text("Animation Time Step Multiplier");
-	ImGui::DragFloat("##Animation Time Step Multiplier", &myAnimationTimeStepMultiplier, 0.01f, 0);
-
-
-
-	if (ImGui::BeginCombo("RenderMode", myRenderModesStrings[static_cast<uint32_t>(FGE::Renderer::GetRenderMode())].c_str()))
-	{
-		for (int i = 0; i < myRenderModesStrings.size(); ++i)
-		{
-			if (ImGui::Selectable(myRenderModesStrings[i].c_str()))
-			{
-				FGE::Renderer::SetRenderMode(static_cast<FGE::RenderMode>(i));
-			}
-		}
-		ImGui::EndCombo();
-	}
-
-	ImGui::End();
+	//ImGui::End();
 
 	for (int i = 0; i < myWindows.size(); i++)
 	{

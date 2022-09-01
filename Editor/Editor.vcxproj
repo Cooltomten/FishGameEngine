@@ -23,14 +23,14 @@
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\SceneCamera.cpp" />
     <ClCompile Include="src\Windows\EditorWindow.cpp" />
-    <ClCompile Include="src\Windows\HierarchyWIndow.cpp" />
+    <ClCompile Include="src\Windows\HierarchyWindow.cpp" />
     <ClCompile Include="src\Windows\Viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\SceneCamera.h" />
     <ClInclude Include="src\Windows\EditorWindow.h" />
-    <ClInclude Include="src\Windows\HierarchyWIndow.h" />
+    <ClInclude Include="src\Windows\HierarchyWindow.h" />
     <ClInclude Include="src\Windows\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +39,9 @@
     </ProjectReference>
     <ProjectReference Include="..\ComponentSystem\ComponentSystem.vcxproj">
       <Project>{92dafa81-9091-4296-88f9-70e0b2973443}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Engine\Engine.vcxproj">
+      <Project>{1150ae7f-94c7-4e31-984b-238194d1f8f8}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Game\Game.vcxproj">
       <Project>{8efa2e56-a47d-4810-bf42-6105523410f6}</Project>
@@ -154,7 +157,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/; $(SolutionDir)\Engine\src\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -170,7 +173,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/; $(SolutionDir)\Engine\src\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -2,12 +2,13 @@
 #include "Scene.h"
 #include "ComponentSystem/Component.h"
 
-#include "FGE/Event/Event.h"
 #include "ComponentSystem/Entity.h"
+
+#include <Engine/Event/Event.h>
 
 namespace Comp
 {
-	void Scene::OnEvent(const FGE::Event& aEvent)
+	void Scene::OnEvent( FGE::Event& aEvent)
 	{
 
 			for (size_t i = 0; i < myEntities.size(); i++)

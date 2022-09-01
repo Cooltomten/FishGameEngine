@@ -3,7 +3,7 @@
 
 #include "FGE/Asset/Texture.h"
 
-#include "FGE/Core/Application.h"
+#include "FGE/Core/Window.h"
 #include "FGE/Core/DX11.h"
 #include "FGE/Asset/ResourceCache.h"
 
@@ -29,7 +29,7 @@ void FGE::Material::SetAsResource(ComPtr<ID3D11Resource> aMaterialBuffer)
 {
 	
 	//map Material buffer
-	auto& dx11 = Application::Get().GetWindow()->GetDX11();
+	auto& dx11 = Window::Get().GetDX11();
 	D3D11_MAPPED_SUBRESOURCE bufferData;
 	ZeroMemory(&bufferData, sizeof(D3D11_MAPPED_SUBRESOURCE));
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <FGE/Core/Game.h>
+#include <Engine/Core/Game.h>
 
 class Game : public FGE::Game
 {

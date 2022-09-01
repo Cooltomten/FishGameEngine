@@ -1,6 +1,8 @@
 #include "GraphicsEngine.pch.h"
 #include "VertexBuffer.h"
-#include "FGE/Core/Application.h"
+#include "FGE/Core/Window.h"
+#include "FGE/Core/DX11.h"
+
 
 namespace FGE
 {
@@ -23,13 +25,13 @@ namespace FGE
 		
 		vertexSubResourceData.pSysMem = aData;
 
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		ID3D11Buffer* vertexBuffer = dx11.CreateBuffer(&vertexBufferDesc, &vertexSubResourceData);
 		myBuffer = vertexBuffer;
 	}
 	void VertexBuffer::Bind()
 	{
-		auto& context = Application::Get().GetWindow()->GetDX11().GetDeviceContext();
+		auto& context = Window::Get().GetDX11().GetDeviceContext();
 		const UINT stride = myStride;
 		const UINT offset = 0;
 		
@@ -56,14 +58,14 @@ namespace FGE
 		
 		indexSubResourceData.pSysMem = aData;
 		
-		auto& dx11 = Application::Get().GetWindow()->GetDX11();
+		auto& dx11 = Window::Get().GetDX11();
 		ID3D11Buffer* indexBuffer = dx11.CreateBuffer(&indexBufferDesc, &indexSubResourceData);
 		myBuffer = indexBuffer;
 	}
 
 	void IndexBuffer::Bind()
 	{
-		auto& context = Application::Get().GetWindow()->GetDX11().GetDeviceContext();
+		auto& context = Window::Get().GetDX11().GetDeviceContext();
 		context->IASetIndexBuffer(myBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	}

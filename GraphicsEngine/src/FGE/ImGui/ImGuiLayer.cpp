@@ -1,7 +1,6 @@
 #include "GraphicsEngine.pch.h"
 #include "ImGuiLayer.h"
-
-#include "FGE/Core/Application.h"
+#include "FGE/Core/Window.h"
 
 #include <ImGui/imgui.h>
 #include <Imgui/imgui_impl_dx11.h>
@@ -89,7 +88,6 @@ void FGE::ImGuiLayer::OnAttach()
 	style.Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.4f, 0.67f, 1.000f, 1.000f);
 
 	style.Colors[ImGuiCol_Tab] = ImVec4(0.137f, 0.137f, 0.137f, 1.000f);
-	//style.Colors[ImGuiCol_TabTop] = ImVec4(0.4f, 0.67f, 1.000f, 1.000f);
 	style.Colors[ImGuiCol_TabHovered] = ImVec4(0.352f, 0.352f, 0.352f, 1.000f);
 	style.Colors[ImGuiCol_TabActive] = ImVec4(0.258f, 0.258f, 0.258f, 1.000f);
 	style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.137f, 0.137f, 0.137f, 1.000f);
@@ -125,9 +123,9 @@ void FGE::ImGuiLayer::OnAttach()
 	style.TabRounding = 1.0f;
 
     // Setup Platform/Renderer backends
-    ImGui_ImplWin32_Init(Application::Get().GetWindow()->GetHandle());
-    ImGui_ImplDX11_Init(Application::Get().GetWindow()->GetDX11().GetDevice().Get(),
-        Application::Get().GetWindow()->GetDX11().GetDeviceContext().Get());
+    ImGui_ImplWin32_Init(FGE::Window::Get().GetHandle());
+    ImGui_ImplDX11_Init(FGE::Window::Get().GetDX11().GetDevice().Get(),
+		FGE::Window::Get().GetDX11().GetDeviceContext().Get());
 
 }
 

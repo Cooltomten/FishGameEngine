@@ -15,6 +15,7 @@ public:
 	// Inherited via EditorWindow
 	void Update(float aTimeStep) override;
 	void Render() override;
+	void UpdateImGui() override;
 
 	inline std::shared_ptr<SceneCamera> GetSceneCamera() { return mySceneCamera; }
 	inline std::shared_ptr<FGE::RenderTexture> GetRenderTexture() { return myRenderTexture; }

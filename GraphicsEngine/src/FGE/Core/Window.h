@@ -87,11 +87,13 @@ namespace FGE
 		HWND GetHandle();
 		float GetWidth();
 		float GetHeight();
+		void Resize(int aWidth, int aHeight);
 		
 		void SetWndFunctionToCall(callback_function_wndProc aFunction);
 
 	public:
 		static std::shared_ptr<Window> Create(const WindowProperties& aProperties);
+		inline static Window& Get() { return *myInstance; }
 
 	private:
 		static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -99,8 +101,12 @@ namespace FGE
 		LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
 	private:
+		static Window* myInstance;
 		int myWidth;
 		int myHeight;
+		int myWindowPositionX;
+		int myWindowPositionY;
+
 		HWND myHWnd;
 		std::unique_ptr<DX11> myDX11;
 		callback_function_wndProc myWndFunctionToCall;

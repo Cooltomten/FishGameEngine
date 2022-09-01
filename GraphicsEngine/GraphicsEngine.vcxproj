@@ -131,7 +131,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GraphicsEngine.pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;$(SolutionDir)/Vendor/include/nlohmann</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;$(SolutionDir)/Vendor/include/nlohmann/; $(SolutionDir)/ComponentSystem/src/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -159,7 +159,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>GraphicsEngine.pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;$(SolutionDir)/Vendor/include/nlohmann</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;..\CommonUtilities/;../TGAFBXImporter/;../ImGui/;$(SolutionDir)/Vendor/include/nlohmann/; $(SolutionDir)/ComponentSystem/src/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -193,20 +193,16 @@
     <ClInclude Include="src\FGE\Asset\ResourceCache.h" />
     <ClInclude Include="src\FGE\Asset\SubMesh.h" />
     <ClInclude Include="src\FGE\Asset\Texture.h" />
-    <ClInclude Include="src\FGE\Event\ApplicationEvents.h" />
-    <ClInclude Include="src\FGE\Event\Event.h" />
-    <ClInclude Include="src\FGE\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\FGE\Asset\EmitterSettingsData.h" />
+    <ClInclude Include="src\FGE\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\FGE\Particles\ParticleEmitter.h" />
     <ClInclude Include="src\FGE\Particles\ParticleVertex.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\FrameBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\GBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\Vertex.h" />
-    <ClInclude Include="src\FGE\Core\Application.h" />
     <ClInclude Include="src\FGE\Core\DX11.h" />
     <ClInclude Include="src\FGE\Core\DXErrorHandling\dxerr.h" />
     <ClInclude Include="src\FGE\Core\DXErrorHandling\DxgiInfoManager.h" />
-    <ClInclude Include="src\FGE\Core\Game.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\ConstantBuffer.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexArray.h" />
     <ClInclude Include="src\FGE\Rendering\Buffers\VertexBuffer.h" />
@@ -214,7 +210,6 @@
     <ClInclude Include="src\FGE\Rendering\Lights\EnvironmentLight.h" />
     <ClInclude Include="src\FGE\Rendering\Lights\Light.h" />
     <ClInclude Include="src\FGE\Rendering\Renderer.h" />
-    <ClInclude Include="src\FGE\EntryPoint.h" />
     <ClInclude Include="src\FabException.h" />
     <ClInclude Include="src\FabWin.h" />
     <ClInclude Include="src\FGE\Rendering\Camera\Camera.h" />
@@ -237,7 +232,6 @@
     <ClCompile Include="src\FGE\Asset\ResourceCache.cpp" />
     <ClCompile Include="src\FGE\Asset\SubMesh.cpp" />
     <ClCompile Include="src\FGE\Asset\Texture.cpp" />
-    <ClCompile Include="src\FGE\Core\Application.cpp" />
     <ClCompile Include="src\FGE\Core\DX11.cpp" />
     <ClCompile Include="src\FGE\Core\DXErrorHandling\dxerr.cpp" />
     <ClCompile Include="src\FGE\Core\DXErrorHandling\DxgiInfoManager.cpp" />
@@ -273,6 +267,9 @@
     <None Include="src\FGE\Shaders\Shaderstructs.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ComponentSystem\ComponentSystem.vcxproj">
+      <Project>{92dafa81-9091-4296-88f9-70e0b2973443}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\ImGui\ImGui.vcxproj">
       <Project>{a976a80c-5ba8-4e11-a61c-92cc066a64c4}</Project>
     </ProjectReference>

@@ -3,7 +3,8 @@
 
 #include "FGE/Rendering/Buffers/VertexBuffer.h"
 
-#include "FGE/Core/Application.h"
+#include "FGE/Core/DX11.h"
+
 #include "FGE/Core/Window.h"
 
 namespace FGE
@@ -28,7 +29,7 @@ namespace FGE
 		myVertexBuffer->Bind();
 		myIndexBuffer->Bind();
 
-		Application::Get().GetWindow()->GetDX11().GetDeviceContext()->IASetInputLayout(myInputLayout);
+		Window::Get().GetDX11().GetDeviceContext()->IASetInputLayout(myInputLayout);
 	}
 
 	void VertexArray::SetVertexBuffer(std::shared_ptr<VertexBuffer> aVertexBuffer)

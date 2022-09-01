@@ -6,8 +6,7 @@
 
 //https://dxuuu.xyz/cpp-static-registration.html
 
-#define REGISTER_COMPONENT(x)\
-	static bool x ## _entry = Comp::ComponentRegistry::Add(x::GetFactoryName(), x::Create)
+#define REGISTER_COMPONENT(x) static bool x ## _entry = Comp::ComponentRegistry::Add(x::GetFactoryName(), x::Create)
 
 namespace Comp
 {

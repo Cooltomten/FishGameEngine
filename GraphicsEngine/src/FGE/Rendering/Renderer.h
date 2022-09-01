@@ -118,6 +118,8 @@ namespace FGE
 
 		static void SetRenderTarget(const RenderTargetData& someRenderTargetData);
 
+		static void ResizeGBuffer(int aWidth, int aHeight);
+
 
 	private:
 		static void GenerateGBuffer();

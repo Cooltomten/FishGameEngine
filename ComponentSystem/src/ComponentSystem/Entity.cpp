@@ -35,7 +35,7 @@ namespace Comp
 		myIsActiveFlag = aActiveFlag;
 	}
 
-	void Entity::OnEvent(const FGE::Event& aEvent)
+	void Entity::OnEvent(FGE::Event& aEvent)
 	{
 		for (int i = 0; i < myComponents.size(); i++)
 		{
@@ -89,6 +89,11 @@ namespace Comp
 			
 			myComponentMap.erase(name);
 		}
+	}
+
+	Transform& Entity::GetTransform()
+	{
+		return myTransform;
 	}
 
 }

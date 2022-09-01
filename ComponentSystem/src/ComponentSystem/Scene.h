@@ -16,7 +16,7 @@ namespace Comp
 		Scene() = default;
 		~Scene() = default;
 
-		void OnEvent(const FGE::Event& aEvent);
+		void OnEvent( FGE::Event& aEvent);
 
 		void OnRuntimeStart();
 
