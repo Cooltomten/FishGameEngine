@@ -40,6 +40,7 @@ public:
 private:
 	bool OnUpdateEvent(FGE::AppUpdateEvent& aEvent);
 	bool OnRenderEvent(FGE::AppRenderEvent& aEvent);
+	
 
 	std::vector<std::shared_ptr<EditorWindow>> myWindows;
 	std::vector<std::shared_ptr<Viewport>> myViewportWindows;
@@ -77,6 +78,9 @@ private:
 	std::shared_ptr<FGE::ParticleEmitter> myParticles;
 
 	std::vector<std::shared_ptr<Comp::Entity>> mySelectedEntities;
+	
+
+	
 	
 
 };

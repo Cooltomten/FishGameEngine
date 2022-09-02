@@ -30,16 +30,11 @@ namespace FGE
 
 		void Init(std::vector<std::shared_ptr<SubMesh>> aSubMesh);
 
-		void Render(const CU::Matrix4x4<float>& aTransform);
-
-		void SetMaterial(std::shared_ptr<Material> aMaterial, uint32_t aIndex);
-		std::shared_ptr<Material> GetMaterial(uint32_t aIndex);
+		void Render(const CU::Matrix4x4<float>& aTransform, const std::vector<std::shared_ptr<Material>>& someMaterials);
 
 	private:
 
 		std::vector<std::shared_ptr<SubMesh>> mySubMeshes;
-
-		std::unordered_map<uint32_t, std::shared_ptr<Material>> myMaterials;
 
 	};
 }

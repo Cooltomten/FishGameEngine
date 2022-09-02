@@ -1,0 +1,26 @@
+{
+  "Entities": [
+    {
+      "ID": 1,
+      "Name": "One",
+      "ParentID": 4294967295,
+      "Position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Tag": "Untagged"
+    },
+    {
+      "ID": 2,
+      "Name": "Two",
+      "ParentID": 4294967295,
+      "Position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "Tag": "Untagged"
+    }
+  ]
+}

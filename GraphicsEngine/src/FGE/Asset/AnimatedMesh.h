@@ -24,7 +24,6 @@ namespace FGE
 		};
 
 		std::vector<Bone> Bones;
-
 		std::unordered_map<std::string, size_t> BoneNameToIndex;
 
 	};
@@ -41,11 +40,8 @@ namespace FGE
 
 		void Init(std::vector<std::shared_ptr<SubMesh>> aSubMesh, Skeleton& aSkeleton);
 
-		void Render(const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Animation> aAnimation,
+		void Render(const CU::Matrix4x4<float>& aTransform, const std::vector<std::shared_ptr<Material>>& someMaterials, std::shared_ptr<Animation> aAnimation,
 			std::shared_ptr<Animation> aAnimationToBlendWith, float aBlendAlpha, float aAnimationTime);
-
-		void SetMaterial(std::shared_ptr<Material> aMaterial, uint32_t aIndex);
-		std::shared_ptr<Material> GetMaterial(uint32_t aIndex);
 
 		FORCEINLINE const Skeleton* GetSkeleton() const { return &mySkeleton; }
 
@@ -53,8 +49,6 @@ namespace FGE
 
 		Skeleton mySkeleton;
 		std::vector<std::shared_ptr<SubMesh>> mySubMeshes;
-
-		std::unordered_map<uint32_t, std::shared_ptr<Material>> myMaterials;
 	};
 
 }

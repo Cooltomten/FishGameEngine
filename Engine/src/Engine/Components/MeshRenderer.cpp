@@ -1,5 +1,6 @@
 #include "MeshRenderer.h"
 #include "Engine/Event/ApplicationEvents.h"
+#include "Engine/Event/EntityEvents.h"
 
 #include <ComponentSystem/ComponentRegistry.hpp>
 #include <ComponentSystem/Entity.h>
@@ -16,29 +17,59 @@ namespace Engine
 	Engine::MeshRenderer::MeshRenderer()
 		: Comp::Component("MeshRenderer")
 	{
+		myMeshPath = "Assets/Meshes/SM_Particle_Chest.fbx";
+		myLastMeshPath = myMeshPath;
+		myMaterialPath = "Assets/Materials/DefaultMaterial.material";
+		myLastMaterialPath = myMaterialPath;
+		InitializeParameters({
+			{Comp::ParameterType::String, "Mesh Path", &myMeshPath},
+			{Comp::ParameterType::String, "Material Path", &myMaterialPath}
+			});
 	}
 
 	void Engine::MeshRenderer::Initialize()
 	{
+		myMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>(myMeshPath);
 
-		myMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Assets/Meshes/SM_Particle_Chest.fbx");
-		
-		myMaterial = std::make_shared<FGE::Material>();
-		myMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_C.dds"));
-		myMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_N.dds"));
-		myMaterial->SetTexture(FGE::MaterialTextureChannel::Material, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_M.dds"));
-		myMesh->SetMaterial(myMaterial, 0);
+		myMaterials.push_back( FGE::ResourceCache::GetAsset<FGE::Material>(myMaterialPath));
 	}
 
 	void Engine::MeshRenderer::OnEvent(FGE::Event& aEvent)
 	{
 		FGE::EventDispatcher dispatcher(aEvent);
 
-		dispatcher.Dispatch<FGE::AppRenderEvent>([this](FGE::AppRenderEvent& aEvent) 
+		dispatcher.Dispatch<FGE::AppRenderEvent>([this](FGE::AppRenderEvent& aEvent)
 			{
-				myMesh->Render(myEntity->GetTransform().GetMatrix());
+				myMesh->Render(myEntity->GetTransform().GetMatrix(), myMaterials);
 				return false;
 			});
+
+		dispatcher.Dispatch<EntityPropertyUpdatedEvent>(
+			[this](EntityPropertyUpdatedEvent& aEvent)
+			{
+				if (myMeshPath != myLastMeshPath)
+				{
+					myLastMeshPath = myMeshPath;
+					if (std::filesystem::exists(myMeshPath) && std::filesystem::is_regular_file(myMeshPath))
+					{
+						myMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>(myMeshPath);
+					}
+				}
+
+				if (myMaterialPath != myLastMaterialPath)
+				{
+					myLastMaterialPath = myMaterialPath;
+					if (std::filesystem::exists(myMaterialPath) && std::filesystem::is_regular_file(myMaterialPath))
+					{
+						myMaterials[0] = FGE::ResourceCache::GetAsset<FGE::Material>(myMaterialPath);
+					}
+				}
+
+				return false;
+			}
+		);
+
+
 	}
 
 

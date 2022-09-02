@@ -7,12 +7,14 @@
 #include "FGE/Asset/SubMesh.h"
 #include "FGE/Asset/Material.h"
 
+
 namespace FGE
 {
 	std::unordered_map<std::string, std::shared_ptr<Asset>> ResourceCache::myAssets;
 	std::unique_ptr<FBXImporter> ResourceCache::myFBXImporter;
 	std::unique_ptr<TextureImporter> ResourceCache::myTextureImporter;
 	std::unique_ptr<EmitterSettingsImporter> ResourceCache::myParticleEmitterImporter;
+	std::unique_ptr<MaterialImporter> ResourceCache::myMaterialImporter;
 	
 
 	void ResourceCache::Initialize()

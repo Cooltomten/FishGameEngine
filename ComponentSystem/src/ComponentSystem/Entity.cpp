@@ -68,6 +68,11 @@ namespace Comp
 		return myChildren;
 	}
 
+	std::vector<std::shared_ptr<Component>>& Entity::GetComponents()
+	{
+		return myComponents;
+	}
+
 	bool Entity::AddComponent(std::shared_ptr<Component> aComponent)
 	{
 		std::string name = aComponent->GetName();

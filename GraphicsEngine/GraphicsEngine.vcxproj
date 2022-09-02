@@ -186,6 +186,7 @@
     <ClInclude Include="src\FGE\Asset\Asset.h" />
     <ClInclude Include="src\FGE\Asset\Importers\FBXImporter.h" />
     <ClInclude Include="src\FGE\Asset\Importers\EmitterSettingsImporter.h" />
+    <ClInclude Include="src\FGE\Asset\Importers\MaterialImporter.h" />
     <ClInclude Include="src\FGE\Asset\Importers\ShaderImporter.h" />
     <ClInclude Include="src\FGE\Asset\Importers\TextureImporter.h" />
     <ClInclude Include="src\FGE\Asset\Material.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="src\FGE\Asset\Animation.cpp" />
     <ClCompile Include="src\FGE\Asset\Importers\FBXImporter.cpp" />
     <ClCompile Include="src\FGE\Asset\Importers\EmitterSettingsImporter.cpp" />
+    <ClCompile Include="src\FGE\Asset\Importers\MaterialImporter.cpp" />
     <ClCompile Include="src\FGE\Asset\Importers\ShaderImporter.cpp" />
     <ClCompile Include="src\FGE\Asset\Importers\TextureImporter.cpp" />
     <ClCompile Include="src\FGE\Asset\Material.cpp" />

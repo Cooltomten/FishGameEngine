@@ -92,10 +92,15 @@ namespace Comp
 		myMatrix(1, 1) = myScale.x;
 		myMatrix(2, 2) = myScale.y;
 		myMatrix(3, 3) = myScale.z;
-		myMatrix = myMatrix.CreateRotationAroundY(myRotation.y) * myMatrix;
-		myMatrix = myMatrix.CreateRotationAroundX(myRotation.x) * myMatrix;
-		myMatrix = myMatrix.CreateRotationAroundZ(myRotation.z) * myMatrix;
 		
+		CommonUtilities::Vector3f rotInRad = myRotation * 3.14159265359f / 180.0f;
+		auto rotX =  CU::Matrix4x4<float>::CreateRotationAroundX(rotInRad.x);
+		auto rotY =  CU::Matrix4x4<float>::CreateRotationAroundY(rotInRad.y);
+		auto rotZ =  CU::Matrix4x4<float>::CreateRotationAroundZ(rotInRad.z);
+
+		auto rot = rotX* rotY * rotZ;
+		
+		myMatrix = myMatrix* rot ;
 		myMatrix(4, 1) = myPosition.x;
 		myMatrix(4, 2) = myPosition.y;
 		myMatrix(4, 3) = myPosition.z;

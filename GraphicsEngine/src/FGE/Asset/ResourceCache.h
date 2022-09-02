@@ -6,6 +6,7 @@
 #include "FGE/Asset/Importers/FBXImporter.h"
 #include "FGE/Asset/Importers/TextureImporter.h"
 #include "FGE/Asset/Importers/EmitterSettingsImporter.h"
+#include "FGE/Asset/Importers/MaterialImporter.h"
 
 #include "GraphicsEngine.pch.h"
 
@@ -35,6 +36,7 @@ namespace FGE
 		static std::unique_ptr<TextureImporter> myTextureImporter;
 		static std::unique_ptr<EmitterSettingsImporter> myParticleEmitterImporter;
 		//static std::unique_ptr<ShaderImporter> myShaderImporter;
+		static std::unique_ptr<MaterialImporter> myMaterialImporter;
 	};
 
 	template<class T>
@@ -76,6 +78,10 @@ namespace FGE
 		case AssetType::EmitterSettingsData:
 			asset = std::reinterpret_pointer_cast<Asset>(myParticleEmitterImporter->ImportEmitterSettings(aPath));
 			break;
+		case AssetType::Material:
+			asset = std::reinterpret_pointer_cast<Asset>(myMaterialImporter->ImportMaterial(aPath));
+			break;
+			
 		}
 
 

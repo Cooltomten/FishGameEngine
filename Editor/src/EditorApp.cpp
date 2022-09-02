@@ -3,6 +3,7 @@
 #include "Windows/EditorWindow.h"
 #include "Windows/Viewport.h"
 #include "Windows/HierarchyWindow.h"
+#include "Windows/InspectorWindow.h"
 
 #include <FGE/Rendering/Renderer.h>
 #include <FGE/Rendering/Lights/DirectionalLight.h>
@@ -119,7 +120,6 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_gremlin_C.dds"));
 	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Gremlin_N.dds"));
 	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Material, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Gremlin_M.dds"));
-	myGremlinMesh->SetMaterial(myGremlinMaterial, 0);
 
 	myGremlinWalkAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_walk.fbx");
 	myGremlinRunAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_run.fbx");
@@ -145,6 +145,10 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 
 	//Create a HierarchyWindow by default
 	myWindows.push_back(std::make_shared<HierarchyWindow>(mySelectedEntities));
+	myWindows.back()->SetOpen(true);
+
+	//create InspectorWindow
+	myWindows.push_back(std::make_shared<InspectorWindow>(mySelectedEntities));
 	myWindows.back()->SetOpen(true);
 
 
@@ -185,8 +189,33 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 
 	if (ImGui::BeginMainMenuBar())
 	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New"))
+			{
+				//TODO: Popup to check if user wants to save current scene
+				Comp::SceneManager::Get().NewScene();
+			}
+			if (ImGui::MenuItem("Load"))
+			{
+				//TODO: Popup to check if user wants to save current scene
+				//TODO: get path from user
+				Comp::SceneManager::Get().LoadScene("Path here");
+			}
+			if (ImGui::MenuItem("Save", "Ctrl + S"))
+			{
+				Comp::SceneManager::Get().SaveCurrentScene("TestSave.scene");
+			}
+			if (ImGui::MenuItem("Save As", "Ctrl + Shift + S"))
+			{
+				//TODO: get path from user
+				//Comp::SceneManager::Get().SaveCurrentSceneAs();
+			}
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("Windows"))
 		{
+			//TODO: Refactor this
 			if (ImGui::MenuItem("Viewport"))
 			{
 				bool shouldCreate = true;
@@ -230,6 +259,30 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 				}
 			}
 
+			//Inspector
+			if (ImGui::MenuItem("Inspector"))
+			{
+				bool shouldCreate = true;
+				for (auto& window : myWindows)
+				{
+					if (!window->IsOpen())
+					{
+						window->SetOpen(true);
+						shouldCreate = false;
+						break;
+					}
+
+				}
+
+				if (shouldCreate)
+				{
+					myWindows.push_back(std::make_shared<InspectorWindow>(mySelectedEntities));
+					myWindows.back()->SetOpen(true);
+				}
+			}
+
+
+
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -265,9 +318,9 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 			FGE::Renderer::Begin(myViewportWindows[i]->GetSceneCamera()->GetCamera());
 
-			myCubeMesh->Render(myCubeTransform.GetMatrix());
+			//myCubeMesh->Render(myCubeTransform.GetMatrix());
 			//myChestMesh->Render(myChestTransform.GetMatrix());
-			myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim, myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
+			//myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim, myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
 
 
 			//Set render target

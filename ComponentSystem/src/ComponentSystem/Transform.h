@@ -30,9 +30,9 @@ namespace Comp
 		const CU::Vector3f GetForward();
 		const CU::Vector3f GetRight();
 		const CU::Vector3f GetUp();
-		
-	private:
 		void RecalculateTransform();
+
+	private:
 		CU::Vector3f myPosition;
 		CU::Vector3f myRotation;
 		CU::Vector3f myScale;

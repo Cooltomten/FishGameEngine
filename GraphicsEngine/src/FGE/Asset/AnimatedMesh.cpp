@@ -14,14 +14,9 @@ namespace FGE
 	{
 		mySubMeshes = aSubMesh;
 		mySkeleton = aSkeleton;
-
-		for (int i = 0; i < mySubMeshes.size(); i++)
-		{
-			myMaterials[mySubMeshes[i]->GetMaterialIndex()] = Material::Default;
-		}
 	}
 
-	void FGE::AnimatedMesh::Render(const CU::Matrix4x4<float>& aTransform, std::shared_ptr<Animation> aAnimation,
+	void FGE::AnimatedMesh::Render(const CU::Matrix4x4<float>& aTransform, const std::vector<std::shared_ptr<Material>>& someMaterials, std::shared_ptr<Animation> aAnimation,
 		std::shared_ptr<Animation> aAnimationToBlendWith, float aBlendAlpha, float aAnimationTime)
 	{
 		std::vector<CU::Matrix4x4<float>> matrices;
@@ -30,18 +25,8 @@ namespace FGE
 
 		for (int i = 0; i < mySubMeshes.size(); i++)
 		{
-			Renderer::SubmitModel(mySubMeshes[i]->GetVertexArray(), aTransform, myMaterials[mySubMeshes[i]->GetMaterialIndex()], matrices);
+			Renderer::SubmitModel(mySubMeshes[i]->GetVertexArray(), aTransform, someMaterials[0], matrices);
 		}
-	}
-
-	void FGE::AnimatedMesh::SetMaterial(std::shared_ptr<Material> aMaterial, uint32_t aIndex)
-	{
-		myMaterials[aIndex] = aMaterial;
-	}
-
-	std::shared_ptr<Material> FGE::AnimatedMesh::GetMaterial(uint32_t aIndex)
-	{
-		return myMaterials[aIndex];
 	}
 
 }

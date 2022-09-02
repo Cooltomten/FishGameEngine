@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include "Scene.h"
+#include <filesystem>
 namespace Comp
 {
 	class SceneManager
@@ -17,7 +18,7 @@ namespace Comp
 		
 		void NewScene();
 		void LoadScene(const std::string& aScenePath);
-
+		void SaveCurrentScene(const std::filesystem::path& aPath);
 	private:
 		static SceneManager* myInstance;
 

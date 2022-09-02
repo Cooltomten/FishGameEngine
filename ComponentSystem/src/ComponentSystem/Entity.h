@@ -36,6 +36,7 @@ namespace Comp
 		const uint32_t& GetID() const;
 		std::shared_ptr<Entity> GetParent() ;
 		std::vector<std::shared_ptr<Entity>>& GetChildren();
+		std::vector<std::shared_ptr<Component>>& GetComponents();
 
 		template<class T> T* GetComponent();
 		template<class T, typename... TArgs> T* GetOrCreateComponent(TArgs&&... aArgs);

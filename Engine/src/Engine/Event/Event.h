@@ -1,8 +1,8 @@
 #pragma once
 
 #define BIND_EVENT_FN(fn) (std::bind(&fn, this, std::placeholders::_1))
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
-								virtual EventType GetEventType() const override { return GetStaticType(); }\
+#define EVENT_CLASS_TYPE(type) static FGE::EventType GetStaticType() { return FGE::EventType::type; }\
+								virtual FGE::EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
 #include <string>
 #include <ostream>
@@ -26,6 +26,8 @@ namespace FGE
 		//KeyPressed,
 		//KeyReleased,
 		//KeyTyped,
+
+		EntityPropertyUpdated
 	};
 	
 

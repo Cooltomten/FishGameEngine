@@ -64,9 +64,15 @@ void SceneCamera::Update(float aTimeStep)
 		CU::Vector3f right = myTransform.GetRight();
 		CU::Vector3f up = myTransform.GetUp();
 
-		cameraPos += forward * moveXZInput.y * aTimeStep * 500.f;
-		cameraPos += right * moveXZInput.x * aTimeStep * 500.f;
-		cameraPos += up * moveYInput * aTimeStep * 500.f;
+		float speed = 500;
+		if (myInput->GetKey(Keys::Shift))
+		{
+			speed = speed * 2;
+		}
+
+		cameraPos += forward * moveXZInput.y * aTimeStep * speed;
+		cameraPos += right * moveXZInput.x * aTimeStep * speed;
+		cameraPos += up * moveYInput * aTimeStep * speed;
 
 
 		myTransform.SetPosition(cameraPos);
@@ -74,7 +80,7 @@ void SceneCamera::Update(float aTimeStep)
 
 		CU::Vector2f mouseDelta = { static_cast<float>(myInput->GetMousePosDelta().x), static_cast<float>(myInput->GetMousePosDelta().y) };
 
-		CU::Vector3f cameraRot = myTransform.GetRotation() + CU::Vector3f(mouseDelta.y, mouseDelta.x, 0) * 0.005f;
+		CU::Vector3f cameraRot = myTransform.GetRotation() + CU::Vector3f(mouseDelta.y, mouseDelta.x, 0) * 0.1f;
 
 		//Clamp camera rotation to prevent camera from flipping over (degrees)
 		cameraRot.x = CU::Clamp(cameraRot.x, -89.f, 89.f);

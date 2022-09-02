@@ -12,7 +12,8 @@ namespace FGE
 		Texture,
 		PixelShader,
 		VertexShader,
-		EmitterSettingsData
+		EmitterSettingsData,
+		Material
 	};
 
 	class Asset

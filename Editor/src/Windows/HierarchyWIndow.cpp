@@ -19,7 +19,7 @@ void HierarchyWindow::Render()
 
 void HierarchyWindow::UpdateImGui()
 {
-	if (ImGui::Begin((std::string("Hierarchy#") + std::to_string(myId)).c_str(), &myOpenFlag))
+	if (ImGui::Begin((std::string("Hierarchy##") + std::to_string(myId)).c_str(), &myOpenFlag))
 	{
 		auto currentScene = Comp::SceneManager::GetCurrentScene();
 		if (currentScene)
@@ -51,7 +51,7 @@ void HierarchyWindow::DrawEntity(std::shared_ptr<Comp::Entity> aEntity)
 		flags |= ImGuiTreeNodeFlags_Selected;
 	}
 	
-	if (ImGui::TreeNodeEx(aEntity->GetName().c_str(), flags ))
+	if (ImGui::TreeNodeEx((aEntity->GetName() + "##" + std::to_string(aEntity->GetID())).c_str(), flags))
 	{
 		if (ImGui::IsItemClicked())
 		{

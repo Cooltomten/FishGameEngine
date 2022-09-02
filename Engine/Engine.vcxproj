@@ -24,6 +24,7 @@
     <ClInclude Include="src\Engine\Core\Game.h" />
     <ClInclude Include="src\Engine\EntryPoint.h" />
     <ClInclude Include="src\Engine\Event\ApplicationEvents.h" />
+    <ClInclude Include="src\Engine\Event\EntityEvents.h" />
     <ClInclude Include="src\Engine\Event\Event.h" />
   </ItemGroup>
   <ItemGroup>

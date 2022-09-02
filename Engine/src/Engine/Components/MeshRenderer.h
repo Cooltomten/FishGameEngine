@@ -1,6 +1,7 @@
 #pragma once
 #include <ComponentSystem/Component.h>
 #include <memory>
+#include <vector>
 
 namespace FGE
 {
@@ -23,7 +24,13 @@ namespace Engine
 
 	private:
 		std::shared_ptr<FGE::Mesh> myMesh;
-		std::shared_ptr<FGE::Material> myMaterial;
+		std::vector<std::shared_ptr<FGE::Material>> myMaterials;
+
+		std::string myMeshPath;
+		std::string myLastMeshPath;
+
+		std::string myMaterialPath;
+		std::string myLastMaterialPath;
 
 
 

@@ -6,6 +6,7 @@ using namespace Microsoft::WRL;
 
 #include <CommonUtilities/Math/Vector3.hpp>
 #include <array>
+#include <FGE/Asset/Asset.h>
 
 
 
@@ -18,7 +19,7 @@ namespace FGE
 {
 	namespace MaterialTextureChannel
 	{
-		enum
+		enum 
 		{
 			Albedo,
 			Normal,
@@ -28,7 +29,7 @@ namespace FGE
 	}
 
 	class Texture;
-	class Material
+	class Material : public Asset
 	{
 
 	public:
@@ -39,8 +40,12 @@ namespace FGE
 
 		};
 	public:
+
 		Material();
 		~Material();
+
+			static AssetType GetStaticType() { return AssetType::Material; }
+		inline AssetType GetAssetType() const override { return GetStaticType(); }
 
 		void Init();
 
@@ -52,7 +57,7 @@ namespace FGE
 		inline const CU::Vector3f& GetAlbedo() const { return myMaterialData.Albedo; };
 
 	private:
-
+		//friend class MaterialImporter;
 		MaterialData myMaterialData;
 		std::array < std::shared_ptr<Texture>, MaterialTextureChannel::COUNT> myTextures;
 
