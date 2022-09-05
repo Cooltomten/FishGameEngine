@@ -159,7 +159,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/; $(SolutionDir)\Engine\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/; $(SolutionDir)\Engine\src\; $(SolutionDir)Vendor\include\nlohmann\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -175,7 +175,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/; $(SolutionDir)\Engine\src\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../GraphicsEngine/src; src; ../CommonUtilities;../Vendor/include/; ../ComponentSystem/src/;../ImGui/; $(SolutionDir)\Engine\src\; $(SolutionDir)Vendor\include\nlohmann\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -48,7 +48,15 @@ namespace FGE
 			return std::reinterpret_pointer_cast<T>(it->second);
 		}
 
-		SaveAsset(ImportAsset <T>(aPath));
+		auto asset = ImportAsset <T>(aPath);
+		if (asset)
+		{
+			SaveAsset(asset);
+		}
+		else
+		{
+			return std::shared_ptr<T>();
+		}
 
 
 		return std::reinterpret_pointer_cast<T>(myAssets[aPath]);
@@ -81,7 +89,7 @@ namespace FGE
 		case AssetType::Material:
 			asset = std::reinterpret_pointer_cast<Asset>(myMaterialImporter->ImportMaterial(aPath));
 			break;
-			
+
 		}
 
 

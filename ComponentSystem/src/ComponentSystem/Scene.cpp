@@ -8,6 +8,7 @@
 
 namespace Comp
 {
+	uint32_t Scene::myCurrentID = 1; // ID 0 is reserved for not having a parent
 	void Scene::OnEvent( FGE::Event& aEvent)
 	{
 
@@ -33,4 +34,12 @@ namespace Comp
 	{
 		return myEntities;
 	}
+
+	 std::shared_ptr<Entity> Scene::InstatiateEntity()
+	 {
+		 std::shared_ptr<Entity> entity = std::make_shared<Entity>("New Entity", myCurrentID++);
+		 AddEntity(entity);
+		 return entity;
+	 }
+
 }

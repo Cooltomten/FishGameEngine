@@ -5,6 +5,7 @@
 #include <filesystem>
 namespace Comp
 {
+	class Parameter;
 	class SceneManager
 	{
 	public:
@@ -19,9 +20,13 @@ namespace Comp
 		void NewScene();
 		void LoadScene(const std::string& aScenePath);
 		void SaveCurrentScene(const std::filesystem::path& aPath);
+		const std::filesystem::path& GetCurrentScenePath();
 	private:
+		//void SerializeParameter(const Parameter& aParameter, nlohmann::json& aJson);
 		static SceneManager* myInstance;
-
+		 
 		std::shared_ptr<Scene> myCurrentScene;
+
+		std::filesystem::path myCurrentScenePath;
 	};
 }

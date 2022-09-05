@@ -114,6 +114,11 @@ namespace FGE
 		OnEventSub(aEvent);
 	}
 
+	LRESULT Application::WindowsMessages(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam)
+	{
+		return LRESULT();
+	}
+
 	LRESULT FGE::Application::WndProc(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam)
 	{
 		if (myImGuiLayer)
@@ -126,10 +131,13 @@ namespace FGE
 			myInputManager->UpdateEvents(aMessage, aWParam, aLParam);
 		}
 
+		WindowsMessages(aHwnd, aMessage, aWParam, aLParam);
+		
 		switch (aMessage)
 		{
 		case WM_CLOSE:
 			myRunning = false;
+			
 			break;
 		case WM_SIZE:
 			myWindow->Resize(LOWORD(aLParam), HIWORD(aLParam));

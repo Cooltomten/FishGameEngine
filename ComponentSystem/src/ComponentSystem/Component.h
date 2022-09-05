@@ -26,6 +26,10 @@ namespace Comp
 		std::string myName;
 		void* myValue;
 	};
+
+	std::string ParameterTypeToString(ParameterType aType);
+	ParameterType StringToParameterType(const std::string& aType);
+	
 	class Entity;
 	class Component
 	{

@@ -21,6 +21,14 @@ void HierarchyWindow::UpdateImGui()
 {
 	if (ImGui::Begin((std::string("Hierarchy##") + std::to_string(myId)).c_str(), &myOpenFlag))
 	{
+		if (ImGui::BeginPopupContextWindow())
+		{
+			if (ImGui::MenuItem("Create Empty"))
+			{
+				Comp::SceneManager::GetCurrentScene()->InstatiateEntity();
+			}
+			ImGui::EndPopup();
+		}
 		auto currentScene = Comp::SceneManager::GetCurrentScene();
 		if (currentScene)
 		{

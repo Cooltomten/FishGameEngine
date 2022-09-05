@@ -7,6 +7,7 @@
 #include <ImGui/imgui_stdlib.h>
 #include <ComponentSystem/Entity.h>
 #include <ComponentSystem/Component.h>
+#include <ComponentSystem/ComponentRegistry.hpp>
 
 
 InspectorWindow::InspectorWindow(std::vector<std::shared_ptr<Comp::Entity>>& aSelectedEntitiesRef)
@@ -30,7 +31,24 @@ void InspectorWindow::UpdateImGui()
 		if (mySelectedEntities.size() == 1)
 		{
 			DrawEntity(mySelectedEntities[0]);
+
+			ImGui::Button("AddComponent");
+			if (ImGui::BeginPopupContextItem(std::to_string(mySelectedEntities[0]->GetID()).c_str(), ImGuiPopupFlags_MouseButtonLeft))
+			{
+				auto& compRegMap = Comp::ComponentRegistry::GetFactoryMap();
+
+				//iterator for-loop with compRegMap
+				for (auto it = compRegMap.begin(); it != compRegMap.end(); ++it)
+				{
+					if (ImGui::MenuItem(it->first.c_str()))
+					{
+						mySelectedEntities[0]->AddComponent(Comp::ComponentRegistry::Create(it->first));
+					}
+				}
+				ImGui::EndPopup();
+			}
 		}
+
 	}
 	ImGui::End();
 }
@@ -53,7 +71,7 @@ void InspectorWindow::DrawEntity(std::shared_ptr<Comp::Entity> aEntity)
 	for (int i = 0; i < components.size(); i++)
 	{
 		auto& parameters = components[i]->GetParameters();
-		
+
 		ImGui::Spacing();
 		ImGui::Text(components[i]->GetName().c_str());
 
@@ -76,8 +94,8 @@ void InspectorWindow::DrawEntity(std::shared_ptr<Comp::Entity> aEntity)
 			case Comp::ParameterType::String:
 				changed = ImGui::InputText((param.myName + "##Param" + std::to_string(paramID)).c_str(), static_cast<std::string*>(param.myValue));
 				break;
-				
-				
+
+
 			}
 			if (changed)
 			{

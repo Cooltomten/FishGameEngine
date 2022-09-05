@@ -38,6 +38,9 @@ public:
 	void OnEventSub(FGE::Event& aEvent) override;
 
 private:
+	
+	LRESULT WindowsMessages(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam) override;
+
 	bool OnUpdateEvent(FGE::AppUpdateEvent& aEvent);
 	bool OnRenderEvent(FGE::AppRenderEvent& aEvent);
 	
@@ -79,6 +82,8 @@ private:
 
 	std::vector<std::shared_ptr<Comp::Entity>> mySelectedEntities;
 	
+
+	const std::string myEditorSettingsPath = "User/EditorSettings.json";
 
 	
 	

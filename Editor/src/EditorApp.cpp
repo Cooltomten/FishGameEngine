@@ -28,6 +28,7 @@
 
 #include <ImGui/imgui.h>
 
+#include <nlohmann/json.hpp>
 
 
 EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
@@ -83,8 +84,6 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	FGE::Renderer::SetDirectionalLight(myDirectionalLight);
 	FGE::Renderer::SetEnvironmentLight(myEnvironmentLight);
 
-	myCubeMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Cube");
-
 	//Add entities
 	Comp::SceneManager::Initialize();
 	Comp::SceneManager::Get().NewScene();
@@ -94,49 +93,29 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	std::shared_ptr<Engine::MeshRenderer> meshRenderer = std::make_shared<Engine::MeshRenderer>();
 	entity->AddComponent(meshRenderer);
 	Comp::SceneManager::GetCurrentScene()->AddEntity(entity);
-	
-	
+
+
 	//another entity 
 	entity = std::make_shared<Comp::Entity>("Two", 2);
 	meshRenderer = std::make_shared<Engine::MeshRenderer>();
 	entity->AddComponent(meshRenderer);
 	Comp::SceneManager::GetCurrentScene()->AddEntity(entity);
 
-
-	Comp::SceneManager::GetCurrentScene()->OnRuntimeStart();
-
-	//myChestMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>("Assets/Meshes/SM_Particle_Chest.fbx");
-
-	//myChestMaterial = std::make_shared<FGE::Material>();
-	//myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_C.dds"));
-	//myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_N.dds"));
-	//myChestMaterial->SetTexture(FGE::MaterialTextureChannel::Material, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Particle_Chest_M.dds"));
-	//myChestMesh->SetMaterial(myChestMaterial, 0);
-
-
-	myGremlinMesh = FGE::ResourceCache::GetAsset<FGE::AnimatedMesh>("Assets/Animations/Gremlin/gremlin_sk.fbx");
-
-	myGremlinMaterial = std::make_shared<FGE::Material>();
-	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Albedo, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_gremlin_C.dds"));
-	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Normal, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Gremlin_N.dds"));
-	myGremlinMaterial->SetTexture(FGE::MaterialTextureChannel::Material, FGE::ResourceCache::GetAsset<FGE::Texture>("Assets/Textures/T_Gremlin_M.dds"));
-
-	myGremlinWalkAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_walk.fbx");
-	myGremlinRunAnim = FGE::ResourceCache::GetAsset<FGE::Animation>("Assets/Animations/Gremlin/gremlin_run.fbx");
-
-
-	myCubeTransform.SetPosition(-50, 0, 0);
-	myCubeTransform.SetScale(0.2f, 0.2f, 0.2f);
-
-	//myChestTransform.SetPosition({ 0,0,0 });
-	//myChestTransform.SetScale(0.2f, 0.2f, 0.2f);
-
-	myGremlinTransform.SetPosition({ 50,0,0 });
-
 	myDirectionalLightTransform.SetRotation(0, 0, 0);
 	myDirectionalLight->SetDirection(myDirectionalLightTransform.GetForward());
 	myGame->OnStart();
-	
+
+
+	if (std::filesystem::exists(myEditorSettingsPath))
+	{
+		std::ifstream file = std::ifstream(myEditorSettingsPath);
+		nlohmann::json json;
+		file >> json;
+		file.close();
+
+		Comp::SceneManager::Get().LoadScene(json["LastLoadedScene"]);
+	}
+
 
 	//Create a viewport by default
 	myViewportWindows.push_back(std::make_shared<Viewport>());
@@ -163,29 +142,37 @@ EditorApp::~EditorApp()
 void EditorApp::OnEventSub(FGE::Event& aEvent)
 {
 	FGE::EventDispatcher dispatcher(aEvent);
+	Comp::SceneManager::GetCurrentScene()->OnEvent(aEvent);
 	dispatcher.Dispatch<FGE::AppUpdateEvent>(BIND_EVENT_FN(EditorApp::OnUpdateEvent));
 	dispatcher.Dispatch<FGE::AppRenderEvent>(BIND_EVENT_FN(EditorApp::OnRenderEvent));
-	Comp::SceneManager::GetCurrentScene()->OnEvent(aEvent);
+}
+
+LRESULT EditorApp::WindowsMessages(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam)
+{
+	switch (aMessage)
+	{
+	case WM_CLOSE:
+	{
+		nlohmann::json json;
+		json["LastLoadedScene"] = Comp::SceneManager::Get().GetCurrentScenePath().string();
+
+		if (!std::filesystem::exists("User"))
+		{
+			std::filesystem::create_directory("User");
+		}
+		std::ofstream file;
+		file.open(myEditorSettingsPath);
+		file << json;
+		file.close();
+	}
+	break;
+	}
+	return 0;
 }
 
 bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 {
 	ImGui::DockSpaceOverViewport();
-	myMaterialFadeTimer += aEvent.GetTimeStep();
-	myGremlinTimer += aEvent.GetTimeStep() * myAnimationTimeStepMultiplier;
-	float duration = CU::Lerp(myGremlinWalkAnim->GetDuration(), myGremlinRunAnim->GetDuration(), myGremlinAlphaBlend);
-	if (myGremlinTimer >= duration)
-	{
-		myGremlinTimer = 0;
-	}
-	if (myGremlinTimer < 0)
-	{
-		myGremlinTimer = duration;
-	}
-
-	//float sinValue = 0.5 * (float)sin(myMaterialFadeTimer * 3) + 0.5;
-	//float cosValue = 0.5 * (float)cos(myMaterialFadeTimer * 3) + 0.5;
-	//myMaterial->SetAlbedo({ sinValue * cosValue,cosValue,sinValue * sinValue });
 
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -200,7 +187,7 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 			{
 				//TODO: Popup to check if user wants to save current scene
 				//TODO: get path from user
-				Comp::SceneManager::Get().LoadScene("Path here");
+				Comp::SceneManager::Get().LoadScene("TestSave.scene");
 			}
 			if (ImGui::MenuItem("Save", "Ctrl + S"))
 			{
@@ -318,11 +305,6 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 			FGE::Renderer::Begin(myViewportWindows[i]->GetSceneCamera()->GetCamera());
 
-			//myCubeMesh->Render(myCubeTransform.GetMatrix());
-			//myChestMesh->Render(myChestTransform.GetMatrix());
-			//myGremlinMesh->Render(myGremlinTransform.GetMatrix(), myGremlinWalkAnim, myGremlinRunAnim, myGremlinAlphaBlend, myGremlinTimer);
-
-
 			//Set render target
 			FGE::Renderer::SetRenderTarget(myViewportWindows[i]->GetRenderTexture()->GetRenderTargetData());
 			myViewportWindows[i]->GetRenderTexture()->ClearRenderTarget(dx11.GetDeviceContext(), 0, 0, 0.5, 1);
@@ -332,20 +314,6 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 	}
 
 	dx11.SetRenderTarget();
-	
-	//ImGui::Begin("Stuff n things");
-
-	//if (ImGui::Button("BANG"))
-	//{
-	//	FGE::Window::Get().Resize(1920, 1080);
-	//}
-	////pow 1280x720
-	//if (ImGui::Button("POW"))
-	//{
-	//	FGE::Window::Get().Resize(1280, 720);
-	//}
-
-	//ImGui::End();
 
 	for (int i = 0; i < myWindows.size(); i++)
 	{

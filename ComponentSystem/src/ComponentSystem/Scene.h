@@ -21,6 +21,7 @@ namespace Comp
 		void OnRuntimeStart();
 
 		void AddEntity(std::shared_ptr<Entity> aEntity);
+		std::shared_ptr<Entity> InstatiateEntity();
 		
 		std::vector<std::shared_ptr<Entity>>& GetEntities();
 
@@ -28,5 +29,7 @@ namespace Comp
 
 		friend class Entity;
 		std::vector<std::shared_ptr<Entity>> myEntities;
+
+		static uint32_t myCurrentID;
 	};
 }

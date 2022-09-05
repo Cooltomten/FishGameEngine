@@ -31,6 +31,8 @@ namespace FGE
 		inline std::shared_ptr<Window> GetWindow() { return myWindow; }
 
 		inline std::shared_ptr<CU::InputManager> GetInput() { return myInputManager; } //TODO: fix this temporary solution
+	protected:
+		virtual LRESULT WindowsMessages(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam);
 	private:
 		LRESULT WndProc(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam);
 

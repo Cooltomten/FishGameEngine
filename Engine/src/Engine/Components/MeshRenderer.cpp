@@ -31,7 +31,7 @@ namespace Engine
 	{
 		myMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>(myMeshPath);
 
-		myMaterials.push_back( FGE::ResourceCache::GetAsset<FGE::Material>(myMaterialPath));
+		myMaterials.push_back(FGE::ResourceCache::GetAsset<FGE::Material>(myMaterialPath));
 	}
 
 	void Engine::MeshRenderer::OnEvent(FGE::Event& aEvent)
@@ -40,7 +40,10 @@ namespace Engine
 
 		dispatcher.Dispatch<FGE::AppRenderEvent>([this](FGE::AppRenderEvent& aEvent)
 			{
-				myMesh->Render(myEntity->GetTransform().GetMatrix(), myMaterials);
+				if (myMesh && myMaterials.size() > 0)
+				{
+					myMesh->Render(myEntity->GetTransform().GetMatrix(), myMaterials);
+				}
 				return false;
 			});
 
