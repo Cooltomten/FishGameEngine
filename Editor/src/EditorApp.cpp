@@ -190,15 +190,15 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 				//TODO: get path from user
 				Comp::SceneManager::Get().LoadScene("TestSave.scene");
 			}
-			if (ImGui::MenuItem("Save", "Ctrl + S"))
+			if (ImGui::MenuItem("Save"/*, "Ctrl + S"*/))
 			{
 				Comp::SceneManager::Get().SaveCurrentScene("TestSave.scene");
 			}
-			if (ImGui::MenuItem("Save As", "Ctrl + Shift + S"))
-			{
-				//TODO: get path from user
-				//Comp::SceneManager::Get().SaveCurrentSceneAs();
-			}
+			//if (ImGui::MenuItem("Save As", "Ctrl + Shift + S"))
+			//{
+			//	//TODO: get path from user
+			//	//Comp::SceneManager::Get().SaveCurrentSceneAs();
+			//}
 			ImGui::EndMenu();
 		}
 
