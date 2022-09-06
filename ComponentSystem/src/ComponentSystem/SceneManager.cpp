@@ -209,7 +209,8 @@ namespace Comp
 			auto entity = myCurrentScene->InstatiateEntity();
 			//std::make_shared<Entity>(jsonEnt["Name"], jsonEnt["ID"], jsonEnt["Tag"]);
 			entity->SetName(jsonEnt["Name"]);
-			myCurrentScene->AddEntity(entity);
+			entity->SetTag(jsonEnt["Tag"]);
+			const_cast<uint32_t&> (entity->GetID()) = jsonEnt["ID"];
 
 			//TODO: Add parent support
 			//entity->SetParent(jsonEnt["ParentID"]);

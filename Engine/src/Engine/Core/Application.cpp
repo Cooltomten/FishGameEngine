@@ -85,7 +85,7 @@ namespace FGE
 			AppUpdateEvent updateEvent(myTimer->GetDeltaTime());
 			OnEvent(updateEvent);
 
-			myWindow->GetDX11().BeginFrame({ 0.8f,0.4f,0.2f,0 });
+			myWindow->GetDX11().BeginFrame();
 			AppRenderEvent renderEvent;
 			OnEvent(renderEvent);
 

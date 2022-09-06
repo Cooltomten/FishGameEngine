@@ -71,7 +71,7 @@ namespace FGE
 
 		bool Initialize(HWND aWindowHandle);
 
-		void BeginFrame(std::array<float, 4> aClearColor = { 0.0f, 0.0f, 0.0f, 0.0f });
+		void BeginFrame();
 		void EndFrame();
 		ID3D11Buffer* CreateBuffer(const D3D11_BUFFER_DESC* aDesc, const D3D11_SUBRESOURCE_DATA* aData);
 
@@ -94,6 +94,7 @@ namespace FGE
 		inline DxgiInfoManager& GetInfoManager() { return myInfoManager; }
 		void SetRenderTarget();
 		std::array<float, 4> GetClearColor() const { return myClearColor; }
+		void SetClearColor(std::array<float, 4> aClearColor) { myClearColor = aClearColor; }
 
 		inline const RenderTargetData& GetRenderTargetData() const { return myRenderTargetData; }
 

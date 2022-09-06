@@ -22,7 +22,7 @@ namespace FGE
 	DX11::DX11()
 	{
 
-
+		myClearColor = { 0.1,0.1,0.1,1 };
 	}
 
 	DX11::~DX11()
@@ -95,11 +95,10 @@ namespace FGE
 		return true;
 	}
 
-	void DX11::BeginFrame(std::array<float, 4> aClearColor)
+	void DX11::BeginFrame()
 	{
 		//clear the back buffer
-		myClearColor = aClearColor;
-		Context->ClearRenderTargetView(myRenderTargetData.RenderTargetView.Get(), &aClearColor[0]);
+		Context->ClearRenderTargetView(myRenderTargetData.RenderTargetView.Get(), &myClearColor[0]);
 		Context->ClearDepthStencilView(myRenderTargetData.DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 

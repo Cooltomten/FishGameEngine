@@ -4,6 +4,7 @@
 #include "Windows/Viewport.h"
 #include "Windows/HierarchyWindow.h"
 #include "Windows/InspectorWindow.h"
+#include "Windows/EditorPreferencesWindow.h"
 
 #include <FGE/Rendering/Renderer.h>
 #include <FGE/Rendering/Lights/DirectionalLight.h>
@@ -200,6 +201,31 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 			}
 			ImGui::EndMenu();
 		}
+
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Editor Preferences"))
+			{
+				bool shouldCreate = true;
+				for (auto& window : myWindows)
+				{
+					if (!window->IsOpen())
+					{
+						window->SetOpen(true);
+						shouldCreate = false;
+						break;
+					}
+
+				}
+
+				if (shouldCreate)
+				{
+					myWindows.push_back(std::make_shared<EditorPreferencesWindow>());
+					myWindows.back()->SetOpen(true);
+				}
+			}
+			ImGui::EndMenu();
+		}
 		if (ImGui::BeginMenu("Windows"))
 		{
 			//TODO: Refactor this
@@ -273,6 +299,8 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
+
+		
 	}
 
 	for (int i = 0; i < myWindows.size(); i++)
@@ -300,6 +328,7 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 	for (int i = 0; i < myViewportWindows.size(); i++)
 	{
 
+			auto clearColor = FGE::Window::Get().GetDX11().GetClearColor();
 		if (myViewportWindows[i]->IsOpen())
 		{
 
@@ -307,11 +336,11 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 			//Set render target
 			FGE::Renderer::SetRenderTarget(myViewportWindows[i]->GetRenderTexture()->GetRenderTargetData());
-			myViewportWindows[i]->GetRenderTexture()->ClearRenderTarget(dx11.GetDeviceContext(), 0, 0, 0.5, 1);
+			myViewportWindows[i]->GetRenderTexture()->ClearRenderTarget(dx11.GetDeviceContext(), clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
 			FGE::Renderer::Render();
-			FGE::Renderer::End();
 		}
 	}
+			FGE::Renderer::End();
 
 	dx11.SetRenderTarget();
 

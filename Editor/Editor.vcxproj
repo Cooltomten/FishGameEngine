@@ -22,6 +22,7 @@
     <ClCompile Include="src\Editor.cpp" />
     <ClCompile Include="src\EditorApp.cpp" />
     <ClCompile Include="src\SceneCamera.cpp" />
+    <ClCompile Include="src\Windows\EditorPreferencesWindow.cpp" />
     <ClCompile Include="src\Windows\EditorWindow.cpp" />
     <ClCompile Include="src\Windows\HierarchyWindow.cpp" />
     <ClCompile Include="src\Windows\InspectorWindow.cpp" />
@@ -30,6 +31,7 @@
   <ItemGroup>
     <ClInclude Include="src\EditorApp.h" />
     <ClInclude Include="src\SceneCamera.h" />
+    <ClInclude Include="src\Windows\EditorPreferencesWindow.h" />
     <ClInclude Include="src\Windows\EditorWindow.h" />
     <ClInclude Include="src\Windows\HierarchyWindow.h" />
     <ClInclude Include="src\Windows\InspectorWindow.h" />

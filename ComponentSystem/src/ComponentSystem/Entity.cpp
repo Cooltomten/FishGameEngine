@@ -58,6 +58,16 @@ namespace Comp
 		return myID;
 	}
 
+	void Entity::SetName(const std::string& aName)
+	{
+		myName = aName;
+	}
+
+	void Entity::SetTag(const std::string& aTag)
+	{
+		myTag = aTag;
+	}
+
 	std::shared_ptr<Entity> Entity::GetParent() 
 	{
 		return myParent;
