@@ -21,7 +21,10 @@ namespace FGE
 	{
 		std::vector<CU::Matrix4x4<float>> matrices;
 
-		matrices = aAnimation->Sample(aAnimationTime, mySkeleton, aAnimationToBlendWith, aBlendAlpha);
+		if (aAnimation && aAnimationToBlendWith)
+		{
+			matrices = aAnimation->Sample(aAnimationTime, mySkeleton, aAnimationToBlendWith, aBlendAlpha);
+		}
 
 		for (int i = 0; i < mySubMeshes.size(); i++)
 		{

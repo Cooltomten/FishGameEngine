@@ -10,6 +10,6 @@ namespace FGE
 		CU::Vector4f Color;
 		CU::Vector3f Velocity;
 		CU::Vector3f Scale;
-		float LifeTime;
+		float LifeTime = 0;
 	};
 }

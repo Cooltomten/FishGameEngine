@@ -9,6 +9,8 @@
 #include <ComponentSystem/Component.h>
 #include <ComponentSystem/ComponentRegistry.hpp>
 
+#include <CommonUtilities/Math/Vector.hpp>
+
 
 InspectorWindow::InspectorWindow(std::vector<std::shared_ptr<Comp::Entity>>& aSelectedEntitiesRef)
 	: EditorWindow("Inspector"), mySelectedEntities(aSelectedEntitiesRef)
@@ -91,9 +93,60 @@ void InspectorWindow::DrawEntity(std::shared_ptr<Comp::Entity> aEntity)
 			bool changed = false;
 			switch (param.myType)
 			{
-			case Comp::ParameterType::String:
-				changed = ImGui::InputText((param.myName + "##Param" + std::to_string(paramID)).c_str(), static_cast<std::string*>(param.myValue));
+			case Comp::ParameterType::Int:
+			{
+				int& value = *reinterpret_cast<int*>(param.myValue);
+				changed = ImGui::DragInt((param.myName + "##" + entityID + std::to_string(paramID)).c_str(), &value);
 				break;
+			}
+
+			case Comp::ParameterType::Float:
+			{
+				float& value = *reinterpret_cast<float*>(param.myValue);
+				changed = ImGui::DragFloat((param.myName + "##" + entityID + std::to_string(paramID)).c_str(), &value);
+				break;
+			}
+
+			case Comp::ParameterType::String:
+			{
+				changed = ImGui::InputText((param.myName + "##Param" + entityID + std::to_string(paramID)).c_str(), static_cast<std::string*>(param.myValue));
+				break;
+			}
+
+			case Comp::ParameterType::Bool:
+			{
+				bool& value = *reinterpret_cast<bool*>(param.myValue);
+				changed = ImGui::Checkbox((param.myName + "##" + entityID + std::to_string(paramID)).c_str(), &value);
+				break;
+			}
+			
+			case Comp::ParameterType::Vec2:
+			{
+				CommonUtilities::Vector2f& value = *reinterpret_cast<CommonUtilities::Vector2f*>(param.myValue);
+				changed = ImGui::DragFloat2((param.myName + "##" + entityID + std::to_string(paramID)).c_str(), &value.x);
+				break;
+			}
+
+			case Comp::ParameterType::Vec3:
+			{
+				CommonUtilities::Vector3f& value = *reinterpret_cast<CommonUtilities::Vector3f*>(param.myValue);
+				changed = ImGui::DragFloat3((param.myName + "##" + entityID + std::to_string(paramID)).c_str(), &value.x);
+				break;
+			}
+
+			case Comp::ParameterType::Vec4:
+			{
+				CommonUtilities::Vector4f& value = *reinterpret_cast<CommonUtilities::Vector4f*>(param.myValue);
+				changed = ImGui::DragFloat4((param.myName + "##" + entityID + std::to_string(paramID)).c_str(), &value.x);
+				break;
+			}
+
+			case Comp::ParameterType::Color:
+			{
+				CommonUtilities::Vector4f& value = *reinterpret_cast<CommonUtilities::Vector4f*>(param.myValue);
+				changed = ImGui::ColorEdit4((param.myName + "##" + entityID + std::to_string(paramID)).c_str(), &value.x);
+				break;
+			}
 
 
 			}

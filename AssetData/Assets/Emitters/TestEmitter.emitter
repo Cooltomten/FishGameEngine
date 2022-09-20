@@ -7,7 +7,7 @@
     "B": 1,
     "A": 1
   },
-  "StartScale": 3  ,
+  "StartScale": 10  ,
   "StartVelocity": {
     "X": 10,
     "Y": 25,

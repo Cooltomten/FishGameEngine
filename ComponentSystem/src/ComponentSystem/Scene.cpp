@@ -30,9 +30,32 @@ namespace Comp
 		myEntities.push_back(aEntity);
 	}
 	
-	 std::vector<std::shared_ptr<Entity>>& Scene::GetEntities()
+	void Scene::DeleteEntity(std::shared_ptr<Entity> aEntity)
+	{
+		auto it = std::find(myEntities.begin(), myEntities.end(), aEntity);
+		for (auto child : (*it._Ptr)->GetChildren())
+		{
+			DeleteEntity(child);
+		}
+
+		myEntities.erase(it);
+	}
+
+	std::vector<std::shared_ptr<Entity>>& Scene::GetEntities()
 	{
 		return myEntities;
+	}
+
+	std::shared_ptr<Entity> Scene::GetEntityByID(uint32_t aID)
+	{
+		for (size_t i = 0; i < myEntities.size(); i++)
+		{
+			if (myEntities[i]->GetID() == aID)
+			{
+				return myEntities[i];
+			}
+		}
+		return std::shared_ptr<Entity>();
 	}
 
 	 std::shared_ptr<Entity> Scene::InstatiateEntity()

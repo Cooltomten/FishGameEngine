@@ -5,10 +5,12 @@
 #include <string>
 #include <filesystem>
 
+#include <shellapi.h>
+
 namespace FGE
 {
-	Window::WindowClass Window::WindowClass::wndClass;
 	Window* Window::myInstance = nullptr;
+	Window::WindowClass Window::WindowClass::wndClass;
 
 	LPCWSTR Window::WindowClass::GetName() noexcept
 	{
@@ -115,7 +117,7 @@ namespace FGE
 		}
 	}
 
-	std::optional<int> Window::ProcessMessages()
+	std::optional<int64_t> Window::ProcessMessages()
 	{
 		MSG msg;
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -130,8 +132,6 @@ namespace FGE
 		}
 
 		return {};
-
-		return std::optional<int>();
 	}
 
 	DX11& Window::GetDX11()
@@ -149,12 +149,12 @@ namespace FGE
 		return myHWnd;
 	}
 
-	float Window::GetWidth()
+	int Window::GetWidth()
 	{
 		return myWidth;
 	}
 
-	float Window::GetHeight()
+	int Window::GetHeight()
 	{
 		return myHeight;
 	}
@@ -175,7 +175,7 @@ namespace FGE
 
 		SetWindowPos(myHWnd, 0, wr.left, wr.right, wr.right - wr.left, wr.bottom - wr.top, SWP_NOMOVE);
 		
-		myDX11->Resize(aWidth, aHeight);
+		myDX11->Resize(static_cast<int>(aWidth), static_cast<int>(aHeight));
 	}
 
 	std::shared_ptr<Window> Window::Create(const WindowProperties& aProperties)
@@ -206,6 +206,8 @@ namespace FGE
 	{
 		if (msg == WM_NCCREATE)
 		{
+			DragAcceptFiles(hWnd, true);
+
 			const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
 			Window* const pWnd = static_cast<Window*>(pCreate->lpCreateParams);
 

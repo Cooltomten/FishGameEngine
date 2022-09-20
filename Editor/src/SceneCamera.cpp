@@ -8,7 +8,7 @@ SceneCamera::SceneCamera()
 	myInput = FGE::Application::Get().GetInput();
 
 	myCamera = std::make_shared<FGE::Camera>();
-	myCamera->SetPerspectiveProjection(90, {1280, 720}, 0.1, 100000.0f);
+	myCamera->SetPerspectiveProjection(90, {1280, 720}, 0.1f, 100000.0f);
 
 	myTransform.SetPosition(0,0,-100 );
 }
@@ -95,6 +95,6 @@ void SceneCamera::Update(float aTimeStep)
 
 void SceneCamera::Resize(unsigned int aWidth, unsigned int aHeight)
 {
-	myCamera->SetPerspectiveProjection(90, { aWidth, aHeight }, 0.1, 100000.0f);
+	myCamera->SetPerspectiveProjection(90, { aWidth, aHeight }, 0.1f, 100000.0f);
 	mySize = {static_cast<float>(aWidth), static_cast<float>(aHeight)};
 }

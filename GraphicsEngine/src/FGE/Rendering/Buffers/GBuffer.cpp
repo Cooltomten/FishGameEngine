@@ -7,7 +7,7 @@
 
 void FGE::GBuffer::Init()
 {
-	Resize(FGE::Window::Get().GetWidth(), FGE::Window::Get().GetHeight());
+	Resize(static_cast<int>(FGE::Window::Get().GetWidth()), static_cast<int>(FGE::Window::Get().GetHeight()));
 }
 
 void FGE::GBuffer::SetAsResource(uint32_t aStartSlot)
@@ -42,7 +42,7 @@ void FGE::GBuffer::Clear()
 	
 	for (uint32_t i = 0; i < GBuffer::GB_COUNT; i++)
 	{
-		myTextures[i].ClearRenderTarget(dx11.GetDeviceContext(), clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+		myTextures[i].ClearRenderTarget(dx11.GetDeviceContext(), clearColor[0], clearColor[1], clearColor[2], 0);
 	}
 }
 

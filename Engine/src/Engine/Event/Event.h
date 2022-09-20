@@ -27,7 +27,9 @@ namespace FGE
 		//KeyReleased,
 		//KeyTyped,
 
-		EntityPropertyUpdated
+		EntityPropertyUpdated,
+
+		ClearColorChanged
 	};
 	
 

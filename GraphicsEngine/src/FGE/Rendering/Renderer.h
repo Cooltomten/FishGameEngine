@@ -5,7 +5,7 @@
 
 #include "FGE/Particles/ParticleVertex.h"
 #include "FGE/Rendering/RenderTargetData.h"
-
+#include "FGE/Rendering/Lights/Light.h"
 
 #include <CommonUtilities/Math/Vector.hpp>
 #include <CommonUtilities/Math/Matrix4x4.hpp>
@@ -98,7 +98,7 @@ namespace FGE
 			std::shared_ptr<Material> aMaterial, std::vector<CU::Matrix4x4<float>> someAnimData = {});
 
 		static void SubmitParticle(const ParticleEmitter* const aEmitter, const std::vector<ParticleVertex>& someVertices, const CU::Matrix4x4<float>& aTransform);
-
+		static void SubmitLight(std::shared_ptr<FGE::Light> aLight);
 		static void Begin(std::shared_ptr<Camera> aCamera);
 		static void End();
 		static void Render();

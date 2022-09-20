@@ -5,6 +5,12 @@
 #include <CommonUtilities/UtilityFunctions.hpp>
 #include <iostream>
 
+FGE::Animation::Animation()
+{
+	FrameCount = 0;
+	FramesPerSecond = 0;
+}
+
 std::vector<CU::Matrix4x4<float>> FGE::Animation::Sample(float aTime, Skeleton& aSkeleton,
 	std::shared_ptr<Animation> aAnimationToBlendWith, float aBlendAlpha) const
 {

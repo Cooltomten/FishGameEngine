@@ -1,6 +1,6 @@
 {
-	"AlbedoTexture": "Assets/Textures/T_Default_C.dds",
-	"NormalTexture": "Assets/Textures/T_Default_N.dds",
-	"MaterialTexture": "Assets/Textures/T_Default_M.dds"
+	"AlbedoTexture": "Assets/Textures/T_gremlin_C.dds",
+	"NormalTexture": "Assets/Textures/T_Gremlin_N.dds",
+	"MaterialTexture": "Assets/Textures/T_Gremlin_M.dds"
 
 }

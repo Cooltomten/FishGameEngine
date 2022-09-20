@@ -5,7 +5,7 @@
 #include <filesystem>
 namespace Comp
 {
-	class Parameter;
+	struct Parameter;
 	class SceneManager
 	{
 	public:

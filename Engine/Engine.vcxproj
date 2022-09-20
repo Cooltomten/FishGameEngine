@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Engine\Components\AnimatedMeshRenderer.h" />
     <ClInclude Include="src\Engine\Components\MeshRenderer.h" />
+    <ClInclude Include="src\Engine\Components\ParticleSystem.h" />
     <ClInclude Include="src\Engine\Core\Application.h" />
     <ClInclude Include="src\Engine\Core\Game.h" />
     <ClInclude Include="src\Engine\EntryPoint.h" />
@@ -28,7 +30,9 @@
     <ClInclude Include="src\Engine\Event\Event.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Engine\Components\AnimatedMeshRenderer.cpp" />
     <ClCompile Include="src\Engine\Components\MeshRenderer.cpp" />
+    <ClCompile Include="src\Engine\Components\ParticleSystem.cpp" />
     <ClCompile Include="src\Engine\Core\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +153,7 @@
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -170,6 +175,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib />
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -82,11 +82,11 @@ namespace FGE
 		Window(const Window&) = delete;
 		Window& operator=(const Window&) = delete;
 		void SetTitle(const std::string& aTitle);
-		static std::optional<int> ProcessMessages();
+		static std::optional<int64_t> ProcessMessages();
 		DX11& GetDX11();
 		HWND GetHandle();
-		float GetWidth();
-		float GetHeight();
+		int GetWidth();
+		int GetHeight();
 		void Resize(int aWidth, int aHeight);
 		
 		void SetWndFunctionToCall(callback_function_wndProc aFunction);

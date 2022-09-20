@@ -46,10 +46,9 @@ DefferedPixelOutput main(DefferedVertexToPixel input)
     const float3 ambient = EvaluateAmbience(environmentTexture, pixelNormal, vertexNormal, toEye, roughness, ambientOcclusion, diffuseColor, specularColor);
     const float3 directLightning = EvaluateDirectionalLight(diffuseColor, specularColor, pixelNormal, roughness, LB_Color, LB_Intensity, -LB_Direction, toEye);
     
-    //HEL?P
+    //
     float4 lightAccumulation = float4(ambient.r, ambient.g, ambient.b, 0) + float4(directLightning.r, directLightning.g, directLightning.b, 0) /*+emissive * emissiveStr*/;
-    float4 aaaa = albedo * emissive * emissiveStr;
-    float4 BBBBBB = lightAccumulation + aaaa;
+    float4 emissiveResult = albedo * emissive * emissiveStr;
         
     
     switch (FB_RenderMode)
@@ -57,11 +56,9 @@ DefferedPixelOutput main(DefferedVertexToPixel input)
         default:
         case 0: //default
         {
-            
-                BBBBBB.w = 1;
-                float4 color = BBBBBB;
-            
+                float4 color = lightAccumulation + emissiveResult;
                 color.a = 1;
+            
                 output.Color = color;
                 output.Color.a = 1;
 

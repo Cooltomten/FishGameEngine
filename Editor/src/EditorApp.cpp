@@ -6,6 +6,10 @@
 #include "Windows/InspectorWindow.h"
 #include "Windows/EditorPreferencesWindow.h"
 
+#include "ImGuiUtil.h"
+
+#include "Engine/Event/ApplicationEvents.h"
+
 #include <FGE/Rendering/Renderer.h>
 #include <FGE/Rendering/Lights/DirectionalLight.h>
 #include <FGE/Rendering/Lights/EnvironmentLight.h>
@@ -16,7 +20,10 @@
 #include <FGE/Asset/Animation.h>
 #include <FGE/Asset/Material.h>
 
-#include <Engine/Components/MeshRenderer.h>
+#include "FGE/Core/Window.h"
+#include "FGE/Core/DX11.h"
+
+//#include <Engine/Components/MeshRenderer.h>
 
 #include <CommonUtilities/InputManager.h>
 #include <CommonUtilities/UtilityFunctions.hpp>
@@ -30,6 +37,11 @@
 #include <ImGui/imgui.h>
 
 #include <nlohmann/json.hpp>
+
+#include <iostream>
+
+#include <shellapi.h> // for drag drop
+#include <WinBase.h> // for copy file
 
 
 EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
@@ -85,37 +97,47 @@ EditorApp::EditorApp(const FGE::WindowProperties& aProperties)
 	FGE::Renderer::SetDirectionalLight(myDirectionalLight);
 	FGE::Renderer::SetEnvironmentLight(myEnvironmentLight);
 
-	//Add entities
-	Comp::SceneManager::Initialize();
-	Comp::SceneManager::Get().NewScene();
-	auto scene = Comp::SceneManager::GetCurrentScene();
-
-	std::shared_ptr<Comp::Entity> entity = std::make_shared<Comp::Entity>("One", 1);
-	std::shared_ptr<Engine::MeshRenderer> meshRenderer = std::make_shared<Engine::MeshRenderer>();
-	entity->AddComponent(meshRenderer);
-	Comp::SceneManager::GetCurrentScene()->AddEntity(entity);
-
-
-	//another entity 
-	entity = std::make_shared<Comp::Entity>("Two", 2);
-	meshRenderer = std::make_shared<Engine::MeshRenderer>();
-	entity->AddComponent(meshRenderer);
-	Comp::SceneManager::GetCurrentScene()->AddEntity(entity);
-
 	myDirectionalLightTransform.SetRotation(0, 0, 0);
 	myDirectionalLight->SetDirection(myDirectionalLightTransform.GetForward());
 	myGame->OnStart();
 
 
-	if (std::filesystem::exists(myEditorSettingsPath))
-	{
-		std::ifstream file = std::ifstream(myEditorSettingsPath);
-		nlohmann::json json;
-		file >> json;
-		file.close();
+	Comp::SceneManager::Initialize();
+	Comp::SceneManager::Get().NewScene();
 
-		Comp::SceneManager::Get().LoadScene(json["LastLoadedScene"]);
+	myEditorSettings.Load();
+	if (myEditorSettings.myLastLoadedScene != "")
+	{
+		Comp::SceneManager::Get().LoadScene(myEditorSettings.myLastLoadedScene);
 	}
+	if (myEditorSettings.myLastLoadedBackground != "")
+	{
+		auto color = myEditorSettings.LoadBackgroundFile(myEditorSettings.myLastLoadedBackground);
+		FGE::Window::Get().GetDX11().SetClearColor({ color.x, color.y, color.z, 1 });
+	}
+	if (myEditorSettings.myLastLoadedFirstBGP != "")
+	{
+		myFirstBGPPath = myEditorSettings.myLastLoadedFirstBGP;
+		myFirstBGP = myEditorSettings.LoadBackgroundFile(myFirstBGPPath);
+	}
+	if (myEditorSettings.myLastLoadedSecondBGP != "")
+	{
+		mySecondBGPPath = myEditorSettings.myLastLoadedSecondBGP;
+		mySecondBGP = myEditorSettings.LoadBackgroundFile(mySecondBGPPath);
+	}
+	if (myEditorSettings.myLastBlendValue != -1)
+	{
+		myBGPBlendAmount = myEditorSettings.myLastBlendValue;
+	}
+
+	if (myEditorSettings.myLastLoadedSecondBGP != "" && myEditorSettings.myLastLoadedFirstBGP != "")
+	{
+	}
+	if (myEditorSettings.myBlendActive)
+	{
+		UpdateBackgroundColorBlend();
+	}
+
 
 
 	//Create a viewport by default
@@ -146,33 +168,70 @@ void EditorApp::OnEventSub(FGE::Event& aEvent)
 	Comp::SceneManager::GetCurrentScene()->OnEvent(aEvent);
 	dispatcher.Dispatch<FGE::AppUpdateEvent>(BIND_EVENT_FN(EditorApp::OnUpdateEvent));
 	dispatcher.Dispatch<FGE::AppRenderEvent>(BIND_EVENT_FN(EditorApp::OnRenderEvent));
+
+	for (int i = 0; i < myWindows.size(); ++i)
+	{
+		myWindows[i]->OnEvent(aEvent);
+	}
 }
 
 LRESULT EditorApp::WindowsMessages(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam)
 {
+	
 	switch (aMessage)
 	{
 	case WM_CLOSE:
-	{
-		nlohmann::json json;
-		json["LastLoadedScene"] = Comp::SceneManager::Get().GetCurrentScenePath().string();
 
-		if (!std::filesystem::exists("User"))
+		myEditorSettings.myLastLoadedScene = Comp::SceneManager::Get().GetCurrentScenePath().string();
+		myEditorSettings.Save();
+		break;
+
+	case WM_DROPFILES:
+	{
+		HDROP hDrop = (HDROP)aWParam;
+		UINT nFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+		for (UINT i = 0; i < nFiles; ++i)
 		{
-			std::filesystem::create_directory("User");
+			char szFileName[MAX_PATH];
+			DragQueryFileA(hDrop, i, szFileName, MAX_PATH);
+			std::string path = szFileName;
+			if (path.find(".dds") != std::string::npos)
+			{
+				std::string newPath = "Assets/Textures/" + path.substr(path.find_last_of("\\") + 1);
+				bool failed = CopyFileA(path.c_str(),
+					(newPath).c_str(),
+					true);
+				if (failed)
+				{
+					std::cout << "Failed to copy file from: " << path << " to: " << "Assets/Textures/" + path.substr(path.find_last_of("\\") + 1) << std::endl;
+					if (std::filesystem::exists(newPath))
+					{
+						std::cout << "File already exists, Delete the current one before dropping a new one" << std::endl;
+					}
+				}
+			}
 		}
-		std::ofstream file;
-		file.open(myEditorSettingsPath);
-		file << json;
-		file.close();
+		DragFinish(hDrop);
+
+		break;
 	}
-	break;
 	}
 	return 0;
 }
 
+void EditorApp::UpdateBackgroundColorBlend()
+{
+	auto lerped = CommonUtilities::Lerp(myFirstBGP, mySecondBGP, myBGPBlendAmount);
+	FGE::Window::Get().GetDX11().SetClearColor({ lerped.x, lerped.y, lerped.z, lerped.z });
+}
+
 bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 {
+	if (FGE::Window::Get().GetDX11().ClearColorChanged())
+	{
+		FGE::ClearColorChangedEvent ev(FGE::Window::Get().GetDX11().GetClearColor());
+		OnEvent(ev);
+	}
 	ImGui::DockSpaceOverViewport();
 
 	if (ImGui::BeginMainMenuBar())
@@ -209,7 +268,7 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 				bool shouldCreate = true;
 				for (auto& window : myWindows)
 				{
-					if (!window->IsOpen())
+					if (!window->IsOpen() && window->GetName() == "Editor Preferences")
 					{
 						window->SetOpen(true);
 						shouldCreate = false;
@@ -220,7 +279,7 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 
 				if (shouldCreate)
 				{
-					myWindows.push_back(std::make_shared<EditorPreferencesWindow>());
+					myWindows.push_back(std::make_shared<EditorPreferencesWindow>(myEditorSettings));
 					myWindows.back()->SetOpen(true);
 				}
 			}
@@ -234,7 +293,7 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 				bool shouldCreate = true;
 				for (auto& window : myWindows)
 				{
-					if (!window->IsOpen())
+					if (!window->IsOpen() && window->GetName() == "Viewport")
 					{
 						window->SetOpen(true);
 						shouldCreate = false;
@@ -256,7 +315,7 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 				bool shouldCreate = true;
 				for (auto& window : myWindows)
 				{
-					if (!window->IsOpen())
+					if (!window->IsOpen() && window->GetName() == "Hierarchy")
 					{
 						window->SetOpen(true);
 						shouldCreate = false;
@@ -278,7 +337,7 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 				bool shouldCreate = true;
 				for (auto& window : myWindows)
 				{
-					if (!window->IsOpen())
+					if (!window->IsOpen() && window->GetName() == "Inspector")
 					{
 						window->SetOpen(true);
 						shouldCreate = false;
@@ -300,7 +359,7 @@ bool EditorApp::OnUpdateEvent(FGE::AppUpdateEvent& aEvent)
 		}
 		ImGui::EndMainMenuBar();
 
-		
+
 	}
 
 	for (int i = 0; i < myWindows.size(); i++)
@@ -325,10 +384,88 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 		}
 	}
 
+	if (ImGui::Begin("Blend n stuff"))
+	{
+		int width = 100;
+		int height = 20;
+		ImGui::Text("Blend n stuff");
+		if (ImGui::Button("Load first background"))
+		{
+			auto firstPath = ImGuiUtil::GetOpenFilePath("Background Presets (*.bgp) \0*.bgp\0");
+			if (firstPath != "")
+			{
+				myFirstBGPPath = firstPath.string();
+				myFirstBGP = myEditorSettings.LoadBackgroundFile(firstPath);
+				if (myEditorSettings.myBlendActive)
+				{
+					UpdateBackgroundColorBlend();
+				}
+			}
+
+		}
+		//Draw first BGP
+		ImGui::GetWindowDrawList()->AddRectFilled(ImGui::GetCursorScreenPos(),
+			ImVec2(ImGui::GetCursorScreenPos().x + width, ImGui::GetCursorScreenPos().y + height),
+			ImGui::ColorConvertFloat4ToU32(ImVec4(myFirstBGP.x, myFirstBGP.y, myFirstBGP.z, myFirstBGP.w)));
+		ImGui::SetCursorPosY(ImGui::GetCursorPos().y + height + 10);
+
+		if (ImGui::Button("Load second background"))
+		{
+			auto secondPath = ImGuiUtil::GetOpenFilePath("Background Presets (*.bgp) \0*.bgp\0");
+			if (secondPath != "")
+			{
+				mySecondBGPPath = secondPath.string();
+				mySecondBGP = myEditorSettings.LoadBackgroundFile(secondPath);
+				if (myEditorSettings.myBlendActive)
+				{
+					UpdateBackgroundColorBlend();
+				}
+			}
+		}
+		//Draw second BGP
+		ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y),
+			ImVec2(ImGui::GetCursorScreenPos().x + width, ImGui::GetCursorScreenPos().y + height),
+			ImGui::ColorConvertFloat4ToU32(ImVec4(mySecondBGP.x, mySecondBGP.y, mySecondBGP.z, mySecondBGP.w)));
+		ImGui::SetCursorPosY(ImGui::GetCursorPos().y + height + 10);
+
+		if (ImGui::DragFloat("BlendPercent##BlendPercentBGP", &myBGPBlendAmount, 0.01f, 0, 1))
+		{
+			if (myEditorSettings.myBlendActive)
+			{
+				UpdateBackgroundColorBlend();
+			}
+		}
+
+
+		ImGui::Text("Result:");
+		//DrawBlend
+		auto lerped = CommonUtilities::Lerp(myFirstBGP, mySecondBGP, myBGPBlendAmount);
+		ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(ImGui::GetCursorScreenPos().x, ImGui::GetCursorScreenPos().y),
+			ImVec2(ImGui::GetCursorScreenPos().x + width, ImGui::GetCursorScreenPos().y + height),
+			ImGui::ColorConvertFloat4ToU32(ImVec4(lerped.x, lerped.y, lerped.z, lerped.w)));
+		ImGui::SetCursorPosY(ImGui::GetCursorPos().y + height + 10);
+
+		if (ImGui::Button("SaveSettings##SaveBlendingSettings"))
+		{
+			myEditorSettings.myLastLoadedFirstBGP = myFirstBGPPath;
+			myEditorSettings.myLastLoadedSecondBGP = mySecondBGPPath;
+			myEditorSettings.myLastBlendValue = myBGPBlendAmount;
+		}
+
+		if (ImGui::Button("Set As Active Background"))
+		{
+			myEditorSettings.myBlendActive = true;
+			UpdateBackgroundColorBlend();
+		}
+
+
+	}
+	ImGui::End();
+
 	for (int i = 0; i < myViewportWindows.size(); i++)
 	{
 
-			auto clearColor = FGE::Window::Get().GetDX11().GetClearColor();
+		auto clearColor = FGE::Window::Get().GetDX11().GetClearColor();
 		if (myViewportWindows[i]->IsOpen())
 		{
 
@@ -336,11 +473,11 @@ bool EditorApp::OnRenderEvent(FGE::AppRenderEvent& aEvent)
 
 			//Set render target
 			FGE::Renderer::SetRenderTarget(myViewportWindows[i]->GetRenderTexture()->GetRenderTargetData());
-			myViewportWindows[i]->GetRenderTexture()->ClearRenderTarget(dx11.GetDeviceContext(), clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+			myViewportWindows[i]->GetRenderTexture()->ClearRenderTarget(dx11.GetDeviceContext(), clearColor[0], clearColor[1], clearColor[2], 1);
 			FGE::Renderer::Render();
 		}
 	}
-			FGE::Renderer::End();
+	FGE::Renderer::End();
 
 	dx11.SetRenderTarget();
 

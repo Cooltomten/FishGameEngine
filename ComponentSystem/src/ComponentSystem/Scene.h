@@ -22,8 +22,11 @@ namespace Comp
 
 		void AddEntity(std::shared_ptr<Entity> aEntity);
 		std::shared_ptr<Entity> InstatiateEntity();
-		
+
+		void DeleteEntity(std::shared_ptr<Entity> aEntity);
 		std::vector<std::shared_ptr<Entity>>& GetEntities();
+		
+		std::shared_ptr<Entity> GetEntityByID(uint32_t aID);
 
 	private:
 

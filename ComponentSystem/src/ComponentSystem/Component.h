@@ -22,6 +22,13 @@ namespace Comp
 
 	struct Parameter
 	{
+		Parameter(ParameterType aParamType, const std::string& aName, void* aValue)
+			: myType(aParamType)
+			, myName(aName)
+			, myValue(aValue)
+		{
+		}
+
 		ParameterType myType;
 		std::string myName;
 		void* myValue;

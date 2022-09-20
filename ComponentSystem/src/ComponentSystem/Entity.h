@@ -28,7 +28,7 @@ namespace Comp
 		bool GetIsActive();
 		void Initialize();
 		void SetActive(bool aActiveFlag);
-		void OnEvent( FGE::Event& aEvent);
+		void OnEvent(FGE::Event& aEvent);
 
 
 		const std::string& GetName() const;
@@ -37,12 +37,31 @@ namespace Comp
 
 		void SetName(const std::string& aName);
 		void SetTag(const std::string& aTag);
-		
-		std::shared_ptr<Entity> GetParent() ;
+
+		std::shared_ptr<Entity> GetParent();
 		std::vector<std::shared_ptr<Entity>>& GetChildren();
 		std::vector<std::shared_ptr<Component>>& GetComponents();
 
+		/// <summary>
+		/// This counts all the children and their children and so on.
+		/// if you need to use the return value more than once, save it in a variable as this is expensive.
+		/// </summary>
+		/// <returns></returns>
+		int GetRecursiveChildrenCount();
 		
+		
+		std::vector<std::shared_ptr<Entity>> GetChildrenRecursive();
+
+		std::shared_ptr<Comp::Entity> GetChild(uint32_t aIndex);
+
+		/// <summary>
+		/// set child index to -1 to place at the end of the children list
+		/// </summary>
+		/// <param name="aParent"></param>
+		/// <param name="aChildIndex"></param>
+		void SetParent(std::shared_ptr<Entity> aParent, int aChildIndex = -1);
+
+
 
 		template<class T> T* GetComponent();
 		template<class T, typename... TArgs> T* GetOrCreateComponent(TArgs&&... aArgs);
@@ -58,10 +77,10 @@ namespace Comp
 		friend class Scene;
 		std::vector<std::shared_ptr<Component>> myComponents;
 		std::unordered_map<std::string, std::shared_ptr<Component>> myComponentMap;
-		
+
 		std::shared_ptr<Entity> myParent;
 		std::vector<std::shared_ptr<Entity>> myChildren;
-		
+
 		Scene* myParentScene;
 
 		Transform myTransform;
@@ -111,7 +130,7 @@ namespace Comp
 			return false;
 		}
 
-		
+
 
 		auto comp = it.second;
 		myComponentMap.erase(it);

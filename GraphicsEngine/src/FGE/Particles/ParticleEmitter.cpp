@@ -30,7 +30,7 @@ namespace FGE
 
 		myPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
 
-		const size_t maxNumberOfParticles = static_cast<size_t>(static_cast<size_t>(ceilf(myEmitterSettings->ParticlesPerSecond * myEmitterSettings->LifeTime))) * 1.1f;
+		const size_t maxNumberOfParticles = static_cast<size_t>(ceilf(myEmitterSettings->ParticlesPerSecond * myEmitterSettings->LifeTime) * 1.1f);
 		myParticles.resize(maxNumberOfParticles);
 
 		auto& dx11 = Window::Get().GetDX11();

@@ -65,7 +65,7 @@ namespace FGE
 			bone.Parent = tgaBone.Parent;
 			skeleton.Bones.push_back(bone);
 		}
-
+		skeleton.Bones.resize(128);
 		skeleton.BoneNameToIndex = tgaModel.Skeleton.BoneNameToIndex;
 
 		mesh->Init(subMeshes, skeleton);

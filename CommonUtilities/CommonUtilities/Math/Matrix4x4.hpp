@@ -4,6 +4,7 @@
 #include <cassert>
 #include <initializer_list>
 #include <memory>
+#include <vector>
 
 namespace CommonUtilities
 {
@@ -24,6 +25,9 @@ namespace CommonUtilities
 		Matrix4x4<T>& operator=(const T aArray[16]);
 		Matrix4x4<T>& operator=(const T aArray[4][4]);
 
+		
+		T& operator[](const int aIndex);
+
 		// Static functions for creating rotation matrices.
 		static Matrix4x4<T> CreateRotationAroundX(T aAngleInRadians);
 		static Matrix4x4<T> CreateRotationAroundY(T aAngleInRadians);
@@ -33,6 +37,8 @@ namespace CommonUtilities
 		static Matrix4x4<T> Transpose(const Matrix4x4<T>& aMatrixToTranspose);
 		// Assumes aTransform is made up of nothing but rotations and translations.
 		static Matrix4x4<T> GetFastInverse(const Matrix4x4<T>& aTransform);
+		static Matrix4x4<T> GetInverse(const Matrix4x4<T>& aTransform);
+		
 	private:
 		T myElements[16];
 	};
@@ -193,6 +199,78 @@ namespace CommonUtilities
 
 		return matrixInverse;
 	}
+	
+	template<class T>
+	inline Matrix4x4<T> Matrix4x4<T>::GetInverse(const Matrix4x4<T>& aTransform)
+	{
+		T m[4][4];
+		Matrix4x4<T> matrix = Transpose(aTransform);
+		memcpy(&m, &matrix, sizeof(T) * 16);
+
+		T Coef00 = m[2][2] * m[3][3] - m[3][2] * m[2][3];
+		T Coef02 = m[1][2] * m[3][3] - m[3][2] * m[1][3];
+		T Coef03 = m[1][2] * m[2][3] - m[2][2] * m[1][3];
+
+		T Coef04 = m[2][1] * m[3][3] - m[3][1] * m[2][3];
+		T Coef06 = m[1][1] * m[3][3] - m[3][1] * m[1][3];
+		T Coef07 = m[1][1] * m[2][3] - m[2][1] * m[1][3];
+
+		T Coef08 = m[2][1] * m[3][2] - m[3][1] * m[2][2];
+		T Coef10 = m[1][1] * m[3][2] - m[3][1] * m[1][2];
+		T Coef11 = m[1][1] * m[2][2] - m[2][1] * m[1][2];
+
+		T Coef12 = m[2][0] * m[3][3] - m[3][0] * m[2][3];
+		T Coef14 = m[1][0] * m[3][3] - m[3][0] * m[1][3];
+		T Coef15 = m[1][0] * m[2][3] - m[2][0] * m[1][3];
+
+		T Coef16 = m[2][0] * m[3][2] - m[3][0] * m[2][2];
+		T Coef18 = m[1][0] * m[3][2] - m[3][0] * m[1][2];
+		T Coef19 = m[1][0] * m[2][2] - m[2][0] * m[1][2];
+
+		T Coef20 = m[2][0] * m[3][1] - m[3][0] * m[2][1];
+		T Coef22 = m[1][0] * m[3][1] - m[3][0] * m[1][1];
+		T Coef23 = m[1][0] * m[2][1] - m[2][0] * m[1][1];
+
+		Vector4<T> Fac0(Coef00, Coef00, Coef02, Coef03);
+		Vector4<T> Fac1(Coef04, Coef04, Coef06, Coef07);
+		Vector4<T> Fac2(Coef08, Coef08, Coef10, Coef11);
+		Vector4<T> Fac3(Coef12, Coef12, Coef14, Coef15);
+		Vector4<T> Fac4(Coef16, Coef16, Coef18, Coef19);
+		Vector4<T> Fac5(Coef20, Coef20, Coef22, Coef23);
+
+		Vector4<T> Vec0(m[1][0], m[0][0], m[0][0], m[0][0]);
+		Vector4<T> Vec1(m[1][1], m[0][1], m[0][1], m[0][1]);
+		Vector4<T> Vec2(m[1][2], m[0][2], m[0][2], m[0][2]);
+		Vector4<T> Vec3(m[1][3], m[0][3], m[0][3], m[0][3]);
+
+		Vector4<T> Inv0(Vec1 * Fac0 - Vec2 * Fac1 + Vec3 * Fac2);
+		Vector4<T> Inv1(Vec0 * Fac0 - Vec2 * Fac3 + Vec3 * Fac4);
+		Vector4<T> Inv2(Vec0 * Fac1 - Vec1 * Fac3 + Vec3 * Fac5);
+		Vector4<T> Inv3(Vec0 * Fac2 - Vec1 * Fac4 + Vec2 * Fac5);
+
+		Vector4<T> SignA(+1, -1, +1, -1);
+		Vector4<T> SignB(-1, +1, -1, +1);
+		std::vector<Vector4<T>> inverse({ Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB });
+
+		Vector4<T> Row0(inverse[0].x, inverse[1].x, inverse[2].x, inverse[3].x);
+
+		T x = m[0][0] * Row0.x;
+		T y = m[0][1] * Row0.y;
+		T z = m[0][2] * Row0.z;
+		T w = m[0][3] * Row0.w;
+		Vector4<T> Dot0(x, y, z, w);
+		T Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);
+
+		T OneOverDeterminant = static_cast<T>(1) / Dot1;
+
+		memcpy(&matrix, inverse.data(), sizeof(T) * 16);
+
+		matrix = matrix * OneOverDeterminant;
+		matrix = Transpose(matrix);
+
+		return matrix;
+	}
+
 
 	template <typename T>
 	void operator+=(Matrix4x4<T>& aMatrix0, const Matrix4x4<T>& aMatrix1)
@@ -294,11 +372,17 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
+	T& Matrix4x4<T>::operator[](const int aIndex)
+	{
+		return myElements[aIndex];
+	}
+
+	template <typename T>
 	void operator*=(Matrix4x4<T>& aMatrix, const T& aScaler)
 	{
 		for (int i = 0; i < 16; i++)
 		{
-			aMatrix.myElements[i] *= aScaler;
+			aMatrix[i] *= aScaler;
 		}
 
 	}

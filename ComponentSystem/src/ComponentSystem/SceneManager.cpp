@@ -7,6 +7,8 @@
 #include <CommonUtilities/Math/Vector2.hpp>
 #include <CommonUtilities/Math/Vector3.hpp>
 #include <CommonUtilities/Math/Vector4.hpp>
+
+#include <Engine/Event/EntityEvents.h>
 namespace Comp
 {
 	SceneManager* SceneManager::myInstance = nullptr;
@@ -202,6 +204,7 @@ namespace Comp
 		file.close();
 
 		NewScene();
+		std::vector<int> parentIDs;
 		auto& jsonEntArr = json["Entities"];
 		for (int entIndex = 0; entIndex < jsonEntArr.size(); entIndex++)
 		{
@@ -212,8 +215,7 @@ namespace Comp
 			entity->SetTag(jsonEnt["Tag"]);
 			const_cast<uint32_t&> (entity->GetID()) = jsonEnt["ID"];
 
-			//TODO: Add parent support
-			//entity->SetParent(jsonEnt["ParentID"]);
+			parentIDs.push_back(jsonEnt["ParentID"]);
 
 			auto& jsonPos = jsonEnt["Position"];
 			entity->GetTransform().SetPosition(CommonUtilities::Vector3f(jsonPos[0], jsonPos[1], jsonPos[2]));
@@ -241,8 +243,21 @@ namespace Comp
 
 				entity->AddComponent(component);
 			}
-
+			EntityPropertyUpdatedEvent ev;
+			entity->OnEvent(ev);
 		}
+		// has to loop again to set parent
+		for (int i = 0; i < parentIDs.size(); i++)
+		{
+			int parentId = parentIDs[i];
+			if (parentId != -1)
+			{
+				auto parent = myCurrentScene->GetEntityByID(parentId);
+				auto child = myCurrentScene->GetEntities()[i];
+				child->SetParent(parent);
+			}
+		}
+
 		myCurrentScene->OnRuntimeStart();
 
 

@@ -39,8 +39,8 @@ void Viewport::UpdateImGui()
 	{
 		if (ImGui::GetContentRegionAvail().x != myWindowWidth || ImGui::GetContentRegionAvail().y != myWindowHeight)
 		{
-			myWindowWidth = ImGui::GetContentRegionAvail().x;
-			myWindowHeight = ImGui::GetContentRegionAvail().y;
+			myWindowWidth = static_cast<unsigned>(ImGui::GetContentRegionAvail().x);
+			myWindowHeight = static_cast<unsigned>(ImGui::GetContentRegionAvail().y);
 			if(myWindowHeight <= 0)
 			{
 				myWindowHeight = 1;

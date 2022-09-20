@@ -7,9 +7,6 @@ EditorWindow::EditorWindow(std::string aName)
 {
 	myName = aName;
 	myOpenFlag = true;
-}
 
-//const char* EditorWindow::AddIdentifier(char* aName)
-//{
-//	return (std::string(aName) + std::to_string(myId)).c_str();
-//}
+	myUndoHandler = std::make_unique<UndoHandler>();
+}

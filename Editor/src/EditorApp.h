@@ -1,4 +1,6 @@
 #pragma once
+#include"EditorSettings.h"
+
 #include <Engine/Core/Game.h>
 #include <Engine/Core/Application.h>
 #include <Engine/Event/ApplicationEvents.h>
@@ -38,35 +40,19 @@ public:
 	void OnEventSub(FGE::Event& aEvent) override;
 
 private:
-	
+
 	LRESULT WindowsMessages(HWND aHwnd, UINT aMessage, WPARAM aWParam, LPARAM aLParam) override;
+
+	void UpdateBackgroundColorBlend();
 
 	bool OnUpdateEvent(FGE::AppUpdateEvent& aEvent);
 	bool OnRenderEvent(FGE::AppRenderEvent& aEvent);
-	
+
 
 	std::vector<std::shared_ptr<EditorWindow>> myWindows;
 	std::vector<std::shared_ptr<Viewport>> myViewportWindows;
 
-		FGE::Game* myGame = nullptr;
-
-
-	float myMaterialFadeTimer = 0;
-
-	std::shared_ptr<FGE::Mesh> myCubeMesh;
-	Comp::Transform myCubeTransform;
-	//std::shared_ptr<FGE::Mesh> myChestMesh;
-	//Comp::Transform myChestTransform;
-	//std::shared_ptr<FGE::Material> myChestMaterial;
-
-	std::shared_ptr<FGE::AnimatedMesh> myGremlinMesh;
-	Comp::Transform myGremlinTransform;
-	float myGremlinTimer = 0;
-	float myGremlinAlphaBlend = 0;
-	float myAnimationTimeStepMultiplier = 1;
-	std::shared_ptr<FGE::Animation> myGremlinWalkAnim;
-	std::shared_ptr<FGE::Animation> myGremlinRunAnim;
-	std::shared_ptr<FGE::Material> myGremlinMaterial;
+	FGE::Game* myGame = nullptr;
 
 	std::shared_ptr<FGE::DirectionalLight> myDirectionalLight;
 	Comp::Transform myDirectionalLightTransform;
@@ -75,17 +61,22 @@ private:
 
 	std::vector<std::string> myRenderModesStrings;
 
-	std::shared_ptr<FGE::RenderTexture> myRenderTexture;
-	std::shared_ptr<SceneCamera> myCamera;
-
-	std::shared_ptr<FGE::ParticleEmitter> myParticles;
-
 	std::vector<std::shared_ptr<Comp::Entity>> mySelectedEntities;
-	
+
 
 	const std::string myEditorSettingsPath = "User/EditorSettings.json";
+	EditorSettings myEditorSettings;
 
-	
-	
+
+	CommonUtilities::Vector4f myFirstBGP;
+	CommonUtilities::Vector4f mySecondBGP;
+
+	std::string myFirstBGPPath;
+	std::string mySecondBGPPath;
+
+	float myBGPBlendAmount = 0;
+
+
+
 
 };

@@ -9,7 +9,7 @@ namespace Comp
 		myScale = { 1,1,1 };
 		RecalculateTransform();
 	}
-	
+
 	void Transform::SetPosition(float aX, float aY, float aZ)
 	{
 		SetPosition({ aX, aY, aZ });
@@ -60,7 +60,12 @@ namespace Comp
 		return myScale;
 	}
 
-	const CU::Matrix4x4<float>& Transform::GetMatrix() const 
+	const CU::Matrix4x4<float>& Transform::GetMatrix() const
+	{
+		return myWorldMatrix;
+	}
+
+	const CU::Matrix4x4<float>& Transform::GetLocalMatrix() const
 	{
 		return myMatrix;
 	}
@@ -70,42 +75,85 @@ namespace Comp
 		return myInverseMatrix;
 	}
 
+	const CU::Matrix4x4<float>& Transform::GetInverseWorldMatrix() const
+	{
+		return myInverseWorldMatrix;
+	}
+
 	const CU::Vector3f Transform::GetForward()
 	{
-		return {myMatrix(3,1), myMatrix(3,2), myMatrix(3,3)};
+		return { myMatrix(3,1), myMatrix(3,2), myMatrix(3,3) };
 	}
 
 	const CU::Vector3f Transform::GetRight()
 	{
-		return {myMatrix(1,1), myMatrix(1,2), myMatrix(1,3)};
+		return { myMatrix(1,1), myMatrix(1,2), myMatrix(1,3) };
 	}
 
 	const CU::Vector3f Transform::GetUp()
 	{
-		return {myMatrix(2,1), myMatrix(2,2), myMatrix(2,3)};
+		return { myMatrix(2,1), myMatrix(2,2), myMatrix(2,3) };
 	}
 
 	void Transform::RecalculateTransform()
 	{
 		myMatrix = CU::Matrix4x4<float>();
-		
+
 		myMatrix(1, 1) = myScale.x;
 		myMatrix(2, 2) = myScale.y;
 		myMatrix(3, 3) = myScale.z;
-		
-		CommonUtilities::Vector3f rotInRad = myRotation * 3.14159265359f / 180.0f;
-		auto rotX =  CU::Matrix4x4<float>::CreateRotationAroundX(rotInRad.x);
-		auto rotY =  CU::Matrix4x4<float>::CreateRotationAroundY(rotInRad.y);
-		auto rotZ =  CU::Matrix4x4<float>::CreateRotationAroundZ(rotInRad.z);
 
-		auto rot = rotX* rotY * rotZ;
-		
-		myMatrix = myMatrix* rot ;
+		CommonUtilities::Vector3f rotInRad = myRotation * 3.14159265359f / 180.0f;
+		auto rotX = CU::Matrix4x4<float>::CreateRotationAroundX(rotInRad.x);
+		auto rotY = CU::Matrix4x4<float>::CreateRotationAroundY(rotInRad.y);
+		auto rotZ = CU::Matrix4x4<float>::CreateRotationAroundZ(rotInRad.z);
+
+		auto rot = rotX * rotY * rotZ;
+
+		myMatrix = myMatrix * rot;
 		myMatrix(4, 1) = myPosition.x;
 		myMatrix(4, 2) = myPosition.y;
 		myMatrix(4, 3) = myPosition.z;
 
-		myInverseMatrix = myMatrix.GetFastInverse(myMatrix);
+		myInverseMatrix = myMatrix.GetInverse(myMatrix);
+		myInverseWorldMatrix = myWorldMatrix.GetInverse(myWorldMatrix);
+		if (myParent)
+		{
+			myWorldMatrix = myMatrix * myParent->GetMatrix();
+		}
+		else
+		{
+			myWorldMatrix = myMatrix;
+		}
+
+		for (auto child : myChildren)
+		{
+			child->RecalculateTransform();
+		}
+
+	}
+
+
+
+	void Transform::SetParent(Transform* aParent)
+	{
+		myParent = aParent;
+	}
+
+	void Transform::AddChild(Transform* aChild)
+	{
+		myChildren.push_back(aChild);
+	}
+	void Transform::RemoveChild(Transform* aChild)
+	{
+		for (int i = 0; i < myChildren.size(); i++)
+		{
+			if (myChildren[i] == aChild)
+			{
+				myChildren.erase(myChildren.begin() + i);
+				return;
+			}
+		}
 	}
 
 }

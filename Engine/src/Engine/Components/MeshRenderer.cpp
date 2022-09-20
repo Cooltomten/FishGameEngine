@@ -19,8 +19,9 @@ namespace Engine
 	{
 		myMeshPath = "Assets/Meshes/SM_Particle_Chest.fbx";
 		myLastMeshPath = myMeshPath;
-		myMaterialPath = "Assets/Materials/DefaultMaterial.material";
-		myLastMaterialPath = myMaterialPath;
+		myMaterialPath = "";
+		myLastMaterialPath = "";
+		myMaterials.push_back(FGE::Material::Default);
 		InitializeParameters({
 			{Comp::ParameterType::String, "Mesh Path", &myMeshPath},
 			{Comp::ParameterType::String, "Material Path", &myMaterialPath}
@@ -30,8 +31,6 @@ namespace Engine
 	void Engine::MeshRenderer::Initialize()
 	{
 		myMesh = FGE::ResourceCache::GetAsset<FGE::Mesh>(myMeshPath);
-
-		myMaterials.push_back(FGE::ResourceCache::GetAsset<FGE::Material>(myMaterialPath));
 	}
 
 	void Engine::MeshRenderer::OnEvent(FGE::Event& aEvent)

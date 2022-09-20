@@ -65,7 +65,7 @@ namespace CommonUtilities
 	template<typename T>
 	inline T Vector2<T>::Length() const
 	{
-		return sqrt(LengthSqr());
+		return static_cast<T>(sqrt(LengthSqr()));
 	}
 
 	template<typename T>

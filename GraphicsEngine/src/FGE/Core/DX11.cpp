@@ -4,7 +4,7 @@
 #include <sstream>
 
 #define GFX_THROW_FAILED(hrcall) if(FAILED(hr = (hrcall))) throw Graphics::HrException(__LINE__, __FILE__, hr)
-#define GFX_DEVICE_REMOVED_EXCEPT(hr) DX11::DeviceRemovedException(__LINE__,__FILE__, hr)
+//#define GFX_DEVICE_REMOVED_EXCEPT(hr) DX11::DeviceRemovedException(__LINE__,__FILE__, hr)
 
 #ifndef NDEBUG
 #define GFX_EXCEPT(hr) DX11::HrException( __LINE__,__FILE__,(hr),myInfoManager.GetMessages() )
@@ -86,11 +86,11 @@ namespace FGE
 		RECT clientRect = { 0,0,0,0 };
 		GetClientRect(aWindowHandle, &clientRect);
 
-		float width = clientRect.right - clientRect.left;
-		float height = clientRect.bottom - clientRect.top;
+		UINT width = clientRect.right - clientRect.left;
+		UINT height = clientRect.bottom - clientRect.top;
 		CreateDepthBuffer(width, height);
 		SetRenderTarget();
-		CreateViewport(width, height);
+		CreateViewport(static_cast<float>(width), static_cast<float>(height));
 		Context->RSSetViewports(1, &myRenderTargetData.Viewport);
 		return true;
 	}
@@ -100,6 +100,7 @@ namespace FGE
 		//clear the back buffer
 		Context->ClearRenderTargetView(myRenderTargetData.RenderTargetView.Get(), &myClearColor[0]);
 		Context->ClearDepthStencilView(myRenderTargetData.DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		myClearColorChangedFlag = false;
 	}
 
 	void DX11::EndFrame()
@@ -156,7 +157,7 @@ namespace FGE
 		return shader;
 	}
 
-	ID3D11InputLayout* DX11::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC aDesc[], size_t aSize, const char* aData, size_t aDataSize)
+	ID3D11InputLayout* DX11::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC aDesc[], UINT aSize, const char* aData, size_t aDataSize)
 	{
 		ID3D11InputLayout* layout = nullptr;
 		HRESULT hr;
@@ -216,13 +217,13 @@ namespace FGE
 		Context->RSSetViewports(1, &myRenderTargetData.Viewport);
 	}
 
-	void DX11::Resize(float aWidth, float aHeight)
+	void DX11::Resize(UINT aWidth, UINT aHeight)
 	{
 
 		myRenderTargetData.RenderTargetView.Reset();
 		myRenderTargetData.DepthStencilView.Reset();
 
-		SwapChain->ResizeBuffers(1, static_cast<UINT>(aWidth), static_cast<UINT>(aHeight), DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+		SwapChain->ResizeBuffers(1, aWidth, aHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 
 		HRESULT hr;
 
@@ -237,13 +238,13 @@ namespace FGE
 		));
 		CreateDepthBuffer(aWidth, aHeight);
 		Context->OMSetRenderTargets(1, myRenderTargetData.RenderTargetView.GetAddressOf(), myRenderTargetData.DepthStencilView.Get());
-		CreateViewport(aWidth, aHeight);
+		CreateViewport(static_cast<float>(aWidth), static_cast<float>(aHeight));
 		Context->RSSetViewports(1, &myRenderTargetData.Viewport);
 
 
 	}
 
-	void DX11::CreateDepthBuffer(float aWidth, float aHeight)
+	void DX11::CreateDepthBuffer(UINT aWidth, UINT aHeight)
 	{
 		ComPtr<ID3D11Texture2D> depthBufferTexture;
 		D3D11_TEXTURE2D_DESC depthBufferDesc = { 0 };
@@ -275,7 +276,15 @@ namespace FGE
 		myRenderTargetData.Viewport.MaxDepth = 1.0f;
 
 	}
-
+	void DX11::SetClearColor(std::array<float, 4> aClearColor)
+	{
+		myClearColor = aClearColor;
+		myClearColorChangedFlag = true;
+	}
+	bool DX11::ClearColorChanged()
+	{
+		return myClearColorChangedFlag;
+	}
 
 
 

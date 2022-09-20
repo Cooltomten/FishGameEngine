@@ -82,6 +82,100 @@ namespace Comp
 	{
 		return myComponents;
 	}
+	int Entity::GetRecursiveChildrenCount()
+	{
+		int count = 0;
+		auto children = GetChildren();
+		while (children.size() > 0)
+		{
+			auto child = *children.begin();
+			for (auto c : child->GetChildren())
+			{
+				children.push_back(c);
+			}
+			children.erase(children.begin());
+			count++;
+		}
+		return count;
+	}
+
+	std::vector<std::shared_ptr<Entity>> Entity::GetChildrenRecursive()
+	{
+		std::vector<std::shared_ptr<Entity>> children;
+		auto childrenVec = GetChildren();
+		while (childrenVec.size() > 0)
+		{
+			
+			auto child = *childrenVec.begin();
+			int index = 1;
+			for (auto c : child->GetChildren())
+			{
+				childrenVec.insert(childrenVec.begin() + index, c);
+				index++;
+			}
+			children.push_back(child);
+			childrenVec.erase(childrenVec.begin());
+		}
+		return children;
+	}
+	
+	std::shared_ptr<Comp::Entity> Entity::GetChild(uint32_t aIndex)
+	{
+		return myChildren[aIndex];
+	}
+
+	void Entity::SetParent(std::shared_ptr<Entity> aParent, int aChildIndex)
+	{
+		std::shared_ptr<Entity> thisEntity;
+		if (aParent)
+		{
+			if (aChildIndex == -1)
+			{
+				aChildIndex = aParent->myChildren.size();
+				if (aParent == myParent)
+				{
+					aChildIndex--;
+				}
+			}
+		}
+		auto sceneEntities = myParentScene->GetEntities();
+		for (int i = 0; i < sceneEntities.size(); i++)
+		{
+			if (sceneEntities[i]->GetID() == myID)
+			{
+				thisEntity = sceneEntities[i];
+				break;
+			}
+		}
+		if (myParent)
+		{
+
+			//Remove as child from old parent
+			auto it = std::find(myParent->myChildren.begin(), myParent->myChildren.end(), thisEntity);
+			myParent->myTransform.RemoveChild(&myTransform);
+			myParent->myChildren.erase(it);
+
+		}
+		myParent = aParent;
+		if (myParent)
+		{
+		myTransform.SetParent(&myParent->myTransform);
+		}
+		else
+		{
+			myTransform.SetParent(nullptr);
+
+		}
+
+		//in the case a parent is set to null, it means that the entity is a root entity
+		if (myParent)
+		{
+			assert(aChildIndex >= 0 && aChildIndex <= myParent->myChildren.size());
+			myParent->myTransform.AddChild(&myTransform);
+			auto it = myParent->myChildren.begin() + aChildIndex;
+			myParent->myChildren.insert(it, thisEntity);
+		}
+	}
 
 	bool Entity::AddComponent(std::shared_ptr<Component> aComponent)
 	{

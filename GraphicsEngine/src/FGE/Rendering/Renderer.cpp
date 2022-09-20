@@ -190,6 +190,9 @@ namespace FGE
 	{
 		myParticleCommands.emplace_back(ParticleCommand(aEmitter, someVertices, aTransform));
 	}
+	void Renderer::SubmitLight(std::shared_ptr<FGE::Light> aLight)
+	{
+	}
 	void Renderer::Begin(std::shared_ptr<Camera> aCamera)
 	{
 		myGBuffer.Clear();
@@ -313,7 +316,7 @@ namespace FGE
 			context->PSSetConstantBuffers(1, 1, myObjectBuffer.GetAddressOf());
 
 			command.Emitter->SetAsResource(); // changes vertex, geometry and pixel shader
-			context->Draw(command.Vertices.size(), 0);
+			context->Draw(static_cast<UINT>(command.Vertices.size()), 0);
 		}
 
 		SetBlendState(BlendState::None);
@@ -338,7 +341,7 @@ namespace FGE
 		context->VSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 		context->GSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
 		context->PSSetConstantBuffers(0, 1, myFrameBuffer.GetAddressOf());
-		myGBuffer.Resize(myCurrentRenderTargetData->Viewport.Width, myCurrentRenderTargetData->Viewport.Height);
+		myGBuffer.Resize(static_cast<int>(myCurrentRenderTargetData->Viewport.Width), static_cast<int>(myCurrentRenderTargetData->Viewport.Height));
 
 		GenerateGBuffer();
 

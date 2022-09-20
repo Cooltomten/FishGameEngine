@@ -210,6 +210,8 @@
     <ClInclude Include="src\FGE\Rendering\Lights\DirectionalLight.h" />
     <ClInclude Include="src\FGE\Rendering\Lights\EnvironmentLight.h" />
     <ClInclude Include="src\FGE\Rendering\Lights\Light.h" />
+    <ClInclude Include="src\FGE\Rendering\Lights\PointLight.h" />
+    <ClInclude Include="src\FGE\Rendering\Lights\SpotLight.h" />
     <ClInclude Include="src\FGE\Rendering\Renderer.h" />
     <ClInclude Include="src\FabException.h" />
     <ClInclude Include="src\FabWin.h" />
@@ -247,6 +249,8 @@
     <ClCompile Include="src\FGE\Rendering\Lights\DirectionalLight.cpp" />
     <ClCompile Include="src\FGE\Rendering\Lights\EnvironmentLight.cpp" />
     <ClCompile Include="src\FGE\Rendering\Lights\Light.cpp" />
+    <ClCompile Include="src\FGE\Rendering\Lights\PointLight.cpp" />
+    <ClCompile Include="src\FGE\Rendering\Lights\SpotLight.cpp" />
     <ClCompile Include="src\FGE\Rendering\Renderer.cpp" />
     <ClCompile Include="src\FGE\Rendering\Camera\Camera.cpp" />
     <ClCompile Include="src\FGE\Rendering\RenderTexture.cpp" />

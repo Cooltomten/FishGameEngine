@@ -10,11 +10,11 @@ namespace CU = CommonUtilities;
 
 namespace FGE
 {
-	class Skeleton;
+	struct Skeleton;
 	class Animation : public Asset
 	{
 	public:
-		Animation() = default;
+		Animation();
 		~Animation() = default;
 
 		static AssetType GetStaticType() { return AssetType::Animation; }

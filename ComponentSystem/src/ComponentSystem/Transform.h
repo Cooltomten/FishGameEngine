@@ -25,21 +25,33 @@ namespace Comp
 		const CU::Vector3f& GetScale() const;
 
 		const CU::Matrix4x4<float>& GetMatrix() const;
+		const CU::Matrix4x4<float>& GetLocalMatrix() const;
 		const CU::Matrix4x4<float>& GetInverseMatrix() const;
+		const CU::Matrix4x4<float>& GetInverseWorldMatrix() const;
+		
 
 		const CU::Vector3f GetForward();
 		const CU::Vector3f GetRight();
 		const CU::Vector3f GetUp();
 		void RecalculateTransform();
 
+		
+		void SetParent(Transform* aParent);
+		void AddChild(Transform* aChild);
+		void RemoveChild(Transform* aChild);
 	private:
 		CU::Vector3f myPosition;
 		CU::Vector3f myRotation;
 		CU::Vector3f myScale;
 
 		CU::Matrix4x4<float> myMatrix;
+		CU::Matrix4x4<float> myWorldMatrix;
 		CU::Matrix4x4<float> myInverseMatrix;
-		
+		CU::Matrix4x4<float> myInverseWorldMatrix;
+
+		Transform* myParent = nullptr;
+		std::vector<Transform*> myChildren;
+
 
 
 	};
